@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 current_page = 1
 data = []
@@ -41,3 +42,7 @@ while proceed:
             data.append(item)
             
         current_page += 1
+        
+## Convert the list to a DataFrame and save it to a CSV file
+df = pd.DataFrame(data)
+df.to_csv("books.csv", index=False)
