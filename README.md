@@ -29,11 +29,15 @@ The deployment terminal is set to 80 columns by 24 rows. That means that each li
 
 Happy coding!
 
-# Web scraping project for flight data
+# Web scraping project for link validation
 
 ## Define Project Scope:
 
+- Check the validity and accessibility of URLs within a dataset or a web application.
+
 ### Project Objectives:
+
+- Check that all links point to existing resources and are not broken or outdated.
 
 - Build a tool to help users find the cheapest flights
 
@@ -41,7 +45,6 @@ Happy coding!
 
 Search Functionality
 Scraping and Data Retrieval
-Price Comparison
 Filtering and Sorting
 User Interface
 Alerts and Notifications
@@ -49,14 +52,11 @@ Data Visualization
 
 ## Data Sources
 
-- Google Flights
+- Wikpedia
 
 ## Data to Scrape
 
-- prices
-- airlines
-- departure times
-- duration
+- Links
 
 ## Project Constraints
 
