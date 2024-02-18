@@ -41,6 +41,10 @@ Happy coding!
 
 - Check that all links point to existing resources and are not broken or outdated.
 
+## Wireframe
+
+![Wireframe - Mobile](assets/media/Wireframe-mobile.png)
+
 ## Possible features
 
 Search Functionality
