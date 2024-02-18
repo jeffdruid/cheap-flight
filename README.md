@@ -31,6 +31,8 @@ Happy coding!
 
 # Web scraping project for link validation
 
+![Banner](assets/media/Banner-LV.png)
+
 ## Define Project Scope:
 
 - Check the validity and accessibility of URLs within a dataset or a web application.
@@ -106,4 +108,5 @@ Data Visualization
 
 ## Credits
 
-[Web Scraping with Python and BeautifulSoup is THIS easy! - Tom's Tech Academy](https://www.youtube.com/watch?v=nBzrMw8hkmY)
+- [Web Scraping with Python and BeautifulSoup is THIS easy! - Tom's Tech Academy](https://www.youtube.com/watch?v=nBzrMw8hkmY)
+- [Banner - Canva AI](https://www.canva.com)
