@@ -103,3 +103,7 @@ Data Visualization
 
 - Integrate link validation as a feature for users to check the validity of URLs.
 - Provide feedback to users about the status of each URL, such as indicating whether it's valid, broken, or redirected.
+
+## Credits
+
+[Web Scraping with Python and BeautifulSoup is THIS easy! - Tom's Tech Academy](https://www.youtube.com/watch?v=nBzrMw8hkmY)

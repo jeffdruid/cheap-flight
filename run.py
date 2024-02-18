@@ -26,23 +26,16 @@ while proceed:
         # Find all the books on the page
         all_books = soup.find_all("li", class_="col-xs-6 col-sm-4 col-md-3 col-lg-3")
         
-        # Loop through each book and get the title, link, price, and stock
+        # Loop through each book and get the link
         for book in all_books:
-            item = {}
+            link = book.find("a").attrs["href"]
             
-            item["title"] = book.find("img").attrs["alt"]
-            
-            item["link"] = book.find("a").attrs["href"]
-            
-            item["price"] = book.find("p", class_="price_color").text[1:]
-            
-            item["stock"] = book.find("p", class_="instock availability").text.strip()
-            
-            # Append the data to the list
-            data.append(item)
+            # Append the link to the data list
+            data.append(link)
             
         current_page += 1
         
-## Convert the list to a DataFrame and save it to a CSV file
-df = pd.DataFrame(data)
-df.to_csv("books.csv", index=False)
+# Convert the list to a DataFrame and save it to a CSV file
+df = pd.DataFrame(data, columns=["link"])
+df.to_csv("links.csv", index=False)
+print("Scraping complete!")
