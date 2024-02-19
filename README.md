@@ -83,6 +83,7 @@ Data Visualization
 
 - [Web Scraping with Python and BeautifulSoup is THIS easy! - Tom's Tech Academy](https://www.youtube.com/watch?v=nBzrMw8hkmY)
 - [Banner - Canva AI](https://www.canva.com)
+- [The Best Websites to Practice Your Web Scraping Skills in 2024 - Proxyway](https://proxyway.com/guides/best-websites-to-practice-your-web-scraping-skills)
 
 # Welcome,
 

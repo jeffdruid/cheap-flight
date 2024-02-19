@@ -5,14 +5,22 @@ import pandas as pd
 current_page = 1
 data = []
 proceed = True
+url = input("Enter the URL you want to scrape: ")
 
-while proceed:
+# Check if the URL is allowed to be scraped by robots.txt
+robots_url = url + "/robots.txt"
+robots_response = requests.get(robots_url)
+robots_content = robots_response.text
+
+if "User-agent: *" in robots_content and "Disallow: /" in robots_content:
+    print("This website does not allow scraping.")
+    print("Please check the robots.txt file for more information.")
+    print(robots_url)
+    proceed = False
+else:
+    # If the website allows scraping, proceed with the scraping
     # Print the current page being scraped
     print(f"Scraping page {current_page}...")
-    
-    # Send a GET request to the website you want to scrape
-    url = "https://books.toscrape.com/catalogue/page-"+str(current_page)+".html"
-    # url = input("Enter the URL you want to scrape: ")
 
     # Get the HTML content of the webpage
     response = requests.get(url)
@@ -20,22 +28,19 @@ while proceed:
     # Parse the HTML content using BeautifulSoup
     soup = BeautifulSoup(response.content, "html.parser")
 
-    # Check if the page exists
-    if soup.title.text == "404 Not Found":
-        proceed = False
-    else:
-        # Find all the books on the page
-        all_books = soup.find_all("li", class_="col-xs-6 col-sm-4 col-md-3 col-lg-3")
-        
-        # Loop through each book and get the link
-        for book in all_books:
-            link = book.find("a").attrs["href"]
-            
-            # Append the link to the data list
-            data.append(link)
-        # proceed = False
-        current_page += 1
-        
+    # Find all the links on the page
+    all_links = soup.find_all("a")
+    
+    # Loop through all the links and get the href attribute
+    for link in all_links:
+        # Get the href attribute of the link
+        href = link.get("href")
+        data.append(href)
+    
+    # Print the number of links found on the page
+    print(f"Found {len(data)} links on page {current_page}.")
+    print(data)
+                    
 # Convert the list to a DataFrame and save it to a CSV file
 df = pd.DataFrame(data, columns=["link"])
 df.to_csv("links.csv", index=False)
@@ -43,3 +48,5 @@ print("Scraping complete!")
 
 # Sort the data
 # data.sort()
+
+# test - URL: https://jeffdruid.github.io/fitzgeralds-menu/menu
