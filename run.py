@@ -19,6 +19,7 @@ if "User-agent: *" in robots_content and "Disallow: /" in robots_content:
     proceed = False
 else:
     # If the website allows scraping, proceed with the scraping
+    
     # Print the current page being scraped
     print(f"Scraping page {current_page}...")
 
@@ -39,7 +40,6 @@ else:
     
     # Print the number of links found on the page
     print(f"Found {len(data)} links on page {current_page}.")
-    print(data)
                     
 # Convert the list to a DataFrame and save it to a CSV file
 df = pd.DataFrame(data, columns=["link"])
@@ -50,3 +50,17 @@ print("Scraping complete!")
 # data.sort()
 
 # test - URL: https://jeffdruid.github.io/fitzgeralds-menu/menu
+
+# TODO - Add a function to check if the URL is valid
+# TODO - Add a function to sort the data
+# TODO - Add a function to display the data
+# TODO - Add a function to search the data
+# TODO - Add a function to filter the data
+# TODO - Add a function to handle errors
+# TODO - Add a function to handle exceptions
+# TODO - Add a function to handle pagination
+# TODO - Add a function to handle proxies
+# TODO - Add a function to handle user agents
+# TODO - Add a function to handle status codes
+# TODO - Add a function to handle rate limits
+# TODO - Add a function to handle timeouts
