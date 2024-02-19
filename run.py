@@ -12,6 +12,7 @@ while proceed:
     
     # Send a GET request to the website you want to scrape
     url = "https://books.toscrape.com/catalogue/page-"+str(current_page)+".html"
+    # url = input("Enter the URL you want to scrape: ")
 
     # Get the HTML content of the webpage
     response = requests.get(url)
@@ -32,10 +33,13 @@ while proceed:
             
             # Append the link to the data list
             data.append(link)
-            
+        # proceed = False
         current_page += 1
         
 # Convert the list to a DataFrame and save it to a CSV file
 df = pd.DataFrame(data, columns=["link"])
 df.to_csv("links.csv", index=False)
 print("Scraping complete!")
+
+# Sort the data
+# data.sort()
