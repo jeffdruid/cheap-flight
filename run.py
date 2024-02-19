@@ -5,7 +5,7 @@ import pandas as pd
 current_page = 1
 data = []
 proceed = True
-url = input("Enter the URL you want to scrape: ")
+url = input("Enter the URL you want to scrape: \n")
 
 # Check if the URL is allowed to be scraped by robots.txt
 robots_url = url + "/robots.txt"
