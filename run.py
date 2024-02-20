@@ -2,18 +2,28 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-def main():
-    current_page = 1
-    data = []
-    # proceed = True
-    url = input("Enter the URL you want to scrape: \n")
-    
-    # Add "https://www." to the URL if it's not already present
-    if not url.startswith("https://www.") and not url.startswith("www."):
-        url = "https://www." + url
-    elif url.startswith("www."):
-        url = "https://" + url
+def get_user_input():
+    while True:
+        url = input("Enter the URL you want to scrape: \n")
+        if validate_url(url):
+            return url
+        else:
+            print("Invalid URL. Please try again.")
 
+def validate_url(url):
+    try:
+        response = requests.head(url)
+        return response.status_code == 200
+    except requests.exceptions.RequestException:
+        return False
+
+
+def main():
+    url = get_user_input()
+    print("You entered: " + url)
+    data = []
+    
+    # proceed = True
     # Check if the URL is allowed to be scraped by robots.txt
     # robots_url = url + "/robots.txt"
     # robots_response = requests.get(robots_url)
