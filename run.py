@@ -9,8 +9,10 @@ def main():
     url = input("Enter the URL you want to scrape: \n")
     
     # Add "https://www." to the URL if it's not already present
-    if not url.startswith("https://www."):
+    if not url.startswith("https://www.") and not url.startswith("www."):
         url = "https://www." + url
+    elif url.startswith("www."):
+        url = "https://" + url
 
     # Check if the URL is allowed to be scraped by robots.txt
     # robots_url = url + "/robots.txt"
