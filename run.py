@@ -1,10 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from urllib.parse import urlparse
 
 def get_user_input():
     while True:
         url = input("Enter the URL you want to scrape: \n")
+        # Check if the URL starts with "http://" or "https://"
+        if not url.startswith(("http://", "https://")):
+            # If not, add "http://" to the beginning of the URL
+            url = "https://" + url
         if validate_url(url):
             return url
         else:
