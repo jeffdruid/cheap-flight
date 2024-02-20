@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-from urllib.parse import urlparse
 
 def get_user_input():
     while True:
@@ -18,10 +17,10 @@ def get_user_input():
 def validate_url(url):
     try:
         response = requests.head(url)
+        print("Status code: " + str(response.status_code))
         return response.status_code == 200
     except requests.exceptions.RequestException:
         return False
-
 
 def main():
     url = get_user_input()
@@ -29,6 +28,7 @@ def main():
     data = []
     
     # proceed = True
+    
     # Check if the URL is allowed to be scraped by robots.txt
     # robots_url = url + "/robots.txt"
     # robots_response = requests.get(robots_url)
@@ -68,6 +68,12 @@ def main():
     df = pd.DataFrame(data, columns=["link"])
     df.to_csv("links.csv", index=False)
     print("Scraping complete!")
+    
+    # Ask the user if they want to scrape another URL
+    if input("Do you want to scrape another URL? (y/n): ").lower() == "y":
+        main()
+    else:
+        print("Goodbye!")
 
 # Sort the data
 # data.sort()
