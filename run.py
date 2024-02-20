@@ -80,17 +80,20 @@ def main():
 
 # test - URL: https://jeffdruid.github.io/fitzgeralds-menu/menu
 
-# TODO - Add a function to check if the URL is valid
+# TODO - Add link validation to check if the link is valid
+# TODO - Add filtering to remove duplicate links
+# TODO - Add filtering types (e.g. only internal links, only external links)
+# TODO - Add a function to save the data to a file
+# TODO - Add a function to load the data from a file
+# TODO - Add a function to handle different types of data (e.g. images, videos, text)
+# TODO - Add error handling for requests where url is invalid or inaccessible
 # TODO - Add a function to sort the data
 # TODO - Add a function to display the data
 # TODO - Add a function to search the data
 # TODO - Add a function to filter the data
-# TODO - Add a function to handle errors
-# TODO - Add a function to handle exceptions
 # TODO - Add a function to handle pagination
 # TODO - Add a function to handle proxies
 # TODO - Add a function to handle user agents
-# TODO - Add a function to handle status codes
 # TODO - Add a function to handle rate limits
 # TODO - Add a function to handle timeouts
 
