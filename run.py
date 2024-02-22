@@ -1,14 +1,21 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from tqdm import tqdm
 
 def print_instructions():
+    """
+    Display the instructions for using the Link-Validator Tool.
+    """
     print("Welcome to the Link-Validator Tool!")
     print("This tool allows you to scrape a webpage and validate all the links.")
     print("Please enter the URL you want to scrape below.")
     print("")
 
 def get_user_input():
+    """
+    Get the URL input from the user and validate it.
+    """
     while True:
         url = input("Enter the URL you want to scrape: \n")
         # Check if the URL starts with "http://" or "https://"
@@ -21,14 +28,40 @@ def get_user_input():
             print("Invalid URL. Please try again.")
 
 def validate_url(url):
+    """
+    Validate the URL by sending a HEAD request and checking the status code.
+    """
     try:
-        response = requests.head(url)
+        response = requests.head(url, allow_redirects=True, stream=True, timeout=5)
         print("Status code: " + str(response.status_code))
         return response.status_code == 200
-    except requests.exceptions.RequestException:
+    except (requests.exceptions.RequestException, ValueError):
         return False
 
+def load_page_with_progress(url):
+    """
+    Load a webpage and display a progress bar while loading.
+    """
+    # Get the HTML content of the webpage
+    response = requests.get(url, stream=True)
+
+    # Store the response content in a variable
+    html_content = response.content
+
+    # Display the progress bar while reading the content
+    with tqdm(total=len(html_content), unit="B", unit_scale=True, desc="Loading", unit_divisor=2048) as progress_bar:
+        for chunk in response.iter_content(chunk_size=1024):
+            progress_bar.update(len(chunk))
+
+    # Parse the HTML content using BeautifulSoup
+    soup = BeautifulSoup(html_content, "html.parser")
+    
+    return soup
+
 def main():
+    """
+    The main function of the Link-Validator Tool.
+    """
     print_instructions()
     url = get_user_input()
     print("You entered: " + url)
@@ -52,13 +85,10 @@ def main():
 
     # Print the current page being scraped
     print(f"Scraping {url}...")
-
-    # Get the HTML content of the webpage
-    response = requests.get(url)
-
-    # Parse the HTML content using BeautifulSoup
-    soup = BeautifulSoup(response.content, "html.parser")
-
+    
+    # Load the webpage and parse the HTML content
+    soup = load_page_with_progress(url)
+   
     # Find all the links on the page
     all_links = soup.find_all("a")
 
