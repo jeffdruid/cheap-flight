@@ -10,9 +10,70 @@ def print_instructions():
     print("Welcome to the Link-Validator Tool!")
     print("This tool allows you to scrape a webpage and validate all the links.")
     print("Please enter the URL you want to scrape below.")
+    print("Please select an option from the menu below:")
+    print("1. Scrape and validate links from a webpage")
+    print("2. Display all links scraped from the last webpage")
+    print("0. Exit")
     print("")
 
 def get_user_input():
+    """
+    Get the user's menu choice.
+    """
+    while True:
+        try:
+            choice = int(input("Enter your choice (1, 2 or 0): "))
+            if choice in [1, 2, 0]:
+                return choice
+            else:
+                print("Invalid choice. Please enter 1, 2 or 0.")
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+def scrape_and_validate_links():
+    """
+    Scrape and validate links from a webpage.
+    """
+    url = get_url_input()
+    print("You entered: " + url)
+    data = []
+
+    # Print the current page being scraped
+    print(f"Scraping {url}...")
+
+    # Load the webpage and parse the HTML content
+    soup = load_page_with_progress(url)
+
+    if soup:
+        # Find all the links on the page
+        all_links = soup.find_all("a")
+
+        # Loop through all the links and get the href attribute
+        for link in all_links:
+            # Get the href attribute of the link
+            href = link.get("href")
+            data.append(href)
+
+        # Print the number of links found on the page
+        print(f"Found {len(data)} links on {url}.")
+
+        # Convert the list to a DataFrame and save it to a CSV file
+        df = pd.DataFrame(data, columns=["link"])
+        df.to_csv("links.csv", index=False)
+        print("Scraping complete!")
+
+def display_all_links():
+    """
+    Display all links scraped from the last webpage.
+    """
+    try:
+        # Load the CSV file containing links
+        df = pd.read_csv("links.csv")
+        print(df)
+    except FileNotFoundError:
+        print("No links found. Please scrape a webpage first.")
+        
+def get_url_input():
     """
     Get the URL input from the user and validate it.
     """
@@ -75,11 +136,15 @@ def main():
     The main function of the Link-Validator Tool.
     """
     print_instructions()
-    url = get_user_input()
-    print("You entered: " + url)
-    data = []
+    choice = get_user_input()
     
-    # proceed = True
+    if choice == 1:
+        scrape_and_validate_links()
+    elif choice == 2:
+        display_all_links()
+    elif choice == 0:
+        print("Exiting the program...")
+        exit()
     
     # Check if the URL is allowed to be scraped by robots.txt
     # robots_url = url + "/robots.txt"
@@ -95,36 +160,7 @@ def main():
     # else:
         # If the website allows scraping, proceed with the scraping
 
-    # Print the current page being scraped
-    print(f"Scraping {url}...")
     
-    # Load the webpage and parse the HTML content
-    soup = load_page_with_progress(url)
-   
-    if soup:
-        # Find all the links on the page
-        all_links = soup.find_all("a")
-
-        # Loop through all the links and get the href attribute
-        for link in all_links:
-            # Get the href attribute of the link
-            href = link.get("href")
-            data.append(href)
-
-        # Print the number of links found on the page
-        print(f"Found {len(data)} links on {url}.")
-
-        # Convert the list to a DataFrame and save it to a CSV file
-        df = pd.DataFrame(data, columns=["link"])
-        df.to_csv("links.csv", index=False)
-        print("Scraping complete!")
-    
-    # Ask the user if they want to scrape another URL
-    if input("Do you want to scrape another URL? (y/n): ").lower() == "y":
-        main()
-    else:
-        print("Goodbye!")
-
 # Sort the data
 # data.sort()
 
