@@ -17,15 +17,19 @@ def get_user_input():
     Get the URL input from the user and validate it.
     """
     while True:
-        url = input("Enter the URL you want to scrape: \n")
-        # Check if the URL starts with "http://" or "https://"
-        if not url.startswith(("http://", "https://")):
-            # If not, add "http://" to the beginning of the URL
-            url = "https://" + url
-        if validate_url(url):
-            return url
-        else:
-            print("Invalid URL. Please try again.")
+        try:
+            url = input("Enter the URL you want to scrape: \n")
+            # Check if the URL starts with "http://" or "https://"
+            if not url.startswith(("http://", "https://")):
+                # If not, add "http://" to the beginning of the URL
+                url = "https://" + url
+            if validate_url(url):
+                return url
+            else:
+                print("Invalid URL. Please try again.")
+        except KeyboardInterrupt:
+            print("\nProgram terminated by user.")
+            exit()
 
 def validate_url(url):
     """
@@ -35,29 +39,37 @@ def validate_url(url):
         response = requests.head(url, allow_redirects=True, stream=True, timeout=5)
         print("Status code: " + str(response.status_code))
         return response.status_code == 200
-    except (requests.exceptions.RequestException, ValueError):
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return False
+    except ValueError as e:
+        print(f"Invalid URL: {e}")
         return False
 
 def load_page_with_progress(url):
     """
     Load a webpage and display a progress bar while loading.
     """
-    # Get the HTML content of the webpage
-    response = requests.get(url, stream=True)
+    try:
+        # Get the HTML content of the webpage
+        response = requests.get(url, stream=True)
 
-    # Store the response content in a variable
-    html_content = response.content
+        # Store the response content in a variable
+        html_content = response.content
 
-    # Display the progress bar while reading the content
-    with tqdm(total=len(html_content), unit="B", unit_scale=True, desc="Loading", unit_divisor=2048) as progress_bar:
-        for chunk in response.iter_content(chunk_size=1024):
-            progress_bar.update(len(chunk))
+        # Display the progress bar while reading the content
+        with tqdm(total=len(html_content), unit="B", unit_scale=True, desc="Loading", unit_divisor=2048) as progress_bar:
+            for chunk in response.iter_content(chunk_size=1024):
+                progress_bar.update(len(chunk))
 
-    # Parse the HTML content using BeautifulSoup
-    soup = BeautifulSoup(html_content, "html.parser")
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(html_content, "html.parser")
+        
+        return soup
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {e}")
+        return None
     
-    return soup
-
 def main():
     """
     The main function of the Link-Validator Tool.
@@ -89,22 +101,23 @@ def main():
     # Load the webpage and parse the HTML content
     soup = load_page_with_progress(url)
    
-    # Find all the links on the page
-    all_links = soup.find_all("a")
+    if soup:
+        # Find all the links on the page
+        all_links = soup.find_all("a")
 
-    # Loop through all the links and get the href attribute
-    for link in all_links:
-        # Get the href attribute of the link
-        href = link.get("href")
-        data.append(href)
+        # Loop through all the links and get the href attribute
+        for link in all_links:
+            # Get the href attribute of the link
+            href = link.get("href")
+            data.append(href)
 
-    # Print the number of links found on the page
-    print(f"Found {len(data)} links on {url}.")
+        # Print the number of links found on the page
+        print(f"Found {len(data)} links on {url}.")
 
-    # Convert the list to a DataFrame and save it to a CSV file
-    df = pd.DataFrame(data, columns=["link"])
-    df.to_csv("links.csv", index=False)
-    print("Scraping complete!")
+        # Convert the list to a DataFrame and save it to a CSV file
+        df = pd.DataFrame(data, columns=["link"])
+        df.to_csv("links.csv", index=False)
+        print("Scraping complete!")
     
     # Ask the user if they want to scrape another URL
     if input("Do you want to scrape another URL? (y/n): ").lower() == "y":
