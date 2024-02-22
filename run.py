@@ -2,6 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+def print_instructions():
+    print("Welcome to the Link-Validator Tool!")
+    print("This tool allows you to scrape a webpage and validate all the links.")
+    print("Please enter the URL you want to scrape below.")
+    print("")
+
 def get_user_input():
     while True:
         url = input("Enter the URL you want to scrape: \n")
@@ -23,6 +29,7 @@ def validate_url(url):
         return False
 
 def main():
+    print_instructions()
     url = get_user_input()
     print("You entered: " + url)
     data = []
