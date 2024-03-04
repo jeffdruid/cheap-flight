@@ -7,9 +7,8 @@ def print_instructions():
     """
     Display the instructions for using the Link-Validator Tool.
     """
-    print("Welcome to the Link-Validator Tool!")
-    print("This tool allows you to scrape a webpage and validate all the links.")
-    print("Please enter the URL you want to scrape below.")
+    print("\nWelcome to the Link-Validator Tool!\n")
+    print("This tool allows you to scrape a webpage and validate all the links.\n")
     print("Please select an option from the menu below:")
     print("1. Scrape and validate links from a webpage")
     print("2. Display all links scraped from the last webpage")
@@ -79,7 +78,7 @@ def get_url_input():
     """
     while True:
         try:
-            url = input("Enter the URL you want to scrape: \n")
+            url = input("\nEnter the URL you want to scrape: \n")
             # Check if the URL starts with "http://" or "https://"
             if not url.startswith(("http://", "https://")):
                 # If not, add "http://" to the beginning of the URL
@@ -135,30 +134,22 @@ def main():
     """
     The main function of the Link-Validator Tool.
     """
-    print_instructions()
-    choice = get_user_input()
-    
-    if choice == 1:
-        scrape_and_validate_links()
-    elif choice == 2:
-        display_all_links()
-    elif choice == 0:
-        print("Exiting the program...")
+    try:
+        print_instructions()
+        choice = get_user_input()
+        
+        if choice == 1:
+            scrape_and_validate_links()
+            main()
+        elif choice == 2:
+            display_all_links()
+            main()
+        elif choice == 0:
+            print("Exiting the program...")
+            exit()
+    except KeyboardInterrupt:
+        print("\nProgram terminated by user.")
         exit()
-    
-    # Check if the URL is allowed to be scraped by robots.txt
-    # robots_url = url + "/robots.txt"
-    # robots_response = requests.get(robots_url)
-    # robots_content = robots_response.text
-
-    # Check if the website allows scraping
-    # if "User-agent: *" in robots_content and "Disallow: /" in robots_content:
-    #     print("This website does not allow scraping.")
-    #     print("Please check the robots.txt file for more information.")
-    #     print(robots_url)
-    #     proceed = False
-    # else:
-        # If the website allows scraping, proceed with the scraping
 
     
 # Sort the data
