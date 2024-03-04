@@ -12,6 +12,8 @@ def print_instructions():
     print("Please select an option from the menu below:")
     print("1. Scrape and validate links from a webpage")
     print("2. Display all links scraped from the last webpage")
+    print("3. Display all duplicated links scraped from the last webpage")
+    print("4. Sort the data in ascending order")
     print("0. Exit")
     print("")
 
@@ -21,11 +23,11 @@ def get_user_input():
     """
     while True:
         try:
-            choice = int(input("Enter your choice (1, 2 or 0): "))
-            if choice in [1, 2, 0]:
+            choice = int(input("Enter your choice (1, 2, 3, 4 or 0): "))
+            if choice in [1, 2, 3, 4, 0]:
                 return choice
             else:
-                print("Invalid choice. Please enter 1, 2 or 0.")
+                print("Invalid choice. Please enter 1, 2, 3, 4 or 0.")
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -129,7 +131,19 @@ def load_page_with_progress(url):
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
         return None
-    
+
+def display_duplicated_links():
+    """
+    Display all duplicated links scraped from the last webpage.
+    """
+    try:
+        # Load the CSV file containing links
+        df = pd.read_csv("links.csv")
+        duplicated_links = df[df.duplicated(subset="link")]
+        print("\nDuplicated links: " +  str(len(duplicated_links)))
+    except FileNotFoundError:
+        print("\nNo links found. Please scrape a webpage first.")
+
 def main():
     """
     The main function of the Link-Validator Tool.
@@ -144,31 +158,35 @@ def main():
         elif choice == 2:
             display_all_links()
             main()
+        elif choice == 3:
+            display_duplicated_links()
+            main()
+        elif choice == 4:
+            sort_data()
+            main()
         elif choice == 0:
-            print("Exiting the program...")
+            print("\nExiting the program...")
             exit()
     except KeyboardInterrupt:
         print("\nProgram terminated by user.")
         exit()
-
-    
-# Sort the data
-# data.sort()
-
-# test - URL: https://jeffdruid.github.io/fitzgeralds-menu/menu
+ 
+def sort_data():
+    """
+    Sort the data in ascending order.
+    """
+    try:
+        # Load the CSV file containing links
+        df = pd.read_csv("links.csv")
+        df.sort_values(by="link", inplace=True)
+        df.to_csv("links.csv", index=False)
+        print("\nData sorted successfully.")
+    except FileNotFoundError:
+        print("\nNo links found. Please scrape a webpage first.")
 
 # TODO - Add link validation to check if the link is valid
-# TODO - Add filtering to remove duplicate links
 # TODO - Add filtering types (e.g. only internal links, only external links)
-# TODO - Add a function to save the data to a file
-# TODO - Add a function to load the data from a file
 # TODO - Add a function to handle different types of data (e.g. images, videos, text)
-# TODO - Add error handling for requests where url is invalid or inaccessible
-# TODO - Add a function to sort the data
-# TODO - Add a function to display the data
-# TODO - Add a function to search the data
-# TODO - Add a function to filter the data
-# TODO - Add a function to handle pagination
 # TODO - Add a function to handle proxies
 # TODO - Add a function to handle user agents
 # TODO - Add a function to handle rate limits
