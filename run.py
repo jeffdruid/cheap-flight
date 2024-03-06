@@ -2,19 +2,23 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 from tqdm import tqdm
+import colorama
+from colorama import Fore, Style
 
+colorama.init()  # Initialize colorama
+print(Fore.GREEN + "\nWelcome to the Link-Validator Tool!\n" + Style.RESET_ALL)
+print(Fore.YELLOW + "This tool allows you to scrape a webpage and validate all the links." + Style.RESET_ALL)
+    
 def print_instructions():
     """
     Display the instructions for using the Link-Validator Tool.
-    """
-    print("\nWelcome to the Link-Validator Tool!\n")
-    print("This tool allows you to scrape a webpage and validate all the links.\n")
-    print("Please select an option from the menu below:")
-    print("1. Scrape and validate links from a webpage")
+    """    
+    print("\nPlease select an option from the menu below:")
+    print(Fore.CYAN + "1. Scrape and validate links from a webpage")
     print("2. Display all links scraped from the last webpage")
     print("3. Display all duplicated links scraped from the last webpage")
     print("4. Sort the data in ascending order")
-    print("0. Exit")
+    print("0. Exit" + Style.RESET_ALL)
     print("")
 
 def get_user_input():
@@ -23,11 +27,11 @@ def get_user_input():
     """
     while True:
         try:
-            choice = int(input("Enter your choice (1, 2, 3, 4 or 0): "))
+            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4 or 0): " + Style.RESET_ALL))
             if choice in [1, 2, 3, 4, 0]:
                 return choice
             else:
-                print("Invalid choice. Please enter 1, 2, 3, 4 or 0.")
+                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4 or 0.\n" + Style.RESET_ALL)
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -61,7 +65,7 @@ def scrape_and_validate_links():
         # Convert the list to a DataFrame and save it to a CSV file
         df = pd.DataFrame(data, columns=["link"])
         df.to_csv("links.csv", index=False)
-        print("Scraping complete!")
+        print("Scraping complete!\n")
 
 def display_all_links():
     """
@@ -140,7 +144,7 @@ def display_duplicated_links():
         # Load the CSV file containing links
         df = pd.read_csv("links.csv")
         duplicated_links = df[df.duplicated(subset="link")]
-        print("\nDuplicated links: " +  str(len(duplicated_links)))
+        print("\n" + Fore.GREEN + "Duplicated links:" + Style.RESET_ALL + " " + str(len(duplicated_links)))
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
 
@@ -165,10 +169,10 @@ def main():
             sort_data()
             main()
         elif choice == 0:
-            print("\nExiting the program...")
+            print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
             exit()
     except KeyboardInterrupt:
-        print("\nProgram terminated by user.")
+        print(Fore.RED + "\nProgram terminated by user." + Style.RESET_ALL)
         exit()
  
 def sort_data():
@@ -180,7 +184,7 @@ def sort_data():
         df = pd.read_csv("links.csv")
         df.sort_values(by="link", inplace=True)
         df.to_csv("links.csv", index=False)
-        print("\nData sorted successfully.")
+        print("\n" + Fore.GREEN + "Data sorted successfully." + Style.RESET_ALL)
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
 
