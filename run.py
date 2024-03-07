@@ -18,6 +18,7 @@ def print_instructions():
     print("2. Display all links scraped from the last webpage")
     print("3. Display all duplicated links scraped from the last webpage")
     print("4. Sort the data in ascending order")
+    print("5. Sort the data by type")
     print("0. Exit" + Style.RESET_ALL)
     print("")
 
@@ -27,11 +28,11 @@ def get_user_input():
     """
     while True:
         try:
-            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4 or 0): " + Style.RESET_ALL))
-            if choice in [1, 2, 3, 4, 0]:
+            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5 or 0): " + Style.RESET_ALL))
+            if choice in [1, 2, 3, 4, 5, 0]:
                 return choice
             else:
-                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4 or 0.\n" + Style.RESET_ALL)
+                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5 or 0.\n" + Style.RESET_ALL)
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -168,6 +169,9 @@ def main():
         elif choice == 4:
             sort_data()
             main()
+        elif choice == 5:
+            sort_data_by_type()
+            main()
         elif choice == 0:
             print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
             exit()
@@ -187,6 +191,32 @@ def sort_data():
         print("\n" + Fore.GREEN + "Data sorted successfully." + Style.RESET_ALL)
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
+
+def sort_data_by_type():
+    """
+    Sort the data by type.
+    """
+    try:
+        # Load the CSV file containing links
+        df = pd.read_csv("links.csv")
+        df['type'] = df['link'].apply(get_link_type)
+        df.sort_values(by="type", inplace=True)
+        df.to_csv("links.csv", index=False)
+        print("\n" + Fore.GREEN + "Data sorted by type successfully." + Style.RESET_ALL)
+    except FileNotFoundError:
+        print("\nNo links found. Please scrape a webpage first.")
+
+def get_link_type(link):
+    """
+    Get the type of the link.
+    """
+    if link.startswith("http://") or link.startswith("https://"):
+        return "external"
+    else:
+        return "internal"
+
+
+
 
 # TODO - Add link validation to check if the link is valid
 # TODO - Add filtering types (e.g. only internal links, only external links)
