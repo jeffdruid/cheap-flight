@@ -22,6 +22,8 @@ def print_instructions():
     print("5. Sort the data by type")
     print("6. Open the links.csv file in a new tab")
     print("7. Check for missing alt tags and aria labels in the scraped links")
+    print("8. Check for broken links (Coming soon)")
+    print("9. Open GitHub")
     print("0. Exit" + Style.RESET_ALL)
     print("")
 
@@ -31,11 +33,11 @@ def get_user_input():
     """
     while True:
         try:
-            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 0): " + Style.RESET_ALL))
-            if choice in [1, 2, 3, 4, 5, 6, 7, 0]:
+            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + Style.RESET_ALL))
+            if choice in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]:
                 return choice
             else:
-                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7 or 0.\n" + Style.RESET_ALL)
+                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + Style.RESET_ALL)
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -217,7 +219,17 @@ def check_missing_alt_aria():
         print(missing_aria)
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
-        
+   
+def open_github():
+    """
+    Open GitHub in a new tab.
+    """
+    try:
+        webbrowser.open_new_tab("https://github.com/jeffdruid/link-validator")
+        print("\n" + Fore.GREEN + "GitHub has been opened in a new tab." + Style.RESET_ALL)
+    except FileNotFoundError:
+        print("\nFailed to open GitHub. Please check your internet connection.")
+
 def main():
     """
     The main function of the Link-Validator Tool.
@@ -246,6 +258,9 @@ def main():
             main()
         elif choice == 7:
             check_missing_alt_aria()
+            main()
+        elif choice == 9:
+            open_github()
             main()
         elif choice == 0:
             print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
