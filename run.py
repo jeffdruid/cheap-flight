@@ -5,11 +5,35 @@ from tqdm import tqdm
 import colorama
 from colorama import Fore, Style
 import os
+import plotly.express as px
 
 colorama.init()  # Initialize colorama
 print(Fore.GREEN + "\nWelcome to the Link-Validator Tool!\n" + Style.RESET_ALL)
 print(Fore.YELLOW + "This tool allows you to scrape a webpage and validate all the links." + Style.RESET_ALL)
-    
+
+def visualize_link_data():
+    """
+    Visualize link data using interactive plots.
+    """
+    try:
+        # Load the CSV file containing links
+        df = pd.read_csv("links.csv")
+
+        # Create a histogram of link distributions
+        fig = px.histogram(df, x="link")
+        fig.show()
+
+        # Create a pie chart of link types
+        fig = px.pie(df, names="type")
+        fig.show()
+
+        # Create an interactive graph of link statuses
+        fig = px.scatter(df, x="link", y="status_code", color="status_code")
+        fig.show()
+
+    except FileNotFoundError:
+        print("\nNo links found. Please scrape a webpage first.")
+
 def print_instructions():
     """
     Display the instructions for using the Link-Validator Tool.
@@ -34,7 +58,7 @@ def get_user_input():
     while True:
         try:
             choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + Style.RESET_ALL))
-            if choice in [1, 2, 3, 4, 5, 6, 7, 9, 0]:
+            if choice in [1, 2, 3, 4, 5, 6, 7, 9, 10, 0]:
                 return choice
             else:
                 print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + Style.RESET_ALL)
@@ -264,6 +288,9 @@ def main():
             main()
         elif choice == 9:
             open_github()
+            main()
+        elif choice == 10:
+            visualize_link_data()
             main()
         elif choice == 0:
             print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
