@@ -4,7 +4,6 @@ import pandas as pd
 from tqdm import tqdm
 import colorama
 from colorama import Fore, Style
-import webbrowser
 import os
 
 colorama.init()  # Initialize colorama
@@ -196,7 +195,7 @@ def open_links_csv():
             Open the links.csv file in a new tab.
             """
             try:
-                webbrowser.open_new_tab("links.csv")
+                os.system("start links.csv")
                 print("\n" + Fore.GREEN + "The links.csv file has been opened in a new tab." + Style.RESET_ALL)
             except FileNotFoundError:
                 print("\nNo links found. Please scrape a webpage first.")
