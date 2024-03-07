@@ -21,6 +21,7 @@ def print_instructions():
     print("4. Sort the data in ascending order")
     print("5. Sort the data by type")
     print("6. Open the links.csv file in a new tab")
+    print("7. Check for missing alt tags and aria labels in the scraped links")
     print("0. Exit" + Style.RESET_ALL)
     print("")
 
@@ -30,11 +31,11 @@ def get_user_input():
     """
     while True:
         try:
-            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6 or 0): " + Style.RESET_ALL))
-            if choice in [1, 2, 3, 4, 5, 6, 0]:
+            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7 or 0): " + Style.RESET_ALL))
+            if choice in [1, 2, 3, 4, 5, 6, 7, 0]:
                 return choice
             else:
-                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6 or 0.\n" + Style.RESET_ALL)
+                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7 or 0.\n" + Style.RESET_ALL)
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -193,9 +194,30 @@ def open_links_csv():
             """
             try:
                 webbrowser.open_new_tab("links.csv")
+                print("\n" + Fore.GREEN + "The links.csv file has been opened in a new tab." + Style.RESET_ALL)
             except FileNotFoundError:
                 print("\nNo links found. Please scrape a webpage first.")
 
+def check_missing_alt_aria():
+    """
+    Check for missing alt tags and aria labels in the scraped links.
+    """
+    try:
+        # Load the CSV file containing links
+        df = pd.read_csv("links.csv")
+        
+        # Check for missing alt tags
+        missing_alt = df[df["link"].str.contains("<img") & ~df["link"].str.contains("alt=")]
+        print("\n" + Fore.GREEN + "Links with missing alt tags:" + Style.RESET_ALL)
+        print(missing_alt)
+        
+        # Check for missing aria labels
+        missing_aria = df[df["link"].str.contains("<a") & ~df["link"].str.contains("aria-label=")]
+        print("\n" + Fore.GREEN + "Links with missing aria labels:" + Style.RESET_ALL)
+        print(missing_aria)
+    except FileNotFoundError:
+        print("\nNo links found. Please scrape a webpage first.")
+        
 def main():
     """
     The main function of the Link-Validator Tool.
@@ -222,6 +244,9 @@ def main():
         elif choice == 6:
             open_links_csv()
             main()
+        elif choice == 7:
+            check_missing_alt_aria()
+            main()
         elif choice == 0:
             print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
             exit()
@@ -230,10 +255,8 @@ def main():
         exit()
 
 # TODO - Add link validation to check if the link is valid
-# TODO - Add a function to handle proxies
-# TODO - Add a function to handle user agents
-# TODO - Add a function to handle rate limits
-# TODO - Add a function to handle timeouts
+# TODO - check for broken links
+# TODO - check for redirects
 
 if __name__ == "__main__":
     main()
