@@ -34,7 +34,7 @@ def get_user_input():
     while True:
         try:
             choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + Style.RESET_ALL))
-            if choice in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]:
+            if choice in [1, 2, 3, 4, 5, 6, 7, 9, 0]:
                 return choice
             else:
                 print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + Style.RESET_ALL)
