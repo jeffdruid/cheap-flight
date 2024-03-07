@@ -4,6 +4,7 @@ import pandas as pd
 from tqdm import tqdm
 import colorama
 from colorama import Fore, Style
+import webbrowser
 
 colorama.init()  # Initialize colorama
 print(Fore.GREEN + "\nWelcome to the Link-Validator Tool!\n" + Style.RESET_ALL)
@@ -19,6 +20,7 @@ def print_instructions():
     print("3. Display all duplicated links scraped from the last webpage")
     print("4. Sort the data in ascending order")
     print("5. Sort the data by type")
+    print("6. Open the links.csv file in a new tab")
     print("0. Exit" + Style.RESET_ALL)
     print("")
 
@@ -28,11 +30,11 @@ def get_user_input():
     """
     while True:
         try:
-            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5 or 0): " + Style.RESET_ALL))
-            if choice in [1, 2, 3, 4, 5, 0]:
+            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6 or 0): " + Style.RESET_ALL))
+            if choice in [1, 2, 3, 4, 5, 6, 0]:
                 return choice
             else:
-                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5 or 0.\n" + Style.RESET_ALL)
+                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6 or 0.\n" + Style.RESET_ALL)
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -149,36 +151,6 @@ def display_duplicated_links():
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
 
-def main():
-    """
-    The main function of the Link-Validator Tool.
-    """
-    try:
-        print_instructions()
-        choice = get_user_input()
-        
-        if choice == 1:
-            scrape_and_validate_links()
-            main()
-        elif choice == 2:
-            display_all_links()
-            main()
-        elif choice == 3:
-            display_duplicated_links()
-            main()
-        elif choice == 4:
-            sort_data()
-            main()
-        elif choice == 5:
-            sort_data_by_type()
-            main()
-        elif choice == 0:
-            print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
-            exit()
-    except KeyboardInterrupt:
-        print(Fore.RED + "\nProgram terminated by user." + Style.RESET_ALL)
-        exit()
- 
 def sort_data():
     """
     Sort the data in ascending order.
@@ -215,12 +187,49 @@ def get_link_type(link):
     else:
         return "internal"
 
+def open_links_csv():
+            """
+            Open the links.csv file in a new tab.
+            """
+            try:
+                webbrowser.open_new_tab("links.csv")
+            except FileNotFoundError:
+                print("\nNo links found. Please scrape a webpage first.")
 
-
+def main():
+    """
+    The main function of the Link-Validator Tool.
+    """
+    try:
+        print_instructions()
+        choice = get_user_input()
+        
+        if choice == 1:
+            scrape_and_validate_links()
+            main()
+        elif choice == 2:
+            display_all_links()
+            main()
+        elif choice == 3:
+            display_duplicated_links()
+            main()
+        elif choice == 4:
+            sort_data()
+            main()
+        elif choice == 5:
+            sort_data_by_type()
+            main()
+        elif choice == 6:
+            open_links_csv()
+            main()
+        elif choice == 0:
+            print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
+            exit()
+    except KeyboardInterrupt:
+        print(Fore.RED + "\nProgram terminated by user." + Style.RESET_ALL)
+        exit()
 
 # TODO - Add link validation to check if the link is valid
-# TODO - Add filtering types (e.g. only internal links, only external links)
-# TODO - Add a function to handle different types of data (e.g. images, videos, text)
 # TODO - Add a function to handle proxies
 # TODO - Add a function to handle user agents
 # TODO - Add a function to handle rate limits
