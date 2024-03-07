@@ -5,6 +5,7 @@ from tqdm import tqdm
 import colorama
 from colorama import Fore, Style
 import webbrowser
+import os
 
 colorama.init()  # Initialize colorama
 print(Fore.GREEN + "\nWelcome to the Link-Validator Tool!\n" + Style.RESET_ALL)
@@ -225,7 +226,7 @@ def open_github():
     Open GitHub in a new tab.
     """
     try:
-        webbrowser.open_new_tab("https://github.com/jeffdruid/link-validator")
+        os.system("start https://github.com/jeffdruid/link-validator")
         print("\n" + Fore.GREEN + "GitHub has been opened in a new tab." + Style.RESET_ALL)
     except FileNotFoundError:
         print("\nFailed to open GitHub. Please check your internet connection.")
@@ -270,8 +271,5 @@ def main():
         exit()
 
 # TODO - Add link validation to check if the link is valid
-# TODO - check for broken links
-# TODO - check for redirects
-
 if __name__ == "__main__":
     main()
