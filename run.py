@@ -194,6 +194,7 @@ def open_links_csv():
             """
             Open the links.csv file in a new tab.
             """
+            
             try:
                 os.system("start links.csv")
                 print("\n" + Fore.GREEN + "The links.csv file has been opened in a new tab." + Style.RESET_ALL)
@@ -222,8 +223,10 @@ def check_missing_alt_aria():
    
 def open_github():
     """
-    Open GitHub in a new tab.
+    Display the link to GitHub.
     """
+    github_link = "https://github.com/jeffdruid/link-validator"
+    print("\n" + Fore.GREEN + "GitHub link: " + github_link + Style.RESET_ALL)
     try:
         os.system("start https://github.com/jeffdruid/link-validator")
         print("\n" + Fore.GREEN + "GitHub has been opened in a new tab." + Style.RESET_ALL)
