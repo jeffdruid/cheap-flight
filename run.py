@@ -5,34 +5,10 @@ from tqdm import tqdm
 import colorama
 from colorama import Fore, Style
 import os
-import plotly.express as px
 
 colorama.init()  # Initialize colorama
 print(Fore.GREEN + "\nWelcome to the Link-Validator Tool!\n" + Style.RESET_ALL)
 print(Fore.YELLOW + "This tool allows you to scrape a webpage and validate all the links." + Style.RESET_ALL)
-
-def visualize_link_data():
-    """
-    Visualize link data using interactive plots.
-    """
-    try:
-        # Load the CSV file containing links
-        df = pd.read_csv("links.csv")
-
-        # Create a histogram of link distributions
-        fig = px.histogram(df, x="link")
-        fig.show()
-
-        # Create a pie chart of link types
-        fig = px.pie(df, names="type")
-        fig.show()
-
-        # Create an interactive graph of link statuses
-        fig = px.scatter(df, x="link", y="status_code", color="status_code")
-        fig.show()
-
-    except FileNotFoundError:
-        print("\nNo links found. Please scrape a webpage first.")
 
 def print_instructions():
     """
@@ -58,7 +34,7 @@ def get_user_input():
     while True:
         try:
             choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + Style.RESET_ALL))
-            if choice in [1, 2, 3, 4, 5, 6, 7, 9, 10, 0]:
+            if choice in [1, 2, 3, 4, 5, 6, 7, 9, 0]:
                 return choice
             else:
                 print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + Style.RESET_ALL)
@@ -257,6 +233,20 @@ def open_github():
     except FileNotFoundError:
         print("\nFailed to open GitHub. Please check your internet connection.")
 
+def ask_continue():
+    """
+    Ask the user if they want to continue.
+    """
+    while True:
+        choice = input("\nDo you want to continue? (y/n): ")
+        if choice.lower() in ["y", "yes"]:
+            main()
+        elif choice.lower() in ["n", "no"]:
+            print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
+            exit()
+        else:
+            print(Fore.RED + "Invalid choice. Please enter 'y' or 'n'." + Style.RESET_ALL)
+
 def main():
     """
     The main function of the Link-Validator Tool.
@@ -267,31 +257,28 @@ def main():
         
         if choice == 1:
             scrape_and_validate_links()
-            main()
+            ask_continue()
         elif choice == 2:
             display_all_links()
-            main()
+            ask_continue()
         elif choice == 3:
             display_duplicated_links()
-            main()
+            ask_continue()
         elif choice == 4:
             sort_data()
-            main()
+            ask_continue()
         elif choice == 5:
             sort_data_by_type()
-            main()
+            ask_continue()
         elif choice == 6:
             open_links_csv()
-            main()
+            ask_continue()
         elif choice == 7:
             check_missing_alt_aria()
-            main()
+            ask_continue()
         elif choice == 9:
             open_github()
-            main()
-        elif choice == 10:
-            visualize_link_data()
-            main()
+            ask_continue()
         elif choice == 0:
             print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
             exit()
@@ -299,6 +286,7 @@ def main():
         print(Fore.RED + "\nProgram terminated by user." + Style.RESET_ALL)
         exit()
 
-# TODO - Add link validation to check if the link is valid
 if __name__ == "__main__":
     main()
+    
+# TODO - Add link validation to check if the link is valid
