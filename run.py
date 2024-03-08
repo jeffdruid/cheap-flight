@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from tqdm import tqdm
 import colorama
-from colorama import Fore, Style
+from colorama import Back, Fore, Style
 import os
 
 #constants
@@ -11,6 +11,9 @@ RED = Fore.RED
 GREEN = Fore.GREEN
 YELLOW = Fore.YELLOW
 CYAN = Fore.CYAN
+MAGENTA = Fore.MAGENTA
+WHITE = Fore.WHITE
+
 RESET = Style.RESET_ALL
 
 
@@ -27,7 +30,7 @@ def print_welcome_message():
     """
     Print the welcome message for the Link-Validator Tool.
     """
-    print(GREEN + "\nWelcome to the Link-Validator Tool!\n" + YELLOW + "This tool allows you to scrape a webpage and validate all the links." + RESET)
+    print(Style.BRIGHT + Back.MAGENTA + CYAN + "\nWelcome to the Link-Validator Tool!\n" + RESET + YELLOW + "\nThis tool allows you to scrape a webpage and validate all the links." + RESET)
 
 print_welcome_message()
 
