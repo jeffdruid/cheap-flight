@@ -6,16 +6,37 @@ import colorama
 from colorama import Fore, Style
 import os
 
-colorama.init()  # Initialize colorama
-print(Fore.GREEN + "\nWelcome to the Link-Validator Tool!\n" + Style.RESET_ALL)
-print(Fore.YELLOW + "This tool allows you to scrape a webpage and validate all the links." + Style.RESET_ALL)
+#constants
+RED = Fore.RED
+GREEN = Fore.GREEN
+YELLOW = Fore.YELLOW
+CYAN = Fore.CYAN
+RESET = Style.RESET_ALL
+
+
+
+def initialize_colorama():
+    """
+    Initialize colorama and set the color for the welcome message.
+    """
+    colorama.init()
+
+initialize_colorama()
+
+def print_welcome_message():
+    """
+    Print the welcome message for the Link-Validator Tool.
+    """
+    print(GREEN + "\nWelcome to the Link-Validator Tool!\n" + YELLOW + "This tool allows you to scrape a webpage and validate all the links." + RESET)
+
+print_welcome_message()
 
 def print_instructions():
     """
     Display the instructions for using the Link-Validator Tool.
     """    
     print("\nPlease select an option from the menu below:")
-    print(Fore.CYAN + "1. Scrape and validate links from a webpage")
+    print(CYAN + "1. Scrape and validate links from a webpage")
     print("2. Display all links scraped from the last webpage")
     print("3. Display all duplicated links scraped from the last webpage")
     print("4. Sort the data in ascending order")
@@ -24,7 +45,7 @@ def print_instructions():
     print("7. Check for missing alt tags and aria labels in the scraped links")
     print("8. Check for broken links (Coming soon)")
     print("9. Open GitHub")
-    print("0. Exit" + Style.RESET_ALL)
+    print("0. Exit" + RESET)
     print("")
 
 def get_user_input():
@@ -33,11 +54,11 @@ def get_user_input():
     """
     while True:
         try:
-            choice = int(input(Fore.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + Style.RESET_ALL))
+            choice = int(input(YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + RESET))
             if choice in [1, 2, 3, 4, 5, 6, 7, 9, 0]:
                 return choice
             else:
-                print(Fore.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + Style.RESET_ALL)
+                print(RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + RESET)
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -150,7 +171,7 @@ def display_duplicated_links():
         # Load the CSV file containing links
         df = pd.read_csv("links.csv")
         duplicated_links = df[df.duplicated(subset="link")]
-        print("\n" + Fore.GREEN + "Duplicated links:" + Style.RESET_ALL + " " + str(len(duplicated_links)))
+        print("\n" + GREEN + "Duplicated links:" + RESET + " " + str(len(duplicated_links)))
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
 
@@ -163,7 +184,7 @@ def sort_data():
         df = pd.read_csv("links.csv")
         df.sort_values(by="link", inplace=True)
         df.to_csv("links.csv", index=False)
-        print("\n" + Fore.GREEN + "Data sorted successfully." + Style.RESET_ALL)
+        print("\n" + GREEN + "Data sorted successfully." + RESET)
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
 
@@ -177,7 +198,7 @@ def sort_data_by_type():
         df['type'] = df['link'].apply(get_link_type)
         df.sort_values(by="type", inplace=True)
         df.to_csv("links.csv", index=False)
-        print("\n" + Fore.GREEN + "Data sorted by type successfully." + Style.RESET_ALL)
+        print("\n" + GREEN + "Data sorted by type successfully." + RESET)
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
 
@@ -197,7 +218,7 @@ def open_links_csv():
             
             try:
                 os.system("start links.csv")
-                print("\n" + Fore.GREEN + "The links.csv file has been opened in a new tab." + Style.RESET_ALL)
+                print("\n" + GREEN + "The links.csv file has been opened in a new tab." + RESET)
             except FileNotFoundError:
                 print("\nNo links found. Please scrape a webpage first.")
 
@@ -211,12 +232,12 @@ def check_missing_alt_aria():
         
         # Check for missing alt tags
         missing_alt = df[df["link"].str.contains("<img") & ~df["link"].str.contains("alt=")]
-        print("\n" + Fore.GREEN + "Links with missing alt tags:" + Style.RESET_ALL)
+        print("\n" + GREEN + "Links with missing alt tags:" + RESET)
         print(missing_alt)
         
         # Check for missing aria labels
         missing_aria = df[df["link"].str.contains("<a") & ~df["link"].str.contains("aria-label=")]
-        print("\n" + Fore.GREEN + "Links with missing aria labels:" + Style.RESET_ALL)
+        print("\n" + GREEN + "Links with missing aria labels:" + RESET)
         print(missing_aria)
     except FileNotFoundError:
         print("\nNo links found. Please scrape a webpage first.")
@@ -226,10 +247,10 @@ def open_github():
     Display the link to GitHub.
     """
     github_link = "https://github.com/jeffdruid/link-validator"
-    print("\n" + Fore.GREEN + "GitHub link: " + github_link + Style.RESET_ALL)
+    print("\n" + GREEN + "GitHub link: " + github_link + RESET)
     try:
         os.system("start https://github.com/jeffdruid/link-validator")
-        print("\n" + Fore.GREEN + "GitHub has been opened in a new tab." + Style.RESET_ALL)
+        print("\n" + GREEN + "GitHub has been opened in a new tab." + RESET)
     except FileNotFoundError:
         print("\nFailed to open GitHub. Please check your internet connection.")
 
@@ -242,10 +263,10 @@ def ask_continue():
         if choice.lower() in ["y", "yes"]:
             main()
         elif choice.lower() in ["n", "no"]:
-            print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
+            print(RED + "\nExiting the program..." + RESET)
             exit()
         else:
-            print(Fore.RED + "Invalid choice. Please enter 'y' or 'n'." + Style.RESET_ALL)
+            print(RED + "Invalid choice. Please enter 'y' or 'n'." + RESET)
 
 def main():
     """
@@ -280,10 +301,10 @@ def main():
             open_github()
             ask_continue()
         elif choice == 0:
-            print(Fore.RED + "\nExiting the program..." + Style.RESET_ALL)
+            print(RED + "\nExiting the program..." + RESET)
             exit()
     except KeyboardInterrupt:
-        print(Fore.RED + "\nProgram terminated by user." + Style.RESET_ALL)
+        print(RED + "\nProgram terminated by user." + RESET)
         exit()
 
 if __name__ == "__main__":
