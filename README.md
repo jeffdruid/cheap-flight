@@ -10,6 +10,44 @@
 
 - Check that all links point to existing resources and are not broken or outdated.
 
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Technologies Used](#technologies-used)
+3. [User Stories](#user-stories)
+4. [Wireframe](#wireframe)
+5. [Features](#features)
+   - [Header](#header)
+6. [Troubleshooting](#troubleshooting)
+7. [Testing](#testing)
+   - [Validator Testing](#validator-testing)
+     - [Python](#python)
+   - [Accessibility](#accessibility)
+   - [Lighthouse](#lighthouse)
+   - [Responsiveness](#responsiveness)
+   - [Manual Testing](#manual-testing)
+     - [Cross-browser Compatibility](#cross-browser-compatibility)
+     - [Responsiveness and Device Compatibility](#responsiveness-and-device-compatibility)
+     - [Link Validation](#link-validation)
+     - [Text and Font Readability](#text-and-font-readability)
+     - [Acceptance Test](#acceptance-test)
+     - [Desktop](#desktop)
+     - [Tablet](#tablet)
+     - [Mobile](#mobile)
+8. [Bugs](#bugs)
+   - [Fixed Bugs](#fixed-bugs)
+9. [UI Improvements](#ui-improvements)
+10. [Future Improvements](#future-improvements)
+11. [Deployment](#deployment)
+    - [Cloning & Forking](#cloning--forking)
+    - [Local Deployment](#local-deployment)
+    - [Remote Deployment](#remote-deployment)
+12. [Credits](#credits)
+    - [Source Code](#source-code)
+    - [Icons](#icons)
+    - [Images](#images)
+    - [Useful links](#useful-links)
+
 ## Wireframe
 
 ![Wireframe - Mobile](assets/media/Wireframe-mobile.png)
@@ -84,34 +122,3 @@ Data Visualization
 - [Web Scraping with Python and BeautifulSoup is THIS easy! - Tom's Tech Academy](https://www.youtube.com/watch?v=nBzrMw8hkmY)
 - [Banner - Canva AI](https://www.canva.com)
 - [The Best Websites to Practice Your Web Scraping Skills in 2024 - Proxyway](https://proxyway.com/guides/best-websites-to-practice-your-web-scraping-skills)
-
-# Welcome,
-
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
-
-## Reminders
-
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
-
-## Creating the Heroku app
-
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
-
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
-
-## Constraints
-
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
-
----
-
-Happy coding!
