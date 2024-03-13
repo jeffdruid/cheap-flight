@@ -65,7 +65,7 @@ def get_user_input():
             else:
                 print(RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + RESET)
         except ValueError:
-            print("Invalid input. Please enter a number.")
+            print(RED + "Invalid input. Please enter a number." + RESET)
 
 def get_base_url(url):
     """
@@ -84,11 +84,12 @@ def scrape_and_validate_links():
     data = []
 
     # Print the current page being scraped
-    print(f"Scraping {url}...")
+    print(f"\nScraping {url}...")
 
-    # Load the webpage and parse the HTML content
-    soup = load_page_with_progress(url)
-
+    # # Load the webpage and parse the HTML content
+    # soup = load_page_with_progress(url)
+    
+    soup = BeautifulSoup(requests.get(url).content, "html.parser")
     if soup:
         # Find all the links on the page
         all_links = soup.find_all("a")
@@ -105,7 +106,7 @@ def scrape_and_validate_links():
             data.append(full_link)
 
         # Print the number of links found on the page
-        print(f"Found {len(data)} links on {url}.")
+        print(GREEN + f"Found {len(data)} links on {url}." + RESET)
         
         # Check for broken links
         check_broken_links(data)
@@ -140,7 +141,7 @@ def get_url_input():
     """
     while True:
         try:
-            url = input("\nEnter the URL you want to scrape: \n")
+            url = input(CYAN + "\nEnter the URL you want to scrape: \n" + RESET)
             # Check if the URL starts with "http://" or "https://"
             if not url.startswith(("http://", "https://")):
                 # If not, add "http://" to the beginning of the URL
@@ -148,9 +149,9 @@ def get_url_input():
             if validate_url(url):
                 return url
             else:
-                print("Invalid URL. Please try again.")
+                print(RED + "Invalid URL. Please try again." + RESET)
         except KeyboardInterrupt:
-            print("\nProgram terminated by user.")
+            print(RED + "\nProgram terminated by user." + RESET)
             exit()
 
 def validate_url(url):
@@ -159,38 +160,38 @@ def validate_url(url):
     """
     try:
         response = requests.head(url, allow_redirects=True, stream=True, timeout=5)
-        print("Status code: " + str(response.status_code))
+        print(GREEN + "Status code: " + str(response.status_code) + RESET)
         return response.status_code == 200
     except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
+        print(Back.RED + f"Error: {e}" + RESET)
         return False
     except ValueError as e:
         print(f"Invalid URL: {e}")
         return False
 
-def load_page_with_progress(url):
-    """
-    Load a webpage and display a progress bar while loading.
-    """
-    try:
-        # Get the HTML content of the webpage
-        response = requests.get(url, stream=True)
+# def load_page_with_progress(url):
+#     """
+#     Load a webpage and display a progress bar while loading.
+#     """
+#     try:
+#         # Get the HTML content of the webpage
+#         response = requests.get(url, stream=True)
 
-        # Store the response content in a variable
-        html_content = response.content
+#         # Store the response content in a variable
+#         html_content = response.content
 
-        # Display the progress bar while reading the content
-        with tqdm(total=len(html_content), unit="B", unit_scale=True, desc="Loading", unit_divisor=2048) as progress_bar:
-            for chunk in response.iter_content(chunk_size=1024):
-                progress_bar.update(len(chunk))
+#         # Display the progress bar while reading the content
+#         with tqdm(total=len(html_content), unit="B", unit_scale=True, desc="Loading", unit_divisor=2048) as progress_bar:
+#             for chunk in response.iter_content(chunk_size=1024):
+#                 progress_bar.update(len(chunk))
 
-        # Parse the HTML content using BeautifulSoup
-        soup = BeautifulSoup(html_content, "html.parser")
+#         # Parse the HTML content using BeautifulSoup
+#         soup = BeautifulSoup(html_content, "html.parser")
         
-        return soup
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-        return None
+#         return soup
+#     except requests.exceptions.RequestException as e:
+#         print(f"Error: {e}")
+#         return None
 
 def display_duplicated_links():
     """
@@ -283,7 +284,7 @@ def check_broken_links(links):
     """
     Check for broken links in the provided list of links.
     """
-    print("Checking for broken links...")
+    print(CYAN + "Checking for broken links..." + RESET)
     broken_links = []
     for link in tqdm(links, desc="Checking links", unit="link"):
         try:
@@ -292,14 +293,14 @@ def check_broken_links(links):
                 print(f"Broken link found: {link}")
                 broken_links.append(link)
         except requests.exceptions.RequestException as e:
-            print(f"Error checking link {link}: {e}")
+            print(RED + f"Error checking link {link}: {e}" + RESET)
             broken_links.append(link)
     if broken_links:
-        print("Broken links found:")
+        print(RED + "Broken links found:" + RESET)
         for broken_link in broken_links:
             print(broken_link)
     else:
-        print("No broken links found.")
+        print(GREEN + "No broken links found." + RESET)
 
 def display_broken_links():
     """
@@ -327,7 +328,7 @@ def open_github():
         os.system("start https://github.com/jeffdruid/link-validator")
         print("\n" + GREEN + "GitHub has been opened in a new tab." + RESET)
     except FileNotFoundError:
-        print("\nFailed to open GitHub. Please check your internet connection.")
+        print(RED + "\nFailed to open GitHub. Please check your internet connection." + RESET)
 
 def display_error_message():
     """
@@ -352,7 +353,7 @@ def ask_continue():
     Ask the user if they want to continue.
     """
     while True:
-        choice = input("\nDo you want to continue? (y/n): ")
+        choice = input(MAGENTA + "\nDo you want to continue? (y/n): " + RESET)
         if choice.lower() in ["y", "yes"]:
             main()
         elif choice.lower() in ["n", "no"]:
