@@ -48,7 +48,7 @@ def print_instructions():
     print("5. Sort the data by type")
     print("6. Open the links.csv file in a new tab")
     print("7. Check for missing alt tags and aria labels in the scraped links")
-    print("8. Check for broken links (Coming soon)")
+    print("8. Display broken links from the last webpage")
     print("9. Open GitHub")
     print("0. Exit" + RESET)
     print("")
@@ -60,7 +60,7 @@ def get_user_input():
     while True:
         try:
             choice = int(input(YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + RESET))
-            if choice in [1, 2, 3, 4, 5, 6, 7, 9, 10, 0]:
+            if choice in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0]:
                 return choice
             else:
                 print(RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + RESET)
@@ -301,6 +301,22 @@ def check_broken_links(links):
     else:
         print("No broken links found.")
 
+def display_broken_links():
+    """
+    Display broken links from the last webpage.
+    """
+    try:
+        # Load the CSV file containing links
+        df = pd.read_csv("links.csv")
+        if df.empty:
+            print("No links found.")
+        else:
+            check_broken_links(df['link'])
+    except FileNotFoundError:
+        print(ERROR_MESSAGE)
+    except pd.errors.EmptyDataError:
+        print(ERROR_MESSAGE)
+
 def open_github():
     """
     Display the link to GitHub.
@@ -373,6 +389,9 @@ def main():
             ask_continue()
         elif choice == 7:
             check_missing_alt_aria()
+            ask_continue()
+        elif choice == 8:
+            display_broken_links()
             ask_continue()
         elif choice == 9:
             open_github()
