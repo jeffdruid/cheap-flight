@@ -32,7 +32,7 @@ def print_welcome_message():
     """
     Print the welcome message for the Link-Validator Tool.
     """
-    print(Style.BRIGHT + Back.MAGENTA + BLACK + "\nWelcome to the Link-Validator Tool!\n" + RESET + YELLOW + "\nThis tool allows you to scrape a webpage and validate all the links." + RESET)
+    print(Style.BRIGHT + Back.GREEN + WHITE + "\nWelcome to the Link-Validator Tool!\n" + RESET + YELLOW + "\nThis tool allows you to scrape a webpage and validate all the links." + RESET)
 
 print_welcome_message()
 
@@ -85,9 +85,6 @@ def scrape_and_validate_links():
 
     # Print the current page being scraped
     print(f"\nScraping {url}...")
-
-    # # Load the webpage and parse the HTML content
-    # soup = load_page_with_progress(url)
     
     soup = BeautifulSoup(requests.get(url).content, "html.parser")
     if soup:
@@ -107,6 +104,9 @@ def scrape_and_validate_links():
 
         # Print the number of links found on the page
         print(GREEN + f"Found {len(data)} links on {url}." + RESET)
+        
+        # Check for missing alt tags and aria labels
+        check_missing_alt_aria(all_links)
         
         # Check for broken links
         check_broken_links(data)
@@ -168,30 +168,6 @@ def validate_url(url):
     except ValueError as e:
         print(f"Invalid URL: {e}")
         return False
-
-# def load_page_with_progress(url):
-#     """
-#     Load a webpage and display a progress bar while loading.
-#     """
-#     try:
-#         # Get the HTML content of the webpage
-#         response = requests.get(url, stream=True)
-
-#         # Store the response content in a variable
-#         html_content = response.content
-
-#         # Display the progress bar while reading the content
-#         with tqdm(total=len(html_content), unit="B", unit_scale=True, desc="Loading", unit_divisor=2048) as progress_bar:
-#             for chunk in response.iter_content(chunk_size=1024):
-#                 progress_bar.update(len(chunk))
-
-#         # Parse the HTML content using BeautifulSoup
-#         soup = BeautifulSoup(html_content, "html.parser")
-        
-#         return soup
-#     except requests.exceptions.RequestException as e:
-#         print(f"Error: {e}")
-#         return None
 
 def display_duplicated_links():
     """
@@ -258,28 +234,39 @@ def open_links_csv():
             except FileNotFoundError:
                 print(ERROR_MESSAGE)
 
-def check_missing_alt_aria():
+def check_missing_alt_aria(all_links):
     """
     Check for missing alt tags and aria labels in the scraped links.
     """
     try:
-        # Load the CSV file containing links
-        df = pd.read_csv("links.csv")
-        
-        # Check for missing alt tags
-        missing_alt = df[df["link"].str.contains("<img") & ~df["link"].str.contains("alt=")]
-        print("\n" + GREEN + "Links with missing alt tags:" + RESET)
-        print(missing_alt)
-        
-        # Check for missing aria labels
-        missing_aria = df[df["link"].str.contains("<a") & ~df["link"].str.contains("aria-label=")]
-        print("\n" + GREEN + "Links with missing aria labels:" + RESET)
-        print(missing_aria)
-    except FileNotFoundError:
-        print(ERROR_MESSAGE)
-    except pd.errors.EmptyDataError:
-        print(ERROR_MESSAGE)
-  
+        # Initialize lists to store links with missing alt tags and aria labels
+        missing_alt = []
+        missing_aria = []
+
+        # Loop through all links
+        for link in all_links:
+            # Check for missing alt tags in img elements
+            if link.name == 'img' and not link.get('alt'):
+                missing_alt.append(link)
+
+            # Check for missing aria labels in anchor elements
+            if link.name == 'a' and not link.get('aria-label'):
+                missing_aria.append(link)
+
+        # Print links with missing alt tags
+        if missing_alt:
+            print("\n" + GREEN + "Links with missing alt tags:" + RESET)
+            for link in missing_alt:
+                print(link)
+
+        # Print links with missing aria labels
+        if missing_aria:
+            print("\n" + GREEN + "Links with missing aria labels:" + RESET)
+            for link in missing_aria:
+                print(link)
+    except Exception as e:
+        print("Error:", e)
+
 def check_broken_links(links):
     """
     Check for broken links in the provided list of links.
@@ -287,6 +274,9 @@ def check_broken_links(links):
     print(CYAN + "Checking for broken links..." + RESET)
     broken_links = []
     for link in tqdm(links, desc="Checking links", unit="link"):
+        if link.startswith("javascript:"):
+            print(f"Skipping JavaScript void link: {link}")
+            continue
         try:
             response = requests.head(link, allow_redirects=True, timeout=5)
             if response.status_code >= 400:
@@ -353,7 +343,7 @@ def ask_continue():
     Ask the user if they want to continue.
     """
     while True:
-        choice = input(MAGENTA + "\nDo you want to continue? (y/n): " + RESET)
+        choice = input(YELLOW + "\nDo you want to continue? (y/n): " + RESET)
         if choice.lower() in ["y", "yes"]:
             main()
         elif choice.lower() in ["n", "no"]:
