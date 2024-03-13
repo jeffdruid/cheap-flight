@@ -5,6 +5,7 @@ from tqdm import tqdm
 import colorama
 from colorama import Back, Fore, Style
 import os
+import urllib.parse
 
 #constants
 RED = Fore.RED
@@ -66,6 +67,14 @@ def get_user_input():
         except ValueError:
             print("Invalid input. Please enter a number.")
 
+def get_base_url(url):
+    """
+    Extract the base URL from the given URL.
+    """
+    parsed_url = urllib.parse.urlparse(url)
+    base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
+    return base_url
+
 def scrape_and_validate_links():
     """
     Scrape and validate links from a webpage.
@@ -83,15 +92,23 @@ def scrape_and_validate_links():
     if soup:
         # Find all the links on the page
         all_links = soup.find_all("a")
-
+        
+        # Extract base URL
+        base_url = get_base_url(url)
+    
         # Loop through all the links and get the href attribute
         for link in all_links:
             # Get the href attribute of the link
             href = link.get("href")
-            data.append(href)
+            # Create absolute URL if href is relative
+            full_link = urllib.parse.urljoin(base_url, href)
+            data.append(full_link)
 
         # Print the number of links found on the page
         print(f"Found {len(data)} links on {url}.")
+        
+        # Check for broken links
+        check_broken_links(data)
 
         # Convert the list to a DataFrame and save it to a CSV file
         df = pd.DataFrame(data, columns=["link"])
@@ -261,7 +278,29 @@ def check_missing_alt_aria():
         print(ERROR_MESSAGE)
     except pd.errors.EmptyDataError:
         print(ERROR_MESSAGE)
-   
+  
+def check_broken_links(links):
+    """
+    Check for broken links in the provided list of links.
+    """
+    print("Checking for broken links...")
+    broken_links = []
+    for link in tqdm(links, desc="Checking links", unit="link"):
+        try:
+            response = requests.head(link, allow_redirects=True, timeout=5)
+            if response.status_code >= 400:
+                print(f"Broken link found: {link}")
+                broken_links.append(link)
+        except requests.exceptions.RequestException as e:
+            print(f"Error checking link {link}: {e}")
+            broken_links.append(link)
+    if broken_links:
+        print("Broken links found:")
+        for broken_link in broken_links:
+            print(broken_link)
+    else:
+        print("No broken links found.")
+
 def open_github():
     """
     Display the link to GitHub.
@@ -350,5 +389,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-# TODO - Add link validation to check if the link is valid
