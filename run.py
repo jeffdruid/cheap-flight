@@ -21,7 +21,7 @@ class LinkValidator:
         self.RESET = Style.RESET_ALL
         self.ERROR_MESSAGE = (self.RED + "\nNo links found. Please scrape a webpage first." + self.RESET)
         self.initialize_colorama()
-
+        
     def initialize_colorama(self):
         """
         Initialize colorama and set the color for the welcome message.
@@ -77,6 +77,7 @@ class LinkValidator:
         """
         Scrape and validate links from a webpage.
         """
+        
         url = self.get_url_input()
         print("You entered: " + url)
         data = []
@@ -196,7 +197,7 @@ class LinkValidator:
             df['type'] = df['link'].apply(self.get_link_type)
             df.sort_values(by="type", inplace=True)
             df.to_csv("links.csv", index=False)
-            print("\n" + self.GREEN + "Data sorted by type successfully." + self.RESET)
+            print(self.GREEN + "Data sorted by type successfully." + self.RESET)
         except FileNotFoundError:
             print(self.ERROR_MESSAGE)
         except pd.errors.EmptyDataError:
@@ -218,13 +219,16 @@ class LinkValidator:
         """
         # Check if the links.csv file exists
         try:
-            shutil.copy2("links.csv", "downloaded_links.csv")
+            destination_file = os.path.join(os.getcwd(), "downloaded_links.csv")
+            shutil.copy2("links.csv", destination_file)
             print("\n" + self.GREEN + "The links.csv file has been downloaded as downloaded_links.csv." + self.RESET)
             confirmation = input(self.CYAN + "Do you want to open the downloaded file? (y/n): " + self.RESET)
             if confirmation.lower() == "y":
-                os.system("start downloaded_links.csv")
+                os.system(f"start {destination_file}")
         except FileNotFoundError:
             print(self.ERROR_MESSAGE)
+        except PermissionError:
+            print(self.RED + "Check if the file is already open." + self.RESET)
                     
     # TODO - Remove this function
     def open_links_csv(self):
