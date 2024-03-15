@@ -253,16 +253,22 @@ class LinkValidator:
                     missing_aria.append(link)
 
             # Print links with missing alt tags
-            if missing_alt:
-                print("\n" + self.GREEN + "Links with missing alt tags:" + self.RESET)
-                for link in missing_alt:
-                    print(link)
+            print("\n" + self.GREEN + "Number of links with missing alt tags: " + str(len(missing_alt)) + self.RESET)
+            
+            # TODO - Move this to display missing alt tags
+            # if missing_alt:
+            #     print("\n" + self.GREEN + "Links with missing alt tags:" + self.RESET)
+            #     for link in missing_alt:
+            #         print(link)
 
             # Print links with missing aria labels
-            if missing_aria:
-                print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
-                for link in missing_aria:
-                    print(link)
+            print("\n" + self.GREEN + "Number of links with missing aria labels: " + str(len(missing_aria)) + self.RESET)
+            
+            # TODO - Move this to display missing aria labels
+            # if missing_aria:
+            #     print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
+            #     for link in missing_aria:
+            #         print(link)
         except Exception as e:
             print("Error:", e)
 
