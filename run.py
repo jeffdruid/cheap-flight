@@ -43,7 +43,7 @@ class LinkValidator:
         print("2. Display all links scraped from the last webpage")
         print("3. TODO")
         print("4. TODO")
-        print("5. Sort the data by type")
+        print("5. TODO")
         print("6. Download the links.csv file")
         print("7. Check for missing alt tags and aria labels in the scraped links")
         print("8. Display broken links from the last webpage")
@@ -108,7 +108,10 @@ class LinkValidator:
             
             # Check for broken links
             self.check_broken_links(data)
-
+            
+            # Sort the data by type
+            self.sort_data_by_type()
+            
             # Convert the list to a DataFrame and save it to a CSV file
             df = pd.DataFrame(data, columns=["link"])
             df.to_csv("links.csv", index=False)
@@ -387,7 +390,7 @@ class LinkValidator:
                 elif choice == 4:
                     self.sort_data()
                 elif choice == 5:
-                    self.sort_data_by_type()
+                    print(self.RED + "This feature is not yet implemented." + self.RESET)
                 elif choice == 6:
                     self.download_links_csv()
                 elif choice == 7:
