@@ -43,7 +43,7 @@ class LinkValidator:
         print("2. Display all links scraped from the last webpage")
         print("3. TODO")
         print("4. TODO")
-        print("5. TODO")
+        print("5. Empty the links.csv file")
         print("6. Download the links.csv file")
         print("7. Check for missing alt tags and aria labels in the scraped links")
         print("8. Display broken links from the last webpage")
@@ -58,7 +58,7 @@ class LinkValidator:
         while True:
             try:
                 choice = int(input(self.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + self.RESET))
-                if choice in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0]:
+                if choice in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]:
                     return choice
                 else:
                     print(self.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + self.RESET)
@@ -331,7 +331,6 @@ class LinkValidator:
         else:
             print(self.GREEN + "No broken links found." + self.RESET)
 
-
     def display_broken_links(self):
         """
         Display broken links from the last webpage.
@@ -358,7 +357,6 @@ class LinkValidator:
         except pd.errors.EmptyDataError:
             print(self.ERROR_MESSAGE)
 
-            
     def open_github(self):
         """
         Display the link to GitHub.
@@ -423,7 +421,7 @@ class LinkValidator:
                 elif choice == 4:
                     self.sort_data()
                 elif choice == 5:
-                    print(self.RED + "This feature is not yet implemented." + self.RESET)
+                    self.empty_links_csv()
                 elif choice == 6:
                     self.download_links_csv()
                 elif choice == 7:
@@ -432,8 +430,6 @@ class LinkValidator:
                     self.display_broken_links()
                 elif choice == 9:
                     self.open_github()
-                elif choice == 10:
-                    self.empty_links_csv()
                 elif choice == 0:
                     print(self.RED + "\nExiting the program..." + self.RESET)
                     exit()
