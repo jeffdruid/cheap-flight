@@ -234,18 +234,6 @@ class LinkValidator:
             print(self.ERROR_MESSAGE)
         except PermissionError:
             print(self.RED + "Check if the file is already open." + self.RESET)
-                    
-    # TODO - Remove this function
-    def open_links_csv(self):
-        """
-        Open the links.csv file in a new tab.
-        """
-        
-        try:
-            os.system("start links.csv")
-            print("\n" + self.GREEN + "The links.csv file has been opened in a new tab." + self.RESET)
-        except FileNotFoundError:
-            print(self.ERROR_MESSAGE)
 
     def check_missing_alt_aria(self, all_links):
         """
@@ -316,13 +304,18 @@ class LinkValidator:
                 print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
                 broken_links.append(link)
 
-        # Initialize DataFrame with columns 'link' and 'status'
-        df = pd.DataFrame(columns=['link', 'status'])
+        # Load the existing CSV file if it exists
+        try:
+            df = pd.read_csv("links.csv")
+        except FileNotFoundError:
+            df = pd.DataFrame(columns=['link', 'status'])
+        
+        # Update the status of links in the DataFrame
+        for link in broken_links:
+            df.loc[df['link'] == link, 'status'] = 'broken'
 
-        # Append both valid and broken links to the DataFrame
-        df_valid = pd.DataFrame({'link': valid_links, 'status': 'valid'})
-        df_broken = pd.DataFrame({'link': broken_links, 'status': 'broken'})
-        df = pd.concat([df, df_valid, df_broken], ignore_index=True)
+        for link in valid_links:
+            df.loc[df['link'] == link, 'status'] = 'valid'
 
         try:
             # Save the DataFrame to the CSV file
@@ -337,6 +330,7 @@ class LinkValidator:
                 print(broken_link)
         else:
             print(self.GREEN + "No broken links found." + self.RESET)
+
 
     def display_broken_links(self):
         """
