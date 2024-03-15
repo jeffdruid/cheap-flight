@@ -118,6 +118,7 @@ class LinkValidator:
         """
         Display all links scraped from the last webpage.
         """
+        # Check if the links.csv file exists
         if os.path.isfile("links.csv"):
             try:
                 # Load the CSV file containing links
@@ -156,6 +157,7 @@ class LinkValidator:
         """
         Validate the URL by sending a HEAD request and checking the status code.
         """
+        # Send a HEAD request to the URL and check the status code
         try:
             response = requests.head(url, allow_redirects=True, stream=True, timeout=5)
             print(self.GREEN + "Status code: " + str(response.status_code) + self.RESET)
@@ -201,6 +203,7 @@ class LinkValidator:
         """
         Get the type of the link.
         """
+        # Check if the link is external or internal
         if link.startswith("http://") or link.startswith("https://"):
             return "external"
         else:
@@ -210,6 +213,7 @@ class LinkValidator:
         """
         Download the links.csv file and confirm the download.
         """
+        # Check if the links.csv file exists
         try:
             shutil.copy2("links.csv", "downloaded_links.csv")
             print("\n" + self.GREEN + "The links.csv file has been downloaded as downloaded_links.csv." + self.RESET)
@@ -264,11 +268,12 @@ class LinkValidator:
         """
         Display links with missing alt tags and aria labels.
         """
+        # Check if the lists are empty
         if missing_alt:
             print("\n" + self.GREEN + "Links with missing alt tags:" + self.RESET)
             for link in missing_alt:
                 print(link)
-
+                
         if missing_aria:
             print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
             for link in missing_aria:
@@ -280,10 +285,13 @@ class LinkValidator:
         """
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         broken_links = []
+        # Loop through all the links and check for broken links
         for link in tqdm(links, desc="Checking links", unit="link"):
+            # Skip JavaScript void links
             if link.startswith("javascript:"):
                 print(f"Skipping JavaScript void link: {link}")
                 continue
+            # Send a HEAD request to the link and check the status code
             try:
                 response = requests.head(link, allow_redirects=True, timeout=5)
                 if response.status_code >= 400:
@@ -337,6 +345,7 @@ class LinkValidator:
         """
         Empty the links.csv file.
         """
+        # Check if the links.csv file exists
         try:
             open("links.csv", "w").close()
             print("\n" + self.GREEN + "The links.csv file has been emptied." + self.RESET)
@@ -393,6 +402,7 @@ class LinkValidator:
                     print(self.RED + "\nExiting the program..." + self.RESET)
                     exit()
                 self.ask_continue()
+        # Handle keyboard interrupt
         except KeyboardInterrupt:
             print(self.RED + "\nProgram terminated by user." + self.RESET)
             exit()
