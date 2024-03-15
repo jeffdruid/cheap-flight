@@ -77,7 +77,6 @@ class LinkValidator:
         """
         Scrape and validate links from a webpage.
         """
-        
         url = self.get_url_input()
         print("You entered: " + url)
         data = []
@@ -89,10 +88,10 @@ class LinkValidator:
         if soup:
             # Find all the links on the page
             all_links = soup.find_all("a")
-            
+
             # Extract base URL
             base_url = self.get_base_url(url)
-        
+
             # Loop through all the links and get the href attribute
             for link in all_links:
                 # Get the href attribute of the link
@@ -103,16 +102,23 @@ class LinkValidator:
 
             # Print the number of links found on the page
             print(self.GREEN + f"Found {len(data)} links on {url}." + self.RESET)
-            
-            # Check for missing alt tags and aria labels
-            self.check_missing_alt_aria(all_links)
-            
+
+            # Check for missing alt tags and capture the returned list
+            missing_alt = self.check_missing_alt(all_links)
+
+            # Check for missing aria labels and capture the returned list
+            missing_aria = self.check_missing_aria(all_links)
+
+            # Print the counts of missing alt tags and aria labels
+            print("Number of missing alt tags:", len(missing_alt))
+            print("Number of missing aria labels:", len(missing_aria))
+
             # Check for broken links
             self.check_broken_links(data)
-             
+
             # Convert the list to a DataFrame and save it to a CSV file
             df = pd.DataFrame(data, columns=["link"])
-            
+
             # Add 'status' column with default value 'valid'
             df['status'] = 'valid'
 
@@ -122,6 +128,7 @@ class LinkValidator:
 
             # Sort the data by type
             self.sort_data_by_type()
+
     
     def display_all_links(self):
         """
@@ -177,14 +184,14 @@ class LinkValidator:
         except ValueError as e:
             print(f"Invalid URL: {e}")
             return False
-
+    # TODO
     def display_duplicated_links(self):
         """
         Display all duplicated links scraped from the last webpage.
         """
         print(self.RED + "This feature is not yet implemented. REMOVED" + self.RESET)
         
-
+    # TODO
     def sort_data(self):
         """
         Sort the data in ascending order.
@@ -235,50 +242,69 @@ class LinkValidator:
         except PermissionError:
             print(self.RED + "Check if the file is already open." + self.RESET)
 
-    def check_missing_alt_aria(self, all_links):
+    def check_missing_alt(self, all_links):
         """
-        Check for missing alt tags and aria labels in the scraped links.
+        Check for missing alt attributes in img elements.
         """
         try:
-            # Initialize lists to store links with missing alt tags and aria labels
+            # Initialize a list to store links with missing alt tags
             missing_alt = []
-            missing_aria = []
 
             # Loop through all links
             for link in all_links:
                 # Check for missing alt tags in img elements
                 if link.name == 'img' and not link.get('alt'):
                     missing_alt.append(link)
+                    
+            print("Number of missing alt tags:", len(missing_alt))
+            return missing_alt
+        except Exception as e:
+            print("Error:", e)
+            return []
 
+    def check_missing_aria(self, all_links):
+        """
+        Check for missing aria labels in anchor elements.
+        """
+        try:
+            # Initialize a list to store links with missing aria labels
+            missing_aria = []
+
+            # Loop through all links
+            for link in all_links:
                 # Check for missing aria labels in anchor elements
                 if link.name == 'a' and not link.get('aria-label'):
                     missing_aria.append(link)
-
-            # Print links with missing alt tags
-            print("\n" + self.GREEN + "Number of links with missing alt tags: " + str(len(missing_alt)) + self.RESET)
-            
-            # Print links with missing aria labels
-            print("\n" + self.GREEN + "Number of links with missing aria labels: " + str(len(missing_aria)) + self.RESET)
-           
+                    
+            print("Number of missing aria labels:", len(missing_aria))
+            return missing_aria
         except Exception as e:
             print("Error:", e)
+            return []
 
-    # TODO
-    def display_missing_alt_aria(self, missing_alt=[], missing_aria=[]):
+    def display_missing_alt(self, missing_alt):
         """
-        Display links with missing alt tags and aria labels.
+        Display links with missing alt tags.
         """
-        # Check if the lists are empty
         if missing_alt:
             print("\n" + self.GREEN + "Links with missing alt tags:" + self.RESET)
             for link in missing_alt:
                 print(link)
-                
+        else:
+            print("\n" + self.GREEN + "No links with missing alt tags found." + self.RESET)
+
+    def display_missing_aria(self, missing_aria):
+        """
+        Display links with missing aria labels.
+        """
         if missing_aria:
             print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
             for link in missing_aria:
                 print(link)
+        else:
+            print("\n" + self.GREEN + "No links with missing aria labels found." + self.RESET)
 
+                
     def check_broken_links(self, links):
         """
         Check for broken links in the provided list of links.
@@ -309,7 +335,7 @@ class LinkValidator:
             df = pd.read_csv("links.csv")
         except FileNotFoundError:
             df = pd.DataFrame(columns=['link', 'status'])
-        
+
         # Update the status of links in the DataFrame
         for link in broken_links:
             df.loc[df['link'] == link, 'status'] = 'broken'
@@ -417,9 +443,9 @@ class LinkValidator:
                 elif choice == 2:
                     self.display_all_links()
                 elif choice == 3:
-                    self.display_duplicated_links()
+                    self.display_missing_alt(missing_alt=[])
                 elif choice == 4:
-                    self.sort_data()
+                    self.display_missing_aria(missing_aria=[])
                 elif choice == 5:
                     self.empty_links_csv()
                 elif choice == 6:
