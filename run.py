@@ -172,31 +172,14 @@ class LinkValidator:
         Display all duplicated links scraped from the last webpage.
         """
         print(self.RED + "This feature is not yet implemented. REMOVED" + self.RESET)
-        # try:
-        #     # Load the CSV file containing links
-        #     df = pd.read_csv("links.csv")
-        #     duplicated_links = df[df.duplicated(subset="link")]
-        #     print("\n" + self.GREEN + "Duplicated links:" + self.RESET + " " + str(len(duplicated_links)))
-        # except FileNotFoundError:
-        #     print(self.ERROR_MESSAGE)
-        # except pd.errors.EmptyDataError:
-        #     print(self.ERROR_MESSAGE)
+        
 
     def sort_data(self):
         """
         Sort the data in ascending order.
         """
         print(self.RED + "This feature is not yet implemented. REMOVED" + self.RESET)
-        # try:
-        #     # Load the CSV file containing links
-        #     df = pd.read_csv("links.csv")
-        #     df.sort_values(by="link", inplace=True)
-        #     df.to_csv("links.csv", index=False)
-        #     print("\n" + self.GREEN + "Data sorted successfully." + self.RESET)
-        # except FileNotFoundError:
-        #     print(self.ERROR_MESSAGE)
-        # except pd.errors.EmptyDataError:
-        #     print(self.ERROR_MESSAGE)
+        
 
     def sort_data_by_type(self):
         """
@@ -270,20 +253,9 @@ class LinkValidator:
             # Print links with missing alt tags
             print("\n" + self.GREEN + "Number of links with missing alt tags: " + str(len(missing_alt)) + self.RESET)
             
-            # TODO - Move this to display missing alt tags
-            # if missing_alt:
-            #     print("\n" + self.GREEN + "Links with missing alt tags:" + self.RESET)
-            #     for link in missing_alt:
-            #         print(link)
-
             # Print links with missing aria labels
             print("\n" + self.GREEN + "Number of links with missing aria labels: " + str(len(missing_aria)) + self.RESET)
-            
-            # TODO - Move this to display missing aria labels
-            # if missing_aria:
-            #     print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
-            #     for link in missing_aria:
-            #         print(link)
+           
         except Exception as e:
             print("Error:", e)
 
