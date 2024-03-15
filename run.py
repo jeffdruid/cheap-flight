@@ -108,15 +108,15 @@ class LinkValidator:
             
             # Check for broken links
             self.check_broken_links(data)
-            
-            # Sort the data by type
-            self.sort_data_by_type()
-            
+             
             # Convert the list to a DataFrame and save it to a CSV file
             df = pd.DataFrame(data, columns=["link"])
             df.to_csv("links.csv", index=False)
             print("Scraping complete!\n")
 
+            # Sort the data by type
+            self.sort_data_by_type()
+    
     def display_all_links(self):
         """
         Display all links scraped from the last webpage.
