@@ -112,6 +112,11 @@ class LinkValidator:
              
             # Convert the list to a DataFrame and save it to a CSV file
             df = pd.DataFrame(data, columns=["link"])
+            
+            # Add 'status' column with default value 'valid'
+            df['status'] = 'valid'
+
+            # Save the DataFrame to the CSV file
             df.to_csv("links.csv", index=False)
             print("Scraping complete!\n")
 
@@ -292,6 +297,7 @@ class LinkValidator:
         """
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         broken_links = []
+        valid_links = []
         # Loop through all the links and check for broken links
         for link in tqdm(links, desc="Checking links", unit="link"):
             # Skip JavaScript void links
@@ -304,9 +310,27 @@ class LinkValidator:
                 if response.status_code >= 400:
                     print(f"Broken link found: {link}")
                     broken_links.append(link)
+                else:
+                    valid_links.append(link)
             except requests.exceptions.RequestException as e:
                 print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
                 broken_links.append(link)
+
+        # Initialize DataFrame with columns 'link' and 'status'
+        df = pd.DataFrame(columns=['link', 'status'])
+
+        # Append both valid and broken links to the DataFrame
+        df_valid = pd.DataFrame({'link': valid_links, 'status': 'valid'})
+        df_broken = pd.DataFrame({'link': broken_links, 'status': 'broken'})
+        df = pd.concat([df, df_valid, df_broken], ignore_index=True)
+
+        try:
+            # Save the DataFrame to the CSV file
+            df.to_csv("links.csv", index=False)
+            print(self.GREEN + "Links status saved to links.csv" + self.RESET)
+        except Exception as e:
+            print(self.RED + "Error saving links status to links.csv:", e + self.RESET)
+
         if broken_links:
             print(self.RED + "Broken links found:" + self.RESET)
             for broken_link in broken_links:
@@ -321,15 +345,26 @@ class LinkValidator:
         try:
             # Load the CSV file containing links
             df = pd.read_csv("links.csv")
-            if df.empty:
-                print("No links found.")
+            
+            # Check if the 'status' column exists in the DataFrame
+            if 'status' not in df.columns:
+                print("No status column found in the links.csv file.")
+                return
+            
+            broken_links = df[df['status'] == 'broken']
+            if broken_links.empty:
+                print("No broken links found.")
             else:
-                self.check_broken_links(df['link'])
+                print(self.RED + "Broken links found:" + self.RESET)
+                for broken_link in broken_links['link']:
+                    print(broken_link)
+        
         except FileNotFoundError:
             print(self.ERROR_MESSAGE)
         except pd.errors.EmptyDataError:
             print(self.ERROR_MESSAGE)
 
+            
     def open_github(self):
         """
         Display the link to GitHub.
