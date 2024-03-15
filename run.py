@@ -41,11 +41,11 @@ class LinkValidator:
         print(self.MAGENTA + "\nPlease select an option from the menu below:")
         print(self.CYAN + "1. Scrape and validate links from a webpage")
         print("2. Display all links scraped from the last webpage")
-        print("3. TODO")
-        print("4. TODO")
+        print("3. Display links with missing alt tags")
+        print("4. Display links with missing aria labels")
         print("5. Empty the links.csv file")
         print("6. Download the links.csv file")
-        print("7. Check for missing alt tags and aria labels in the scraped links")
+        print("7. Not implemented yet")
         print("8. Display broken links from the last webpage")
         print("9. Open GitHub")
         print("0. Exit" + self.RESET)
@@ -184,20 +184,6 @@ class LinkValidator:
         except ValueError as e:
             print(f"Invalid URL: {e}")
             return False
-    # TODO
-    def display_duplicated_links(self):
-        """
-        Display all duplicated links scraped from the last webpage.
-        """
-        print(self.RED + "This feature is not yet implemented. REMOVED" + self.RESET)
-        
-    # TODO
-    def sort_data(self):
-        """
-        Sort the data in ascending order.
-        """
-        print(self.RED + "This feature is not yet implemented. REMOVED" + self.RESET)
-        
 
     def sort_data_by_type(self):
         """
@@ -451,7 +437,7 @@ class LinkValidator:
                 elif choice == 6:
                     self.download_links_csv()
                 elif choice == 7:
-                    self.display_missing_alt_aria()
+                    print(self.RED + "\nNot implemented yet." + self.RESET)
                 elif choice == 8:
                     self.display_broken_links()
                 elif choice == 9:
