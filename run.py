@@ -41,8 +41,8 @@ class LinkValidator:
         print(self.MAGENTA + "\nPlease select an option from the menu below:")
         print(self.CYAN + "1. Scrape and validate links from a webpage")
         print("2. Display all links scraped from the last webpage")
-        print("3. Display all duplicated links scraped from the last webpage")
-        print("4. Sort the data in ascending order")
+        print("3. TODO")
+        print("4. TODO")
         print("5. Sort the data by type")
         print("6. Download the links.csv file")
         print("7. Check for missing alt tags and aria labels in the scraped links")
@@ -287,6 +287,21 @@ class LinkValidator:
         except Exception as e:
             print("Error:", e)
 
+    # TODO
+    def display_missing_alt_aria(self, missing_alt=[], missing_aria=[]):
+        """
+        Display links with missing alt tags and aria labels.
+        """
+        if missing_alt:
+            print("\n" + self.GREEN + "Links with missing alt tags:" + self.RESET)
+            for link in missing_alt:
+                print(link)
+
+        if missing_aria:
+            print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
+            for link in missing_aria:
+                print(link)
+
     def check_broken_links(self, links):
         """
         Check for broken links in the provided list of links.
@@ -395,7 +410,7 @@ class LinkValidator:
                 elif choice == 6:
                     self.download_links_csv()
                 elif choice == 7:
-                    self.check_missing_alt_aria()
+                    self.display_missing_alt_aria()
                 elif choice == 8:
                     self.display_broken_links()
                 elif choice == 9:
