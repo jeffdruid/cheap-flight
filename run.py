@@ -5,6 +5,7 @@ from tqdm import tqdm
 import colorama
 from colorama import Back, Fore, Style
 import os
+import shutil
 import urllib.parse
 
 class LinkValidator:
@@ -43,7 +44,7 @@ class LinkValidator:
         print("3. Display all duplicated links scraped from the last webpage")
         print("4. Sort the data in ascending order")
         print("5. Sort the data by type")
-        print("6. Open the links.csv file in a new tab")
+        print("6. Download the links.csv file")
         print("7. Check for missing alt tags and aria labels in the scraped links")
         print("8. Display broken links from the last webpage")
         print("9. Open GitHub")
@@ -221,7 +222,21 @@ class LinkValidator:
             return "external"
         else:
             return "internal"
-
+        
+    def download_links_csv(self):
+        """
+        Download the links.csv file and confirm the download.
+        """
+        try:
+            shutil.copy2("links.csv", "downloaded_links.csv")
+            print("\n" + self.GREEN + "The links.csv file has been downloaded as downloaded_links.csv." + self.RESET)
+            confirmation = input(self.CYAN + "Do you want to open the downloaded file? (y/n): " + self.RESET)
+            if confirmation.lower() == "y":
+                os.system("start downloaded_links.csv")
+        except FileNotFoundError:
+            print(self.ERROR_MESSAGE)
+                    
+    # TODO - Remove this function
     def open_links_csv(self):
         """
         Open the links.csv file in a new tab.
@@ -378,7 +393,7 @@ class LinkValidator:
                 elif choice == 5:
                     self.sort_data_by_type()
                 elif choice == 6:
-                    self.open_links_csv()
+                    self.download_links_csv()
                 elif choice == 7:
                     self.check_missing_alt_aria()
                 elif choice == 8:
