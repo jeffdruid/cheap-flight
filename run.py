@@ -32,9 +32,9 @@ class LinkValidator:
 
         # Google Sheets API credentials
         self.CREDS = Credentials.from_service_account_file('creds.json')
-        self.SCOPED_CREDS = CREDS.with_scopes(SCOPE)
-        self.GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
-        self.SHEET = GSPREAD_CLIENT.open('love_sandwiches')
+        self.SCOPED_CREDS = self.CREDS.with_scopes(self.SCOPE)
+        self.GSPREAD_CLIENT = gspread.authorize(self.SCOPED_CREDS)
+        self.SHEET = self.GSPREAD_CLIENT.open('love_sandwiches')
                 
     def initialize_colorama(self):
         """
@@ -93,11 +93,11 @@ class LinkValidator:
         """
         try:
             # Clear existing data
-            self.sheet.clear()
+            self.SHEET.clear()
 
             # Append new data
             for i, row in enumerate(data):
-                self.sheet.insert_row(row, i + 1)
+                self.SHEET.insert_row(row, i + 1)
 
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
         except Exception as e:
