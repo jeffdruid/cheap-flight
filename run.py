@@ -92,16 +92,21 @@ class LinkValidator:
         Write data to Google Sheets.
         """
         try:
+            # Open the first worksheet in the spreadsheet
+            worksheet = self.SHEET.sheet1
+
             # Clear existing data
-            self.SHEET.clear()
+            worksheet.clear()
 
             # Append new data
             for i, row in enumerate(data):
-                self.SHEET.insert_row(row, i + 1)
+                worksheet.insert_row(row, i + 1)
 
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
+        except AttributeError as e:
+            print(self.RED + "Error writing data to Google Sheets:", str(e) + self.RESET)
         except Exception as e:
-            print(self.RED + "Error writing data to Google Sheets:", e + self.RESET)
+            print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
     
     def test_google_sheets(self):
         """
