@@ -7,6 +7,8 @@ from colorama import Back, Fore, Style
 import os
 import shutil
 import urllib.parse
+import gspread
+from google.oauth2.service_account import Credentials
 
 class LinkValidator:
     def __init__(self):
@@ -22,6 +24,18 @@ class LinkValidator:
         self.ERROR_MESSAGE = (self.RED + "\nNo links found. Please scrape a webpage first." + self.RESET)
         self.initialize_colorama()
         
+        self.SCOPE = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive.file",
+            "https://www.googleapis.com/auth/drive"
+            ]
+
+        # Google Sheets API credentials
+        self.CREDS = Credentials.from_service_account_file('creds.json')
+        self.SCOPED_CREDS = CREDS.with_scopes(SCOPE)
+        self.GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
+        self.SHEET = GSPREAD_CLIENT.open('love_sandwiches')
+                
     def initialize_colorama(self):
         """
         Initialize colorama and set the color for the welcome message.
@@ -73,6 +87,22 @@ class LinkValidator:
         base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
         return base_url
 
+    def write_to_google_sheets(self, data):
+        """
+        Write data to Google Sheets.
+        """
+        try:
+            # Clear existing data
+            self.sheet.clear()
+
+            # Append new data
+            for i, row in enumerate(data):
+                self.sheet.insert_row(row, i + 1)
+
+            print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
+        except Exception as e:
+            print(self.RED + "Error writing data to Google Sheets:", e + self.RESET)
+            
     def scrape_and_validate_links(self):
         """
         Scrape and validate links from a webpage.
@@ -115,6 +145,12 @@ class LinkValidator:
 
             # Check for broken links
             self.check_broken_links(data)
+            
+             # Convert the list of lists to a list of strings for writing to Google Sheets
+            data_strings = [[str(cell) for cell in row] for row in data]
+
+            # Write data to Google Sheets
+            self.write_to_google_sheets(data_strings)
 
             # Convert the list to a DataFrame and save it to a CSV file
             df = pd.DataFrame(data, columns=["link"])
