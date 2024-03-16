@@ -34,7 +34,7 @@ class LinkValidator:
         self.CREDS = Credentials.from_service_account_file('creds.json')
         self.SCOPED_CREDS = self.CREDS.with_scopes(self.SCOPE)
         self.GSPREAD_CLIENT = gspread.authorize(self.SCOPED_CREDS)
-        self.SHEET = self.GSPREAD_CLIENT.open('love_sandwiches')
+        self.SHEET = self.GSPREAD_CLIENT.open('LinkValidator')
                 
     def initialize_colorama(self):
         """
