@@ -100,17 +100,25 @@ class LinkValidator:
         Write data to Google Sheets.
         """
         try:
-            print("Data:", data)  # Debug print
-            print("Data type:", type(data))  # Debug print
-            
             # Clear existing data (including header)
             self.WORKSHEET.clear()
-            
+
             # Define the header row
             header = ['Link URL', 'Type', 'Status']
 
             # Write the header row to the worksheet
             self.WORKSHEET.update('A1', [header])
+
+            # Ensure each row of data has exactly three columns
+            for row in data:
+                if len(row) != 3:
+                    # If the number of columns is incorrect, adjust the data
+                    if len(row) == 1:
+                        # If only the link URL is provided, add empty values for 'Type' and 'Status'
+                        row.extend(['', ''])
+                    else:
+                        # If more than three columns are provided, trim the extra columns
+                        row = row[:3]
 
             # Append new data
             self.WORKSHEET.append_rows(data)
@@ -118,7 +126,7 @@ class LinkValidator:
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
-
+    
     def scrape_and_validate_links(self):
         """
         Scrape and validate links from a webpage.
@@ -129,21 +137,16 @@ class LinkValidator:
 
         # Print the current page being scraped
         print(f"\nScraping {url}...")
-        
+
         # Load the existing data from Google Sheets
         try:
             data = self.WORKSHEET.get_all_values()
             if not data:
                 print("No links found in Google Sheets.")
-                df = pd.DataFrame(columns=['Link URL', 'Type', 'Status'])  # Initialize DataFrame with columns
+                df = pd.DataFrame(columns=['Link URL'])  # Initialize DataFrame with only 'Link URL' column
             else:
                 # Construct DataFrame with explicit column names
                 df = pd.DataFrame(data, columns=['Link URL'])
-                # Check and add missing columns if necessary
-                columns_to_add = ['Type', 'Status']
-                for col in columns_to_add:
-                    if col not in df.columns:
-                        df[col] = ''
         except Exception as e:
             print("An unexpected error occurred:", str(e))
             return
@@ -162,7 +165,8 @@ class LinkValidator:
                 href = link.get("href")
                 # Create absolute URL if href is relative
                 full_link = urllib.parse.urljoin(base_url, href)
-                data.append([full_link, '', ''])  # Add empty status and type for now
+                # Append each link as a separate list representing a row
+                data.append([full_link])  # Add only the link for now
 
             # Print the number of links found on the page
             print(self.GREEN + f"Found {len(data)} links on {url}." + self.RESET)
