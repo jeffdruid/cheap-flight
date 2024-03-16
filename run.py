@@ -100,11 +100,14 @@ class LinkValidator:
         Write data to Google Sheets.
         """
         try:
-            # Clear existing data (excluding header)
-            self.WORKSHEET.clear('A2:C')
-
+            print("Data:", data)  # Debug print
+            print("Data type:", type(data))  # Debug print
+            
+            # Clear existing data (including header)
+            self.WORKSHEET.clear()
+            
             # Define the header row
-            header = ['Link URL', 'Status', 'Type']
+            header = ['Link URL', 'Type', 'Status']
 
             # Write the header row to the worksheet
             self.WORKSHEET.update('A1', [header])
