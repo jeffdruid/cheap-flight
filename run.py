@@ -35,6 +35,7 @@ class LinkValidator:
         self.SCOPED_CREDS = self.CREDS.with_scopes(self.SCOPE)
         self.GSPREAD_CLIENT = gspread.authorize(self.SCOPED_CREDS)
         self.SHEET = self.GSPREAD_CLIENT.open('LinkValidator')
+        self.WORKSHEET = self.SHEET.sheet1
                 
     def initialize_colorama(self):
         """
@@ -57,7 +58,7 @@ class LinkValidator:
         print("2. Display all links scraped from the last webpage")
         print("3. Display links with missing alt tags")
         print("4. Display links with missing aria labels")
-        print("5. Empty the links.csv file")
+        print("5. Empty the links Google Sheet")
         print("6. Open Google Sheets")
         print("7. Not implemented yet")
         print("8. Display broken links from the last webpage")
@@ -99,19 +100,19 @@ class LinkValidator:
         Write data to Google Sheets.
         """
         try:
-            # Open the first worksheet in the spreadsheet
-            worksheet = self.SHEET.sheet1
+            # Clear existing data (excluding header)
+            self.WORKSHEET.clear('A2:C')
 
-            # Clear existing data
-            worksheet.clear()
-
+            # Define the header row
+            header = ['Link URL', 'Status', 'Type']
+            
+            # Write the header row to the worksheet
+            self.WORKSHEET.update('A1', [header])
+            
             # Append new data
-            for i, row in enumerate(data):
-                worksheet.insert_row(row, i + 1)
-
+            self.WORKSHEET.append_rows(data)
+    
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
-        except AttributeError as e:
-            print(self.RED + "Error writing data to Google Sheets:", str(e) + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
 
@@ -170,21 +171,24 @@ class LinkValidator:
         """
         Display all links scraped from the last webpage.
         """
-        # Check if the links.csv file exists
-        if os.path.isfile("links.csv"):
-            try:
-                # Load the CSV file containing links
-                df = pd.read_csv("links.csv")
-                if df.empty:
-                    print("No links found.")
-                else:
-                    print(df)
-            except FileNotFoundError:
-                print(self.ERROR_MESSAGE)
-            except pd.errors.EmptyDataError:
-                print(self.ERROR_MESSAGE)
-        else:
-            print("No links.csv file found.")
+        # Check if the worksheet exists
+        try:
+            # Fetch all data from the worksheet
+            data = self.WORKSHEET.get_all_values()
+
+            # Check if there is any data in the worksheet
+            if not data:
+                print("No links found.")
+                return
+            
+            # Convert data to DataFrame
+            df = pd.DataFrame(data[1:], columns=data[0])
+            
+            # Display DataFrame
+            print(df)
+        
+        except Exception as e:
+            print(self.ERROR_MESSAGE)
 
     def get_url_input(self):
         """
@@ -226,15 +230,28 @@ class LinkValidator:
         Sort the data by type.
         """
         try:
-            # Load the CSV file containing links
-            df = pd.read_csv("links.csv")
-            df['type'] = df['link'].apply(self.get_link_type)
-            df.sort_values(by="type", inplace=True)
-            df.to_csv("links.csv", index=False)
+            # Fetch all data from the worksheet
+            data = self.WORKSHEET.get_all_values()
+
+            # Check if there is any data in the worksheet
+            if not data:
+                print("No links found.")
+                return
+            
+            # Convert data to DataFrame
+            df = pd.DataFrame(data[1:], columns=data[0])
+
+            # Add a new column 'Type'
+            df['Type'] = df['Link URL'].apply(self.get_link_type)
+            
+            # Sort DataFrame by 'Type'
+            df.sort_values(by="Type", inplace=True)
+
+            # Update data in the worksheet
+            self.write_to_google_sheets(df.values.tolist())
+            
             print(self.GREEN + "Data sorted by type successfully." + self.RESET)
-        except FileNotFoundError:
-            print(self.ERROR_MESSAGE)
-        except pd.errors.EmptyDataError:
+        except Exception as e:
             print(self.ERROR_MESSAGE)
 
     def get_link_type(self, link):
@@ -262,18 +279,7 @@ class LinkValidator:
         """
         Download the links.csv file and confirm the download.
         """
-        # Check if the links.csv file exists
-        try:
-            destination_file = os.path.join(os.getcwd(), "downloaded_links.csv")
-            shutil.copy2("links.csv", destination_file)
-            print("\n" + self.GREEN + "The links.csv file has been downloaded as downloaded_links.csv." + self.RESET)
-            confirmation = input(self.CYAN + "Do you want to open the downloaded file? (y/n): " + self.RESET)
-            if confirmation.lower() == "y":
-                os.system(f"start {destination_file}")
-        except FileNotFoundError:
-            print(self.ERROR_MESSAGE)
-        except PermissionError:
-            print(self.RED + "Check if the file is already open." + self.RESET)
+        print(self.RED + "This option is not available when using Google Sheets." + self.RESET)
 
     def check_missing_alt(self, all_links):
         """
@@ -336,18 +342,29 @@ class LinkValidator:
                 print(link)
         else:
             print("\n" + self.GREEN + "No links with missing aria labels found." + self.RESET)
-
                 
-    def check_broken_links(self, data):
+    def check_broken_links(self, links):
         """
         Check for broken links in the provided list of links.
         """
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         broken_links = []
         valid_links = []
+        # Load the existing data from Google Sheets
+        try:
+            data = self.WORKSHEET.get_all_values()
+            if not data:
+                print("No links found in Google Sheets.")
+                return
+            else:
+                # Convert data to DataFrame
+                df = pd.DataFrame(data[1:], columns=data[0])
+        except Exception as e:
+            print("An unexpected error occurred:", str(e))
+            return
+
         # Loop through all the links and check for broken links
-        for link_data in tqdm(data, desc="Checking links", unit="link"):
-            link = link_data[0]  # Accessing the link from the data list
+        for link in tqdm(links, desc="Checking links", unit="link"):
             # Skip JavaScript void links
             if link.startswith("javascript:"):
                 print(f"Skipping JavaScript void link: {link}")
@@ -364,25 +381,15 @@ class LinkValidator:
                 print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
                 broken_links.append(link)
 
-        # Load the existing CSV file if it exists
-        try:
-            df = pd.read_csv("links.csv")
-        except FileNotFoundError:
-            df = pd.DataFrame(columns=['link', 'status'])
-
         # Update the status of links in the DataFrame
-        for link in broken_links:
-            df.loc[df['link'] == link, 'status'] = 'broken'
-
-        for link in valid_links:
-            df.loc[df['link'] == link, 'status'] = 'valid'
+        df.loc[df['Link URL'].isin(broken_links), 'Status'] = 'broken'
+        df.loc[df['Link URL'].isin(valid_links), 'Status'] = 'valid'
 
         try:
-            # Save the DataFrame to the CSV file
-            df.to_csv("links.csv", index=False)
-            print(self.GREEN + "Links status saved to links.csv" + self.RESET)
+            # Write updated data to Google Sheets
+            self.write_to_google_sheets(df.values.tolist())
         except Exception as e:
-            print(self.RED + "Error saving links status to links.csv:", e + self.RESET)
+            print(self.RED + "Error updating Google Sheets:", e + self.RESET)
 
         if broken_links:
             print(self.RED + "Broken links found:" + self.RESET)
@@ -396,25 +403,28 @@ class LinkValidator:
         Display broken links from the last webpage.
         """
         try:
-            # Load the CSV file containing links
-            df = pd.read_csv("links.csv")
-            
-            # Check if the 'status' column exists in the DataFrame
-            if 'status' not in df.columns:
-                print("No status column found in the links.csv file.")
+            # Fetch all data from the worksheet
+            data = self.WORKSHEET.get_all_values()
+
+            # Check if there is any data in the worksheet
+            if not data:
+                print("No links found.")
                 return
             
-            broken_links = df[df['status'] == 'broken']
+            # Convert data to DataFrame
+            df = pd.DataFrame(data[1:], columns=data[0])
+
+            # Filter DataFrame to get broken links
+            broken_links = df[df['Status'] == 'broken']
+
             if broken_links.empty:
                 print("No broken links found.")
             else:
                 print(self.RED + "Broken links found:" + self.RESET)
-                for broken_link in broken_links['link']:
+                for broken_link in broken_links['Link URL']:
                     print(broken_link)
         
-        except FileNotFoundError:
-            print(self.ERROR_MESSAGE)
-        except pd.errors.EmptyDataError:
+        except Exception as e:
             print(self.ERROR_MESSAGE)
 
     def open_github(self):
@@ -429,24 +439,16 @@ class LinkValidator:
         except FileNotFoundError:
             print(self.RED + "\nFailed to open GitHub. Please check your internet connection." + self.RESET)
 
-    def display_error_message(self):
+    def empty_links_google_sheet(self):
         """
-        Display an error message if the links.csv file is not found.
+        Empty the links Google Sheet.
         """
-        print(self.RED + "\nNo links found. Please scrape a webpage first." + self.RESET)
-        
-    def empty_links_csv(self):
-        """
-        Empty the links.csv file.
-        """
-        # Check if the links.csv file exists
         try:
-            open("links.csv", "w").close()
-            print("\n" + self.GREEN + "The links.csv file has been emptied." + self.RESET)
-        except FileNotFoundError:
-            print(self.ERROR_MESSAGE)
-        except pd.errors.EmptyDataError:
-            print(self.ERROR_MESSAGE)
+            # Clear existing data (including header)
+            self.WORKSHEET.clear()
+            print("\n" + self.GREEN + "The Google Sheet has been emptied." + self.RESET)
+        except Exception as e:
+            print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
 
     def ask_continue(self):
         """
@@ -471,9 +473,6 @@ class LinkValidator:
             while True:
                 self.print_instructions()
                 
-                # Run the test for Google Sheets
-                # self.test_google_sheets()
-                
                 choice = self.get_user_input()
                 
                 if choice == 1:
@@ -485,7 +484,7 @@ class LinkValidator:
                 elif choice == 4:
                     self.display_missing_aria(missing_aria=[])
                 elif choice == 5:
-                    self.empty_links_csv()
+                    self.empty_links_google_sheet()
                 elif choice == 6:
                     self.open_google_sheet()
                 elif choice == 7:
