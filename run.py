@@ -152,10 +152,6 @@ class LinkValidator:
             # Check for missing aria labels and capture the returned list
             missing_aria = self.check_missing_aria(all_links)
 
-            # Print the counts of missing alt tags and aria labels
-            print("Number of missing alt tags:", len(missing_alt))
-            print("Number of missing aria labels:", len(missing_aria))
-
             # Check for broken links
             self.check_broken_links(data)
 
