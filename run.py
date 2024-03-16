@@ -115,27 +115,27 @@ class LinkValidator:
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
-    
+        
     def scrape_and_validate_links(self):
         """
         Scrape and validate links from a webpage.
         """
         url = self.get_url_input()
         print("You entered: " + url)
-        data = []  # List to store data
+        
+        # Clear the Google Sheet first
+        self.empty_links_google_sheet()
 
         # Print the current page being scraped
         print(f"\nScraping {url}...")
+        
+        data = []  # List to store URLs
         
         # Load the existing data from Google Sheets
         try:
             data = self.WORKSHEET.get_all_values()
             if not data:
                 print("No links found in Google Sheets.")
-                df = pd.DataFrame(columns=['Link URL', 'Type', 'Status'])  # Initialize DataFrame with columns
-            else:
-                # Construct DataFrame with explicit column names
-                df = pd.DataFrame(data, columns=['Link URL', 'Type', 'Status'])
         except Exception as e:
             print("An unexpected error occurred:", str(e))
             return
@@ -154,10 +154,24 @@ class LinkValidator:
                 href = link.get("href")
                 # Create absolute URL if href is relative
                 full_link = urllib.parse.urljoin(base_url, href)
-                data.append([full_link, '', ''])  # Add empty status and type for now
+                # Add full link to data if it's not empty
+                if full_link:
+                    data.append([full_link])
 
             # Print the number of links found on the page
             print(self.GREEN + f"Found {len(data)} links on {url}." + self.RESET)
+
+            # Check for missing alt tags and capture the returned list
+            missing_alt = self.check_missing_alt(all_links)
+
+            # Check for missing aria labels and capture the returned list
+            missing_aria = self.check_missing_aria(all_links)
+
+            # Filter out empty lists from data
+            data = [link for link in data if link]
+
+            # Check for broken links
+            self.check_broken_links([link[0] for link in data])  # Pass the extracted links to check_broken_links
 
             # Write data to Google Sheets
             self.write_to_google_sheets(data)  # Write extracted links to Google Sheets
