@@ -126,6 +126,24 @@ class LinkValidator:
 
         # Print the current page being scraped
         print(f"\nScraping {url}...")
+        
+        # Load the existing data from Google Sheets
+        try:
+            data = self.WORKSHEET.get_all_values()
+            if not data:
+                print("No links found in Google Sheets.")
+                df = pd.DataFrame(columns=['Link URL', 'Type', 'Status'])  # Initialize DataFrame with columns
+            else:
+                # Construct DataFrame with explicit column names
+                df = pd.DataFrame(data, columns=['Link URL'])
+                # Check and add missing columns if necessary
+                columns_to_add = ['Type', 'Status']
+                for col in columns_to_add:
+                    if col not in df.columns:
+                        df[col] = ''
+        except Exception as e:
+            print("An unexpected error occurred:", str(e))
+            return
 
         soup = BeautifulSoup(requests.get(url).content, "html.parser")
         if soup:
@@ -337,9 +355,19 @@ class LinkValidator:
                 print("No links found in Google Sheets.")
                 return
             else:
-                # Convert data to DataFrame
-                df = pd.DataFrame(data[1:], columns=data[0])
+                # Construct DataFrame with explicit column names
+                df = pd.DataFrame(data, columns=['Link URL'])
                 print("DataFrame columns:", df.columns)  # Debug print
+
+                # Add 'type' and 'status' columns if they don't exist
+                if 'type' not in df.columns:
+                    df['type'] = ''
+                if 'status' not in df.columns:
+                    df['status'] = ''
+
+                # Rename the first column to 'Link URL' if not already
+                if df.columns[0] != 'Link URL':
+                    df.rename(columns={df.columns[0]: 'Link URL'}, inplace=True)
 
         except Exception as e:
             print("An unexpected error occurred:", str(e))
