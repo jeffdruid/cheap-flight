@@ -102,7 +102,14 @@ class LinkValidator:
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
         except Exception as e:
             print(self.RED + "Error writing data to Google Sheets:", e + self.RESET)
-            
+    
+    def test_google_sheets(self):
+        """
+        Test writing data to Google Sheets.
+        """
+        test_data = [['Test1', 'Test2', 'Test3'], ['Value1', 'Value2', 'Value3']]
+        self.write_to_google_sheets(test_data)
+                
     def scrape_and_validate_links(self):
         """
         Scrape and validate links from a webpage.
@@ -458,6 +465,10 @@ class LinkValidator:
             self.print_welcome_message()
             while True:
                 self.print_instructions()
+                
+                # Run the test for Google Sheets
+                self.test_google_sheets()
+                
                 choice = self.get_user_input()
                 
                 if choice == 1:
