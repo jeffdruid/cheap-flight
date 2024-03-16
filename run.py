@@ -242,7 +242,7 @@ class LinkValidator:
 
     def sort_data_by_type(self):
         """
-        Sort the data by type.
+        Sort the data by type and update the 'Type' column in the Google Sheets.
         """
         try:
             # Fetch all data from the worksheet
@@ -263,8 +263,12 @@ class LinkValidator:
             df.sort_values(by="Type", inplace=True)
 
             # Update data in the worksheet
-            self.write_to_google_sheets(df.values.tolist())
-            
+            self.WORKSHEET.clear()  # Clear existing data (including header)
+            header = ['Link URL', 'Type', 'Status']
+            self.WORKSHEET.update([header], 'A1')
+            for row in df.values.tolist():
+                self.WORKSHEET.append_row(row)
+
             print(self.GREEN + "Data sorted by type successfully." + self.RESET)
         except Exception as e:
             print(self.ERROR_MESSAGE)
