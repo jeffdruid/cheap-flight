@@ -105,13 +105,13 @@ class LinkValidator:
 
             # Define the header row
             header = ['Link URL', 'Status', 'Type']
-            
+
             # Write the header row to the worksheet
             self.WORKSHEET.update('A1', [header])
-            
+
             # Append new data
             self.WORKSHEET.append_rows(data)
-    
+
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
@@ -122,7 +122,7 @@ class LinkValidator:
         """
         url = self.get_url_input()
         print("You entered: " + url)
-        data = []
+        data = []  # List to store data
 
         # Print the current page being scraped
         print(f"\nScraping {url}...")
@@ -141,7 +141,7 @@ class LinkValidator:
                 href = link.get("href")
                 # Create absolute URL if href is relative
                 full_link = urllib.parse.urljoin(base_url, href)
-                data.append([full_link])
+                data.append([full_link, '', ''])  # Add empty status and type for now
 
             # Print the number of links found on the page
             print(self.GREEN + f"Found {len(data)} links on {url}." + self.RESET)
@@ -153,11 +153,11 @@ class LinkValidator:
             missing_aria = self.check_missing_aria(all_links)
 
             # Check for broken links
-            self.check_broken_links(data)
+            self.check_broken_links([link[0] for link in data])  # Pass the extracted links to check_broken_links
 
             # Write data to Google Sheets
-            self.write_to_google_sheets(data)
-            
+            self.write_to_google_sheets(data)  # Write extracted links to Google Sheets
+
             print("Scraping complete!\n")
 
             # Sort the data by type
@@ -322,17 +322,6 @@ class LinkValidator:
         else:
             print("\n" + self.GREEN + "No links with missing alt tags found." + self.RESET)
 
-    def display_missing_aria(self, missing_aria):
-        """
-        Display links with missing aria labels.
-        """
-        if missing_aria:
-            print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
-            for link in missing_aria:
-                print(link)
-        else:
-            print("\n" + self.GREEN + "No links with missing aria labels found." + self.RESET)
-                
     def check_broken_links(self, links):
         """
         Check for broken links in the provided list of links.
@@ -343,12 +332,15 @@ class LinkValidator:
         # Load the existing data from Google Sheets
         try:
             data = self.WORKSHEET.get_all_values()
+            print("Data from Google Sheets:", data)  # Debug print
             if not data:
                 print("No links found in Google Sheets.")
                 return
             else:
                 # Convert data to DataFrame
                 df = pd.DataFrame(data[1:], columns=data[0])
+                print("DataFrame columns:", df.columns)  # Debug print
+
         except Exception as e:
             print("An unexpected error occurred:", str(e))
             return
