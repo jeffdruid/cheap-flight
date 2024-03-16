@@ -275,12 +275,6 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "\nFailed to open Google Sheet:", e + self.RESET)
 
-    def download_links_csv(self):
-        """
-        Download the links.csv file and confirm the download.
-        """
-        print(self.RED + "This option is not available when using Google Sheets." + self.RESET)
-
     def check_missing_alt(self, all_links):
         """
         Check for missing alt attributes in img elements.
