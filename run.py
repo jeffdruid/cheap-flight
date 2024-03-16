@@ -58,7 +58,7 @@ class LinkValidator:
         print("3. Display links with missing alt tags")
         print("4. Display links with missing aria labels")
         print("5. Empty the links.csv file")
-        print("6. Download the links.csv file")
+        print("6. Open Google Sheets")
         print("7. Not implemented yet")
         print("8. Display broken links from the last webpage")
         print("9. Open GitHub")
@@ -86,7 +86,14 @@ class LinkValidator:
         parsed_url = urllib.parse.urlparse(url)
         base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
         return base_url
-
+    
+    def test_google_sheets(self):
+        """
+        Test writing data to Google Sheets.
+        """
+        test_data = [['Test1', 'Test2', 'Test3'], ['Value1', 'Value2', 'Value3']]
+        self.write_to_google_sheets(test_data)
+    
     def write_to_google_sheets(self, data):
         """
         Write data to Google Sheets.
@@ -107,14 +114,7 @@ class LinkValidator:
             print(self.RED + "Error writing data to Google Sheets:", str(e) + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
-    
-    def test_google_sheets(self):
-        """
-        Test writing data to Google Sheets.
-        """
-        test_data = [['Test1', 'Test2', 'Test3'], ['Value1', 'Value2', 'Value3']]
-        self.write_to_google_sheets(test_data)
-                
+               
     def scrape_and_validate_links(self):
         """
         Scrape and validate links from a webpage.
@@ -483,7 +483,7 @@ class LinkValidator:
                 self.print_instructions()
                 
                 # Run the test for Google Sheets
-                self.test_google_sheets()
+                # self.test_google_sheets()
                 
                 choice = self.get_user_input()
                 
