@@ -95,7 +95,7 @@ class LinkValidator:
         test_data = [['Test1', 'Test2', 'Test3'], ['Value1', 'Value2', 'Value3']]
         self.write_to_google_sheets(test_data)
     
-    def write_to_google_sheets(self, data, link_status):
+    def write_to_google_sheets(self, data):
         """
         Write data to Google Sheets.
         """
@@ -104,14 +104,14 @@ class LinkValidator:
             self.WORKSHEET.clear()
             
             # Define the header row
-            header = ['Link URL', 'Type', 'Status']
+            header = ['Link URL', 'Type', 'Status', 'Status Code']
 
             # Write the header row to the worksheet
             self.WORKSHEET.update([header], 'A1')
 
             # Append new data with status
-            for link, status in link_status.items():
-                self.WORKSHEET.append_row([link, '', status])
+            for link, (status, status_code) in data.items():
+                self.WORKSHEET.append_row([link, '', status, status_code])
 
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
         except Exception as e:
@@ -175,7 +175,7 @@ class LinkValidator:
             link_status = self.check_broken_links([link[0] for link in data])  # Pass the extracted links to check_broken_links
 
             # Write data to Google Sheets
-            self.write_to_google_sheets(data, link_status)  # Write extracted links to Google Sheets
+            self.write_to_google_sheets(link_status)  # Write extracted links to Google Sheets
 
             print("Scraping complete!\n")
 
@@ -348,7 +348,8 @@ class LinkValidator:
     def check_broken_links(self, links):
         """
         Check for broken links in the provided list of links.
-        Returns a dictionary mapping each link to its status (valid or broken).
+        Returns a dictionary mapping each link to its status (valid or broken)
+        and its status code.
         """
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         link_status = {}
@@ -357,19 +358,19 @@ class LinkValidator:
             # Skip JavaScript void links
             if link.startswith("javascript:"):
                 print(f"Skipping JavaScript void link: {link}")
-                link_status[link] = 'skipped'
+                link_status[link] = ('skipped', None)
                 continue
             # Send a HEAD request to the link and check the status code
             try:
                 response = requests.head(link, allow_redirects=True, timeout=5)
                 if response.status_code >= 400:
                     print(f"Broken link found: {link}")
-                    link_status[link] = 'broken'
+                    link_status[link] = ('broken', response.status_code)
                 else:
-                    link_status[link] = 'valid'
+                    link_status[link] = ('valid', response.status_code)
             except requests.exceptions.RequestException as e:
                 print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
-                link_status[link] = 'error'
+                link_status[link] = ('error', None)
 
         return link_status
 
