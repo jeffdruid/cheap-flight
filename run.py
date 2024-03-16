@@ -259,6 +259,17 @@ class LinkValidator:
         else:
             return "internal"
         
+    def open_google_sheet(self):
+        """
+        Open the Google Sheet in a web browser.
+        """
+        try:
+            sheet_url = self.SHEET.url
+            os.system(f"start {sheet_url}")
+            print("\n" + self.GREEN + "Google Sheet has been opened in a web browser." + self.RESET)
+        except Exception as e:
+            print(self.RED + "\nFailed to open Google Sheet:", e + self.RESET)
+
     def download_links_csv(self):
         """
         Download the links.csv file and confirm the download.
@@ -487,7 +498,7 @@ class LinkValidator:
                 elif choice == 5:
                     self.empty_links_csv()
                 elif choice == 6:
-                    self.download_links_csv()
+                    self.open_google_sheet()
                 elif choice == 7:
                     print(self.RED + "\nNot implemented yet." + self.RESET)
                 elif choice == 8:
