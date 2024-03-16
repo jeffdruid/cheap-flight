@@ -110,10 +110,12 @@ class LinkValidator:
             self.WORKSHEET.append_row(header)
 
             # Append new data with status
-            for link, (status, response) in data.items():
-                self.WORKSHEET.append_row([link, '', status, response])
+            with tqdm(total=len(data), desc="Saving data to Google Sheets", unit="row") as pbar:
+                for link, (status, response) in data.items():
+                    self.WORKSHEET.append_row([link, '', status, response])
+                    pbar.update(1)
 
-            print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
+            print(self.GREEN + "Data saved to Google Sheets successfully." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
