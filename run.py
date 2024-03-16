@@ -102,23 +102,12 @@ class LinkValidator:
         try:
             # Clear existing data (including header)
             self.WORKSHEET.clear()
-
+            
             # Define the header row
-            header = ['Link URL', 'Type', 'Status']
+            header = ['Link URL', 'Type', 'Status', 'Response Code']
 
             # Write the header row to the worksheet
-            self.WORKSHEET.update('A1', [header])
-
-            # Ensure each row of data has exactly three columns
-            for row in data:
-                if len(row) != 3:
-                    # If the number of columns is incorrect, adjust the data
-                    if len(row) == 1:
-                        # If only the link URL is provided, add empty values for 'Type' and 'Status'
-                        row.extend(['', ''])
-                    else:
-                        # If more than three columns are provided, trim the extra columns
-                        row = row[:3]
+            self.WORKSHEET.update([header], 'A1')
 
             # Append new data
             self.WORKSHEET.append_rows(data)
@@ -137,16 +126,16 @@ class LinkValidator:
 
         # Print the current page being scraped
         print(f"\nScraping {url}...")
-
+        
         # Load the existing data from Google Sheets
         try:
             data = self.WORKSHEET.get_all_values()
             if not data:
                 print("No links found in Google Sheets.")
-                df = pd.DataFrame(columns=['Link URL'])  # Initialize DataFrame with only 'Link URL' column
+                df = pd.DataFrame(columns=['Link URL', 'Type', 'Status'])  # Initialize DataFrame with columns
             else:
                 # Construct DataFrame with explicit column names
-                df = pd.DataFrame(data, columns=['Link URL'])
+                df = pd.DataFrame(data, columns=['Link URL', 'Type', 'Status'])
         except Exception as e:
             print("An unexpected error occurred:", str(e))
             return
@@ -165,20 +154,10 @@ class LinkValidator:
                 href = link.get("href")
                 # Create absolute URL if href is relative
                 full_link = urllib.parse.urljoin(base_url, href)
-                # Append each link as a separate list representing a row
-                data.append([full_link])  # Add only the link for now
+                data.append([full_link, '', ''])  # Add empty status and type for now
 
             # Print the number of links found on the page
             print(self.GREEN + f"Found {len(data)} links on {url}." + self.RESET)
-
-            # Check for missing alt tags and capture the returned list
-            missing_alt = self.check_missing_alt(all_links)
-
-            # Check for missing aria labels and capture the returned list
-            missing_aria = self.check_missing_aria(all_links)
-
-            # Check for broken links
-            self.check_broken_links([link[0] for link in data])  # Pass the extracted links to check_broken_links
 
             # Write data to Google Sheets
             self.write_to_google_sheets(data)  # Write extracted links to Google Sheets
@@ -357,24 +336,12 @@ class LinkValidator:
         # Load the existing data from Google Sheets
         try:
             data = self.WORKSHEET.get_all_values()
-            print("Data from Google Sheets:", data)  # Debug print
             if not data:
                 print("No links found in Google Sheets.")
                 return
             else:
                 # Construct DataFrame with explicit column names
-                df = pd.DataFrame(data, columns=['Link URL'])
-                print("DataFrame columns:", df.columns)  # Debug print
-
-                # Add 'type' and 'status' columns if they don't exist
-                if 'type' not in df.columns:
-                    df['type'] = ''
-                if 'status' not in df.columns:
-                    df['status'] = ''
-
-                # Rename the first column to 'Link URL' if not already
-                if df.columns[0] != 'Link URL':
-                    df.rename(columns={df.columns[0]: 'Link URL'}, inplace=True)
+                df = pd.DataFrame(data, columns=['Link URL', 'Type', 'Status'])
 
         except Exception as e:
             print("An unexpected error occurred:", str(e))
