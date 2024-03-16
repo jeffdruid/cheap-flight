@@ -114,7 +114,7 @@ class LinkValidator:
             print(self.RED + "Error writing data to Google Sheets:", str(e) + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
-               
+
     def scrape_and_validate_links(self):
         """
         Scrape and validate links from a webpage.
@@ -140,7 +140,7 @@ class LinkValidator:
                 href = link.get("href")
                 # Create absolute URL if href is relative
                 full_link = urllib.parse.urljoin(base_url, href)
-                data.append(full_link)
+                data.append([full_link])
 
             # Print the number of links found on the page
             print(self.GREEN + f"Found {len(data)} links on {url}." + self.RESET)
@@ -157,26 +157,14 @@ class LinkValidator:
 
             # Check for broken links
             self.check_broken_links(data)
-            
-             # Convert the list of lists to a list of strings for writing to Google Sheets
-            data_strings = [[str(cell) for cell in row] for row in data]
 
             # Write data to Google Sheets
-            self.write_to_google_sheets(data_strings)
-
-            # Convert the list to a DataFrame and save it to a CSV file
-            df = pd.DataFrame(data, columns=["link"])
-
-            # Add 'status' column with default value 'valid'
-            df['status'] = 'valid'
-
-            # Save the DataFrame to the CSV file
-            df.to_csv("links.csv", index=False)
+            self.write_to_google_sheets(data)
+            
             print("Scraping complete!\n")
 
             # Sort the data by type
             self.sort_data_by_type()
-
     
     def display_all_links(self):
         """
@@ -350,7 +338,7 @@ class LinkValidator:
             print("\n" + self.GREEN + "No links with missing aria labels found." + self.RESET)
 
                 
-    def check_broken_links(self, links):
+    def check_broken_links(self, data):
         """
         Check for broken links in the provided list of links.
         """
@@ -358,7 +346,8 @@ class LinkValidator:
         broken_links = []
         valid_links = []
         # Loop through all the links and check for broken links
-        for link in tqdm(links, desc="Checking links", unit="link"):
+        for link_data in tqdm(data, desc="Checking links", unit="link"):
+            link = link_data[0]  # Accessing the link from the data list
             # Skip JavaScript void links
             if link.startswith("javascript:"):
                 print(f"Skipping JavaScript void link: {link}")
