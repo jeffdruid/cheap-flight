@@ -100,18 +100,18 @@ class LinkValidator:
         Write data to Google Sheets.
         """
         try:
+            # Define the header row
+            header = ['Link URL', 'Type', 'Status', 'Response']
+
             # Clear existing data (including header)
             self.WORKSHEET.clear()
-            
-            # Define the header row
-            header = ['Link URL', 'Type', 'Status', 'Status Code']
 
             # Write the header row to the worksheet
-            self.WORKSHEET.update([header], 'A1')
+            self.WORKSHEET.append_row(header)
 
             # Append new data with status
-            for link, (status, status_code) in data.items():
-                self.WORKSHEET.append_row([link, '', status, status_code])
+            for link, (status, response) in data.items():
+                self.WORKSHEET.append_row([link, '', status, response])
 
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
         except Exception as e:
@@ -177,10 +177,10 @@ class LinkValidator:
             # Write data to Google Sheets
             self.write_to_google_sheets(link_status)  # Write extracted links to Google Sheets
 
-            print("Scraping complete!\n")
-
             # Sort the data by type
             self.sort_data_by_type()
+
+            print("Scraping complete!\n")
     
     def display_all_links(self):
         """
@@ -264,7 +264,7 @@ class LinkValidator:
 
             # Update data in the worksheet
             self.WORKSHEET.clear()  # Clear existing data (including header)
-            header = ['Link URL', 'Type', 'Status']
+            header = ['Link URL', 'Type', 'Status', 'Response']
             self.WORKSHEET.update([header], 'A1')
             for row in df.values.tolist():
                 self.WORKSHEET.append_row(row)
@@ -422,7 +422,7 @@ class LinkValidator:
         try:
             # Clear existing data (including header)
             self.WORKSHEET.clear()
-            print("\n" + self.GREEN + "The Google Sheet has been emptied." + self.RESET)
+            # print("\n" + self.GREEN + "The Google Sheet has been emptied." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
 
