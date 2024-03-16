@@ -95,7 +95,7 @@ class LinkValidator:
         test_data = [['Test1', 'Test2', 'Test3'], ['Value1', 'Value2', 'Value3']]
         self.write_to_google_sheets(test_data)
     
-    def write_to_google_sheets(self, data):
+    def write_to_google_sheets(self, data, link_status):
         """
         Write data to Google Sheets.
         """
@@ -104,18 +104,19 @@ class LinkValidator:
             self.WORKSHEET.clear()
             
             # Define the header row
-            header = ['Link URL', 'Type', 'Status', 'Response Code']
+            header = ['Link URL', 'Type', 'Status']
 
             # Write the header row to the worksheet
             self.WORKSHEET.update([header], 'A1')
 
-            # Append new data
-            self.WORKSHEET.append_rows(data)
+            # Append new data with status
+            for link, status in link_status.items():
+                self.WORKSHEET.append_row([link, '', status])
 
             print(self.GREEN + "Data written to Google Sheets successfully." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
-        
+            
     def scrape_and_validate_links(self):
         """
         Scrape and validate links from a webpage.
@@ -171,10 +172,10 @@ class LinkValidator:
             data = [link for link in data if link]
 
             # Check for broken links
-            self.check_broken_links([link[0] for link in data])  # Pass the extracted links to check_broken_links
+            link_status = self.check_broken_links([link[0] for link in data])  # Pass the extracted links to check_broken_links
 
             # Write data to Google Sheets
-            self.write_to_google_sheets(data)  # Write extracted links to Google Sheets
+            self.write_to_google_sheets(data, link_status)  # Write extracted links to Google Sheets
 
             print("Scraping complete!\n")
 
@@ -343,58 +344,30 @@ class LinkValidator:
     def check_broken_links(self, links):
         """
         Check for broken links in the provided list of links.
+        Returns a dictionary mapping each link to its status (valid or broken).
         """
         print(self.CYAN + "Checking for broken links..." + self.RESET)
-        broken_links = []
-        valid_links = []
-        # Load the existing data from Google Sheets
-        try:
-            data = self.WORKSHEET.get_all_values()
-            if not data:
-                print("No links found in Google Sheets.")
-                return
-            else:
-                # Construct DataFrame with explicit column names
-                df = pd.DataFrame(data, columns=['Link URL', 'Type', 'Status'])
-
-        except Exception as e:
-            print("An unexpected error occurred:", str(e))
-            return
-
+        link_status = {}
         # Loop through all the links and check for broken links
         for link in tqdm(links, desc="Checking links", unit="link"):
             # Skip JavaScript void links
             if link.startswith("javascript:"):
                 print(f"Skipping JavaScript void link: {link}")
+                link_status[link] = 'skipped'
                 continue
             # Send a HEAD request to the link and check the status code
             try:
                 response = requests.head(link, allow_redirects=True, timeout=5)
                 if response.status_code >= 400:
                     print(f"Broken link found: {link}")
-                    broken_links.append(link)
+                    link_status[link] = 'broken'
                 else:
-                    valid_links.append(link)
+                    link_status[link] = 'valid'
             except requests.exceptions.RequestException as e:
                 print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
-                broken_links.append(link)
+                link_status[link] = 'error'
 
-        # Update the status of links in the DataFrame
-        df.loc[df['Link URL'].isin(broken_links), 'Status'] = 'broken'
-        df.loc[df['Link URL'].isin(valid_links), 'Status'] = 'valid'
-
-        try:
-            # Write updated data to Google Sheets
-            self.write_to_google_sheets(df.values.tolist())
-        except Exception as e:
-            print(self.RED + "Error updating Google Sheets:", e + self.RESET)
-
-        if broken_links:
-            print(self.RED + "Broken links found:" + self.RESET)
-            for broken_link in broken_links:
-                print(broken_link)
-        else:
-            print(self.GREEN + "No broken links found." + self.RESET)
+        return link_status
 
     def display_broken_links(self):
         """
