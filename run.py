@@ -125,15 +125,15 @@ class LinkValidator:
         """
         url = self.get_url_input()
         print("You entered: " + url)
-        
+
         # Clear the Google Sheet first
         self.empty_links_google_sheet()
 
         # Print the current page being scraped
         print(f"\nScraping {url}...")
-        
+
         data = []  # List to store URLs
-        
+
         # Load the existing data from Google Sheets
         try:
             data = self.WORKSHEET.get_all_values()
@@ -162,13 +162,16 @@ class LinkValidator:
                     data.append([full_link])
 
             # Print the number of links found on the page
-            print(self.GREEN + f"Found {len(data)} links on {url}." + self.RESET)
+            num_links_scraped = len(data)
+            print(self.GREEN + f"Found {num_links_scraped} links on {url}." + self.RESET)
 
             # Check for missing alt tags and capture the returned list
             missing_alt = self.check_missing_alt(all_links)
+            num_missing_alt = len(missing_alt)
 
             # Check for missing aria labels and capture the returned list
             missing_aria = self.check_missing_aria(all_links)
+            num_missing_aria = len(missing_aria)
 
             # Filter out empty lists from data
             data = [link for link in data if link]
@@ -176,11 +179,17 @@ class LinkValidator:
             # Check for broken links
             link_status = self.check_broken_links([link[0] for link in data])  # Pass the extracted links to check_broken_links
 
+            # Count the number of broken links
+            num_broken_links = sum(1 for status in link_status.values() if status[0] == 'broken')
+
             # Write data to Google Sheets
             self.write_to_google_sheets(link_status)  # Write extracted links to Google Sheets
 
             # Sort the data by type
             self.sort_data_by_type()
+
+            # Generate and display summary of findings
+            self.summarize_findings(num_links_scraped, num_missing_alt, num_missing_aria, num_broken_links)
 
             print("Scraping complete!\n")
     
@@ -428,7 +437,21 @@ class LinkValidator:
             # print("\n" + self.GREEN + "The Google Sheet has been emptied." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
-
+            
+    def summarize_findings(self, num_links_scraped, num_missing_alt, num_missing_aria, num_broken_links):
+        """
+        Generate a summary of findings and present them with ASCII art.
+        """
+        print("\n" + self.GREEN + "Summary of Findings:" + self.RESET)
+        print("+" + "-" * 40 + "+")
+        print("| {:<20} {:<15} |".format("Metric", "Count"))
+        print("+" + "-" * 40 + "+")
+        print("| {:<20} {:<15} |".format("Links Scraped", num_links_scraped))
+        print("| {:<20} {:<15} |".format("Missing Alt Tags", num_missing_alt))
+        print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
+        print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
+        print("+" + "-" * 40 + "+")
+    
     def ask_continue(self):
         """
         Ask the user if they want to continue.
