@@ -60,7 +60,7 @@ class LinkValidator:
         print("4. Display links with missing aria labels")
         print("5. Empty the links Google Sheet")
         print("6. Open Google Sheets")
-        print("7. Not implemented yet")
+        print("7. Display a summary of findings")
         print("8. Display broken links from the last webpage")
         print("9. Open GitHub")
         print("0. Exit" + self.RESET)
@@ -187,9 +187,6 @@ class LinkValidator:
 
             # Sort the data by type
             self.sort_data_by_type()
-
-            # Generate and display summary of findings
-            self.summarize_findings(num_links_scraped, num_missing_alt, num_missing_aria, num_broken_links)
 
             print("Scraping complete!\n")
     
@@ -452,6 +449,44 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
         print("+" + "-" * 40 + "+")
     
+    def display_summary_of_findings(self):
+        """
+        Display a summary of findings.
+        """
+        # Load the existing data from Google Sheets
+        try:
+            data = self.WORKSHEET.get_all_values()
+            if not data:
+                print("No links found in Google Sheets.")
+                return
+        except Exception as e:
+            print("An unexpected error occurred:", str(e))
+            return
+
+        # Convert data to DataFrame
+        df = pd.DataFrame(data[1:], columns=data[0])
+
+        # Count the number of links scraped
+        num_links_scraped = len(df)
+
+        # Count the number of missing alt tags if the column exists
+        if 'Alt Tag' in df.columns:
+            num_missing_alt = len(df[df['Type'] == 'image'][df['Alt Tag'].isnull()])
+        else:
+            num_missing_alt = 0
+
+        # Count the number of missing aria labels if the column exists
+        if 'Aria Label' in df.columns:
+            num_missing_aria = len(df[df['Type'] == 'anchor'][df['Aria Label'].isnull()])
+        else:
+            num_missing_aria = 0
+
+        # Count the number of broken links
+        num_broken_links = len(df[df['Status'] == 'broken'])
+
+        # Display the summary
+        self.summarize_findings(num_links_scraped, num_missing_alt, num_missing_aria, num_broken_links)
+    
     def ask_continue(self):
         """
         Ask the user if they want to continue.
@@ -501,7 +536,7 @@ class LinkValidator:
                 elif choice == 6:
                     self.open_google_sheet()
                 elif choice == 7:
-                    print(self.RED + "\nNot implemented yet." + self.RESET)
+                    self.display_summary_of_findings()
                 elif choice == 8:
                     self.display_broken_links()
                 elif choice == 9:
