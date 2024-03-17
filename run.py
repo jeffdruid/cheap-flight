@@ -9,6 +9,7 @@ import shutil
 import urllib.parse
 import gspread
 from google.oauth2.service_account import Credentials
+import webbrowser
 
 class LinkValidator:
     """
@@ -429,15 +430,15 @@ class LinkValidator:
 
     def open_github(self):
         """
-        Display the link to GitHub.
+        Open the GitHub link in a web browser.
         """
         github_link = "https://github.com/jeffdruid/link-validator"
         print("\n" + self.GREEN + "GitHub link: " + github_link + self.RESET)
         try:
-            os.system("start https://github.com/jeffdruid/link-validator")
+            webbrowser.open(github_link)
             print("\n" + self.GREEN + "GitHub has been opened in a new tab." + self.RESET)
-        except FileNotFoundError:
-            print(self.RED + "\nFailed to open GitHub. Please check your internet connection." + self.RESET)
+        except Exception as e:
+            print(self.RED + "\nFailed to open GitHub:", e + self.RESET)
 
     def empty_links_google_sheet(self):
         """
