@@ -110,7 +110,7 @@ class LinkValidator:
             self.WORKSHEET.append_row(header)
 
             # Append new data with status
-            with tqdm(total=len(data), desc="Saving data to Google Sheets", unit="row") as pbar:
+            with tqdm(total=len(data), desc= self.CYAN + "Saving data to Google Sheets", unit="row" + self.RESET) as pbar:
                 for link, (status, response) in data.items():
                     self.WORKSHEET.append_row([link, '', status, response])
                     pbar.update(1)
@@ -356,7 +356,7 @@ class LinkValidator:
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         link_status = {}
         # Loop through all the links and check for broken links
-        for link in tqdm(links, desc="Checking links", unit="link"):
+        for link in tqdm(links, desc= self.YELLOW + "Checking links", unit="link" + self.RESET):
             # Skip JavaScript void links
             if link.startswith("javascript:"):
                 print(f"Skipping JavaScript void link: {link}")
