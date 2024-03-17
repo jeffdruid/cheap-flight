@@ -131,6 +131,14 @@ class LinkValidator:
 
         # Print the current page being scraped
         print(f"\nScraping {url}...")
+        
+        try:
+            response = requests.get(url)
+            response.raise_for_status()  # Raise an HTTPError if status code is not 200
+            soup = BeautifulSoup(response.content, "html.parser")
+        except requests.exceptions.RequestException as e:
+            print(self.RED + f"An error occurred while fetching the webpage: {e}" + self.RESET)
+            return
 
         data = []  # List to store URLs
 
@@ -143,7 +151,6 @@ class LinkValidator:
             print("An unexpected error occurred:", str(e))
             return
 
-        soup = BeautifulSoup(requests.get(url).content, "html.parser")
         if soup:
             # Find all the links on the page
             all_links = soup.find_all("a")
@@ -183,7 +190,10 @@ class LinkValidator:
             num_broken_links = sum(1 for status in link_status.values() if status[0] == 'broken')
 
             # Write data to Google Sheets
-            self.write_to_google_sheets(link_status)  # Write extracted links to Google Sheets
+            try:
+                self.write_to_google_sheets(link_status)  # Write extracted links to Google Sheets
+            except Exception as e:
+                print(self.RED + "An error occurred while writing data to Google Sheets:", str(e) + self.RESET)
 
             # Sort the data by type
             self.sort_data_by_type()
