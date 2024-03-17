@@ -276,22 +276,20 @@ class LinkValidator:
             if not data:
                 print("No links found.")
                 return
-            
+
             # Convert data to DataFrame
             df = pd.DataFrame(data[1:], columns=data[0])
 
             # Add a new column 'Type'
             df['Type'] = df['Link URL'].apply(self.get_link_type)
-            
-            # Sort DataFrame by 'Type'
-            df.sort_values(by="Type", inplace=True)
 
-            # Update data in the worksheet
-            self.WORKSHEET.clear()  # Clear existing data (including header)
-            header = ['Link URL', 'Type', 'Status', 'Response']
-            self.WORKSHEET.update([header], 'A1')
-            for row in df.values.tolist():
-                self.WORKSHEET.append_row(row)
+            # Sort DataFrame by 'Type' with progress bar
+            sorted_df = df.sort_values(by="Type")
+            total_rows = len(sorted_df)
+            with tqdm(total=total_rows, desc=self.CYAN + "Sorting data", unit="row" + self.RESET) as pbar:
+                for index, row in sorted_df.iterrows():
+                    self.WORKSHEET.update([row.values.tolist()], f'A{index+2}')
+                    pbar.update(1)
 
             print(self.GREEN + "Data sorted by type successfully." + self.RESET)
         except Exception as e:
@@ -378,7 +376,7 @@ class LinkValidator:
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         link_status = {}
         # Loop through all the links and check for broken links
-        for link in tqdm(links, desc= self.YELLOW + "Checking links", unit="link" + self.RESET):
+        for link in tqdm(links, desc= self.CYAN + "Checking links", unit="link" + self.RESET):
             # Skip JavaScript void links
             if link.startswith("javascript:"):
                 print(f"Skipping JavaScript void link: {link}")
@@ -395,7 +393,8 @@ class LinkValidator:
             except requests.exceptions.RequestException as e:
                 print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
                 link_status[link] = ('error', None)
-
+        print(self.GREEN + "Broken links checked successfully." + self.RESET)
+        print("Number of broken links:", sum(1 for status in link_status.values() if status[0] == 'broken'))
         return link_status
 
     def display_broken_links(self):
