@@ -398,10 +398,10 @@ class LinkValidator:
         link_status = {}
         # Loop through all the links and check for broken links
         for link in tqdm(links, desc= self.CYAN + "Checking links", unit="link" + self.RESET):
-            # Skip JavaScript void links
-            if link.startswith("javascript:"):
-                print(f"Skipping JavaScript void link: {link}")
-                link_status[link] = ('skipped', None)
+            # Skip unsupported link types
+            if link.startswith(("mailto:", "tel:")):
+                print(f"Skipping unsupported link type: {link}")
+                link_status[link] = ('unsupported', None)
                 continue
             # Send a HEAD request to the link and check the status code
             try:
@@ -415,13 +415,7 @@ class LinkValidator:
                 print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
                 link_status[link] = ('error', None)
         print(self.GREEN + "Broken links checked successfully." + self.RESET)
-        
-        # Print message based on the presence of broken links
-        if any(status[0] == 'broken' for status in link_status.values()):
-            print(self.RED + "Some broken links found." + self.RESET)
-        else:
-            print(self.GREEN + "No broken links found." + self.RESET)
-        
+        print("Number of broken links:", sum(1 for status in link_status.values() if status[0] == 'broken'))
         return link_status
 
     def display_broken_links(self):
