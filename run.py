@@ -436,7 +436,8 @@ class LinkValidator:
             choice = input(self.YELLOW + "\nDo you want to continue? (y/n): " + self.RESET)
             if choice.lower() in ["y", "yes"]:
                 # Clear the console
-                os.system('cls' if os.name == 'nt' else 'clear')
+                self.clear_console()
+                
                 self.main()  # Continue with the main program loop
             elif choice.lower() in ["n", "no"]:
                 print(self.RED + "\nExiting the program..." + self.RESET)
@@ -444,16 +445,24 @@ class LinkValidator:
             else:
                 print(self.RED + "Invalid choice. Please enter 'y' or 'n'." + self.RESET)
 
+    def clear_console(self):
+        """
+        Clear the console.
+        """
+        os.system('cls' if os.name == 'nt' else 'clear')
+
     def main(self):
         """
         The main function of the Link-Validator Tool.
         """
+        self.print_welcome_message()
         try:
-            self.print_welcome_message()
             while True:
                 self.print_instructions()
                 
                 choice = self.get_user_input()
+                
+                self.clear_console()
                 
                 if choice == 1:
                     self.scrape_and_validate_links()
