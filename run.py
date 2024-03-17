@@ -422,7 +422,8 @@ class LinkValidator:
 
             except requests.exceptions.RequestException as e:
                 # Handle connection errors
-                print(f"Error checking link {link}: {e}")
+                error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
+                print(f"Error checking link {link}: {error_msg}")
                 link_status[link] = ('error', None)
                 # Check if the hostname resolution failed
                 if isinstance(e, requests.exceptions.ConnectionError):
@@ -430,7 +431,8 @@ class LinkValidator:
                     link_status[link] = ('broken', None)
             except Exception as e:
                 # Handle other exceptions
-                print(f"An unexpected error occurred for link {link}: {e}")
+                error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
+                print(f"An unexpected error: {error_msg}")
                 link_status[link] = ('unexpected_error', None)
 
         print(self.GREEN + "Broken links checked successfully." + self.RESET)
