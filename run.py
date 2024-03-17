@@ -90,7 +90,7 @@ class LinkValidator:
         Extract the base URL from the given URL.
         """
         parsed_url = urllib.parse.urlparse(url)
-        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}"
+        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}{os.path.dirname(parsed_url.path)}"
         return base_url
     
     def test_google_sheets(self):
@@ -167,11 +167,18 @@ class LinkValidator:
             for link in all_links:
                 # Get the href attribute of the link
                 href = link.get("href")
-                # Create absolute URL if href is relative
-                full_link = urllib.parse.urljoin(base_url, href)
-                # Add full link to data if it's not empty
-                if full_link:
-                    data.append([full_link])
+                # Check if href is not None and is not an empty string
+                if href:
+                    # Check if href is a relative path
+                    if not urllib.parse.urlparse(href).netloc:
+                        # Create absolute URL using base_url and href
+                        full_link = urllib.parse.urljoin(base_url, href)
+                    else:
+                        # Use href directly as it's already an absolute URL
+                        full_link = href
+                    # Add full link to data if it's not empty
+                    if full_link:
+                        data.append([full_link])
 
             # Print the number of links found on the page
             num_links_scraped = len(data)
@@ -186,11 +193,11 @@ class LinkValidator:
             num_missing_aria = len(missing_aria)
 
             # Filter out empty lists from data
-            data = [link for link in data if link]
+            data = [link[0] for link in data if link]
 
             # Check for broken links
-            link_status = self.check_broken_links([link[0] for link in data])  # Pass the extracted links to check_broken_links
-
+            link_status = self.check_broken_links(data)
+           
             # Count the number of broken links
             num_broken_links = sum(1 for status in link_status.values() if status[0] == 'broken')
 
