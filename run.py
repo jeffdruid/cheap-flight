@@ -353,10 +353,13 @@ class LinkValidator:
 
             # Loop through all links
             for link in all_links:
-                # Check for missing aria labels in anchor elements
-                if link.name == 'a' and (not link.get('aria-label') or link.get('aria-label').strip() == ''):
-                    missing_aria.append(link)
-                    
+                # Check for anchor elements
+                if link.name == 'a':
+                    # Check if aria-label attribute exists and is not empty
+                    aria_label = link.get('aria-label')
+                    if not aria_label or aria_label.strip() == '':
+                        missing_aria.append(link)
+
             print("Number of missing aria labels:", len(missing_aria))
             return missing_aria
         except Exception as e:
