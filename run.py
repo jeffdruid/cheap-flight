@@ -334,7 +334,7 @@ class LinkValidator:
             # Loop through all links
             for link in all_links:
                 # Check for missing alt tags in img elements
-                if link.name == 'img' and not link.get('alt'):
+                if link.name == 'img' and (not link.get('alt') or link.get('alt').strip() == ''):
                     missing_alt.append(link)
                     
             print("Number of missing alt tags:", len(missing_alt))
@@ -354,7 +354,7 @@ class LinkValidator:
             # Loop through all links
             for link in all_links:
                 # Check for missing aria labels in anchor elements
-                if link.name == 'a' and not link.get('aria-label'):
+                if link.name == 'a' and (not link.get('aria-label') or link.get('aria-label').strip() == ''):
                     missing_aria.append(link)
                     
             print("Number of missing aria labels:", len(missing_aria))
