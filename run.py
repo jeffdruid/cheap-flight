@@ -188,6 +188,7 @@ class LinkValidator:
         """
         Display all links scraped from the last webpage.
         """
+        print(self.CYAN + "Displaying all links scraped from the last webpage...\n" + self.RESET)
         # Check if the worksheet exists
         try:
             # Fetch all data from the worksheet
