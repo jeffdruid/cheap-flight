@@ -405,7 +405,13 @@ class LinkValidator:
                 print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
                 link_status[link] = ('error', None)
         print(self.GREEN + "Broken links checked successfully." + self.RESET)
-        print("Number of broken links:", sum(1 for status in link_status.values() if status[0] == 'broken'))
+        
+        # Print message based on the presence of broken links
+        if any(status[0] == 'broken' for status in link_status.values()):
+            print(self.RED + "Some broken links found." + self.RESET)
+        else:
+            print(self.GREEN + "No broken links found." + self.RESET)
+        
         return link_status
 
     def display_broken_links(self):
@@ -428,7 +434,7 @@ class LinkValidator:
             broken_links = df[df['Status'] == 'broken']
 
             if broken_links.empty:
-                print("No broken links found.")
+                print(self.GREEN + "No broken links found." + self.RESET)
             else:
                 print(self.RED + "Broken links found:" + self.RESET)
                 for broken_link in broken_links['Link URL']:
