@@ -11,6 +11,9 @@ import gspread
 from google.oauth2.service_account import Credentials
 
 class LinkValidator:
+    """
+        Initialize the LinkValidator class.
+    """
     def __init__(self):
         # Constants
         self.RED = Fore.RED
@@ -72,7 +75,9 @@ class LinkValidator:
         """
         while True:
             try:
-                choice = int(input(self.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + self.RESET))
+                choice = input(self.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + self.RESET)
+                # Convert input to integer
+                choice = int(choice)
                 if choice in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]:
                     return choice
                 else:
