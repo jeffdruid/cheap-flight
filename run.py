@@ -396,24 +396,43 @@ class LinkValidator:
         """
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         link_status = {}
+
         # Loop through all the links and check for broken links
-        for link in tqdm(links, desc= self.CYAN + "Checking links", unit="link" + self.RESET):
-            # Skip unsupported link types
-            if link.startswith(("mailto:", "tel:")):
-                print(f"Skipping unsupported link type: {link}")
-                link_status[link] = ('unsupported', None)
-                continue
-            # Send a HEAD request to the link and check the status code
+        for link in tqdm(links, desc=self.CYAN + "Checking links", unit="link" + self.RESET):
             try:
+                # Skip JavaScript void links
+                if link.startswith("javascript:"):
+                    print(f"Skipping JavaScript void link: {link}")
+                    link_status[link] = ('skipped', None)
+                    continue
+
+                # Handle URLs with unsupported schemes
+                if not link.startswith(("http://", "https://")):
+                    print(f"Unsupported URL scheme for link: {link}")
+                    link_status[link] = ('unsupported_scheme', None)
+                    continue
+
+                # Send a HEAD request to the link and check the status code
                 response = requests.head(link, allow_redirects=True, timeout=5)
                 if response.status_code >= 400:
                     print(f"Broken link found: {link}")
                     link_status[link] = ('broken', response.status_code)
                 else:
                     link_status[link] = ('valid', response.status_code)
+
             except requests.exceptions.RequestException as e:
-                print(self.RED + f"Error checking link {link}: {e}" + self.RESET)
+                # Handle connection errors
+                print(f"Error checking link {link}: {e}")
                 link_status[link] = ('error', None)
+                # Check if the hostname resolution failed
+                if isinstance(e, requests.exceptions.ConnectionError):
+                    print(f"Hostname resolution failed for link: {link}")
+                    link_status[link] = ('broken', None)
+            except Exception as e:
+                # Handle other exceptions
+                print(f"An unexpected error occurred for link {link}: {e}")
+                link_status[link] = ('unexpected_error', None)
+
         print(self.GREEN + "Broken links checked successfully." + self.RESET)
         print("Number of broken links:", sum(1 for status in link_status.values() if status[0] == 'broken'))
         return link_status
