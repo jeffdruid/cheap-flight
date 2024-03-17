@@ -367,6 +367,17 @@ class LinkValidator:
         else:
             print("\n" + self.GREEN + "No links with missing alt tags found." + self.RESET)
 
+    def display_missing_aria(self, missing_aria):
+        """
+        Display links with missing aria labels.
+        """
+        if missing_aria:
+            print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
+            for link in missing_aria:
+                print(link)
+        else:
+            print("\n" + self.GREEN + "No links with missing aria labels found." + self.RESET)
+
     def check_broken_links(self, links):
         """
         Check for broken links in the provided list of links.
