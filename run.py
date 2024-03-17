@@ -5,7 +5,6 @@ from tqdm import tqdm
 import colorama
 from colorama import Back, Fore, Style
 import os
-import shutil
 import urllib.parse
 import gspread
 from google.oauth2.service_account import Credentials
