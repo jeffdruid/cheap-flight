@@ -435,7 +435,9 @@ class LinkValidator:
         while True:
             choice = input(self.YELLOW + "\nDo you want to continue? (y/n): " + self.RESET)
             if choice.lower() in ["y", "yes"]:
-                self.main()
+                # Clear the console
+                os.system('cls' if os.name == 'nt' else 'clear')
+                self.main()  # Continue with the main program loop
             elif choice.lower() in ["n", "no"]:
                 print(self.RED + "\nExiting the program..." + self.RESET)
                 exit()
