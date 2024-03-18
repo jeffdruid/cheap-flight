@@ -539,8 +539,8 @@ class LinkValidator:
         num_links_scraped = len(df)
 
         # Count the number of missing aria labels if the column exists
-        if 'Aria Label' in df.columns:
-            num_missing_aria = len(df[df['Type'] == 'anchor'][df['Aria Label'].isnull()])
+        if 'Missing Aria' in df.columns:
+            num_missing_aria = len(df[df['Missing Aria'] == 'yes'])
         else:
             num_missing_aria = 0
 
