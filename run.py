@@ -128,6 +128,12 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
+    def is_internal_link(self, base_url, link):
+        """
+        Check if a link is internal based on the base URL.
+        """
+        return urllib.parse.urlparse(link).netloc == urllib.parse.urlparse(base_url).netloc
+    
     def check_internal_links(self, soup, base_url):
         """
         Check internal links found in the webpage.
@@ -156,12 +162,6 @@ class LinkValidator:
                     internal_links.add(full_link)
         return internal_links
 
-    def is_internal_link(self, base_url, link):
-        """
-        Check if a link is internal based on the base URL.
-        """
-        return urllib.parse.urlparse(link).netloc == urllib.parse.urlparse(base_url).netloc
-
     def check_external_links(self, soup, base_url):
         """
         Check external links found in the webpage.
@@ -180,7 +180,7 @@ class LinkValidator:
                 # Create absolute URL using base_url and href
                 full_link = urllib.parse.urljoin(base_url, href)
                 # Check if the full link is an external link
-                if self.get_base_url(full_link) != base_url:
+                if not self.is_internal_link(base_url, full_link):
                     # This is an external link
                     external_links.append(full_link)
         return external_links
