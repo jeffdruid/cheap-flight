@@ -59,7 +59,7 @@ class LinkValidator:
         print(self.MAGENTA + "\nPlease select an option from the menu below:")
         print(self.CYAN + "1. Scrape and validate links from a webpage")
         print("2. Display all links scraped from the last webpage")
-        print("3. Display links with missing alt tags")
+        print("3. Not implemented yet")
         print("4. Display links with missing aria labels")
         print("5. Empty the links Google Sheet")
         print("6. Open Google Sheets")
@@ -222,15 +222,12 @@ class LinkValidator:
             for link in external_links:
                 data[link] = ('external', 'valid', None)  # Set initial status and response
 
-            # Check for missing alt tags and aria labels, and broken links
-            missing_alt = self.check_missing_alt(soup.find_all("a"))
+            # Check for missing aria labels, and broken links
             missing_aria = self.check_missing_aria(soup.find_all("a"))
             internal_link_status = self.check_broken_links(internal_links)
             external_link_status = self.check_broken_links(external_links)
 
-            # Update data with missing alt tags and aria labels
-            for link in missing_alt:
-                data[str(link)] = ('internal', 'missing_alt', None)
+            # Update data with missing aria labels
             for link in missing_aria:
                 data[str(link)] = ('internal', 'missing_aria', None)
 
@@ -366,26 +363,6 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "\nFailed to open Google Sheet:", e + self.RESET)
 
-    def check_missing_alt(self, all_links):
-        """
-        Check for missing alt attributes in img elements.
-        """
-        try:
-            # Initialize a list to store links with missing alt tags
-            missing_alt = []
-
-            # Loop through all links
-            for link in all_links:
-                # Check for missing alt tags in img elements
-                if link.name == 'img' and (not link.get('alt') or link.get('alt').strip() == ''):
-                    missing_alt.append(link)
-                    
-            print("Number of missing alt tags:", len(missing_alt))
-            return missing_alt
-        except Exception as e:
-            print("Error:", e)
-            return []
-
     def check_missing_aria(self, all_links):
         """
         Check for missing aria labels in anchor elements.
@@ -409,17 +386,6 @@ class LinkValidator:
             print("Error:", e)
             return []
 
-    def display_missing_alt(self, missing_alt):
-        """
-        Display links with missing alt tags.
-        """
-        if missing_alt:
-            print("\n" + self.GREEN + "Links with missing alt tags:" + self.RESET)
-            for link in missing_alt:
-                print(link)
-        else:
-            print("\n" + self.GREEN + "No links with missing alt tags found." + self.RESET)
-
     def display_missing_aria(self, missing_aria):
         """
         Display links with missing aria labels.
@@ -434,8 +400,8 @@ class LinkValidator:
     def check_broken_links(self, links):
         """
         Check for broken links in the provided list of links.
-        Returns a dictionary mapping each link to its status (valid or broken)
-        and its status code.
+        Returns a dictionary mapping each link to its status (valid, broken, error, etc.)
+        and its response code.
         """
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         link_status = {}
@@ -533,7 +499,7 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
-    def summarize_findings(self, num_links_scraped, num_missing_alt, num_missing_aria, num_broken_links):
+    def summarize_findings(self, num_links_scraped, num_missing_aria, num_broken_links):
         """
         Generate a summary of findings and present them with ASCII art.
         """
@@ -542,7 +508,6 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format("Metric", "Count"))
         print("+" + "-" * 40 + "+")
         print("| {:<20} {:<15} |".format("Links Scraped", num_links_scraped))
-        print("| {:<20} {:<15} |".format("Missing Alt Tags", num_missing_alt))
         print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
         print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
         print("+" + "-" * 40 + "+")
@@ -567,12 +532,6 @@ class LinkValidator:
         # Count the number of links scraped
         num_links_scraped = len(df)
 
-        # Count the number of missing alt tags if the column exists
-        if 'Alt Tag' in df.columns:
-            num_missing_alt = len(df[df['Type'] == 'image'][df['Alt Tag'].isnull()])
-        else:
-            num_missing_alt = 0
-
         # Count the number of missing aria labels if the column exists
         if 'Aria Label' in df.columns:
             num_missing_aria = len(df[df['Type'] == 'anchor'][df['Aria Label'].isnull()])
@@ -583,7 +542,7 @@ class LinkValidator:
         num_broken_links = len(df[df['Status'] == 'broken'])
 
         # Display the summary
-        self.summarize_findings(num_links_scraped, num_missing_alt, num_missing_aria, num_broken_links)
+        self.summarize_findings(num_links_scraped, num_missing_aria, num_broken_links)
     
     def ask_continue(self):
         """
@@ -626,7 +585,7 @@ class LinkValidator:
                 elif choice == 2:
                     self.display_all_links()
                 elif choice == 3:
-                    self.display_missing_alt(missing_alt=[])
+                    print(self.RED + "\nNot implemented yet." + self.RESET)
                 elif choice == 4:
                     self.display_missing_aria(missing_aria=[])
                 elif choice == 5:
