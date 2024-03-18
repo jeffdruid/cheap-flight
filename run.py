@@ -59,11 +59,11 @@ class LinkValidator:
         print(self.MAGENTA + "\nPlease select an option from the menu below:")
         print(self.CYAN + "1. Scrape and validate links from a webpage")
         print("2. Display all links scraped from the last webpage")
-        print("3. Not implemented yet")
-        print("4. Display links with missing aria labels")
+        print("3. Display invalid links scraped from the last webpage")
+        print("4. Display links with missing aria labels from the last webpage")
         print("5. Empty the links Google Sheet")
         print("6. Open Google Sheets")
-        print("7. Display a summary of findings")
+        print("7. Display a summary of findings from the last webpage")
         print("8. Display broken links from the last webpage")
         print("9. Open GitHub")
         print("0. Exit" + self.RESET)
@@ -482,6 +482,36 @@ class LinkValidator:
         except Exception as e:
             print(self.ERROR_MESSAGE)
 
+    def display_invalid_links(self):
+        """
+        Display invalid links with unsupported schemes scraped from the last webpage.
+        """
+        print(self.CYAN + "Displaying invalid links with unsupported schemes scraped from the last webpage...\n" + self.RESET)
+        try:
+            # Fetch all data from the worksheet
+            data = self.WORKSHEET.get_all_values()
+
+            # Check if there is any data in the worksheet
+            if not data:
+                print("No links found.")
+                return
+            
+            # Convert data to DataFrame
+            df = pd.DataFrame(data[1:], columns=data[0])
+
+            # Filter DataFrame to get invalid links with unsupported schemes
+            invalid_links = df[(df['Status'] == 'unsupported_scheme')]
+
+            if invalid_links.empty:
+                print(self.GREEN + "No invalid links found." + self.RESET)
+            else:
+                print(self.RED + "Invalid links with unsupported schemes found:" + self.RESET)
+                for invalid_link in invalid_links['Link URL']:
+                    print(invalid_link)
+        
+        except Exception as e:
+            print(self.ERROR_MESSAGE)
+
     def open_github(self):
         """
         Open the GitHub link in a web browser.
@@ -591,7 +621,7 @@ class LinkValidator:
                 elif choice == 2:
                     self.display_all_links()
                 elif choice == 3:
-                    print(self.RED + "\nNot implemented yet." + self.RESET)
+                    self.display_invalid_links()
                 elif choice == 4:
                     self.display_missing_aria(missing_aria=[])
                 elif choice == 5:
