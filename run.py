@@ -139,14 +139,12 @@ class LinkValidator:
             href = link.get("href")
             # Check if href is not None and is not an empty string
             if href:
-                # Check if href is a relative path
-                if not urllib.parse.urlparse(href).netloc:
-                    # Create absolute URL using base_url and href
-                    full_link = urllib.parse.urljoin(base_url, href)
-                    # Check if the full link is an internal link
-                    if full_link.startswith(base_url):
-                        # Add internal link to the set
-                        internal_links.add(full_link)
+                # Create absolute URL using base_url and href
+                full_link = urllib.parse.urljoin(base_url, href)
+                # Check if the full link is an internal link
+                if self.get_base_url(full_link) == base_url:
+                    # Add internal link to the set
+                    internal_links.add(full_link)
         return internal_links
 
     def check_external_links(self, soup, base_url):
@@ -164,14 +162,12 @@ class LinkValidator:
             href = link.get("href")
             # Check if href is not None and is not an empty string
             if href:
-                # Check if href is a relative path
-                if not urllib.parse.urlparse(href).netloc:
-                    # Create absolute URL using base_url and href
-                    full_link = urllib.parse.urljoin(base_url, href)
-                    # Check if the full link is an external link
-                    if not full_link.startswith(base_url):
-                        # This is an external link
-                        external_links.append(full_link)
+                # Create absolute URL using base_url and href
+                full_link = urllib.parse.urljoin(base_url, href)
+                # Check if the full link is an external link
+                if self.get_base_url(full_link) != base_url:
+                    # This is an external link
+                    external_links.append(full_link)
         return external_links
 
     def scrape_and_validate_links(self):
@@ -461,7 +457,6 @@ class LinkValidator:
                     link_status[link] = ('broken', response.status_code)
                 else:
                     link_status[link] = ('valid', response.status_code)
-
             except requests.exceptions.RequestException as e:
                 # Handle connection errors
                 error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
