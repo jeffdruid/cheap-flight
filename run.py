@@ -236,9 +236,15 @@ class LinkValidator:
 
             # Update data with broken link statuses
             for link, status in internal_link_status.items():
-                data[link] = ('internal', status[0], status[1])
+                if status[0] == 'broken':
+                    data[link] = ('internal', status[0], 'none')  # Set response to 'none' for broken links
+                else:
+                    data[link] = ('internal', status[0], status[1])
             for link, status in external_link_status.items():
-                data[link] = ('external', status[0], status[1])
+                if status[0] == 'broken':
+                    data[link] = ('external', status[0], 'none')  # Set response to 'none' for broken links
+                else:
+                    data[link] = ('external', status[0], status[1])
 
             # Write data to Google Sheets
             try:
