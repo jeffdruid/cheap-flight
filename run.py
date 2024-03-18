@@ -138,14 +138,25 @@ class LinkValidator:
             # Get the href attribute of the link
             href = link.get("href")
             # Check if href is not None and is not an empty string
-            if href:
+            if href is not None and href != "":
                 # Create absolute URL using base_url and href
                 full_link = urllib.parse.urljoin(base_url, href)
+                # Check if href is "#" or starts with "#"
+                if href == "#" or href.startswith("#"):
+                    full_link += "#"  # Add fragment identifier
+                print("href:", href)
+                print("full_link:", full_link)
                 # Check if the full link is an internal link
-                if self.get_base_url(full_link) == base_url:
+                if self.is_internal_link(base_url, full_link):
                     # Add internal link to the set
                     internal_links.add(full_link)
         return internal_links
+
+    def is_internal_link(self, base_url, link):
+        """
+        Check if a link is internal based on the base URL.
+        """
+        return urllib.parse.urlparse(link).netloc == urllib.parse.urlparse(base_url).netloc
 
     def check_external_links(self, soup, base_url):
         """
@@ -280,6 +291,7 @@ class LinkValidator:
         """
         while True:
             try:
+                print(self.CYAN + "\nhttps://jeffdruid.github.io/link-test/" + self.RESET)
                 url = input(self.CYAN + "\nEnter the URL you want to scrape: \n" + self.RESET)
                 # Check if the URL starts with "http://" or "https://"
                 if not url.startswith(("http://", "https://")):
