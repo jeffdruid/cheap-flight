@@ -229,7 +229,7 @@ class LinkValidator:
 
             # Update data with missing aria labels
             for link in missing_aria:
-                data[str(link)] = ('internal', 'missing_aria', None)
+                data[str(link)] = ('internal', 'missing_aria', 'None')
 
             # Update data with broken link statuses
             for link, status in internal_link_status.items():
@@ -418,7 +418,7 @@ class LinkValidator:
                 # Handle URLs with unsupported schemes
                 if not link.startswith(("http://", "https://")):
                     print(f"Unsupported URL scheme for link: {link}")
-                    link_status[link] = ('unsupported_scheme', None)
+                    link_status[link] = ('unsupported_scheme', 'None')
                     continue
 
                 # Send a HEAD request to the link and check the status code
@@ -432,7 +432,7 @@ class LinkValidator:
                 # Handle connection errors
                 error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
                 print(f"Error checking link {link}: {error_msg}")
-                link_status[link] = ('error', None)
+                link_status[link] = ('error', '-')
                 # Check if the hostname resolution failed
                 if isinstance(e, requests.exceptions.ConnectionError):
                     print(f"Hostname resolution failed for link: {link}")
@@ -441,7 +441,7 @@ class LinkValidator:
                 # Handle other exceptions
                 error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
                 print(f"An unexpected error: {error_msg}")
-                link_status[link] = ('unexpected_error', None)
+                link_status[link] = ('unexpected_error', '-')
 
         print(self.GREEN + "Broken links checked successfully." + self.RESET)
         print("Number of broken links:", sum(1 for status in link_status.values() if status[0] == 'broken'))
