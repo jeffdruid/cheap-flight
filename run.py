@@ -61,10 +61,10 @@ class LinkValidator:
         print("2. Display all links scraped from the last webpage")
         print("3. Display invalid links scraped from the last webpage")
         print("4. Display links with missing aria labels from the last webpage")
-        print("5. Empty the links Google Sheet")
-        print("6. Open Google Sheets")
-        print("7. Display a summary of findings from the last webpage")
-        print("8. Display broken links from the last webpage")
+        print("5. Display broken links from the last webpage")
+        print("6. Display a summary of findings from the last webpage")
+        print("7. Empty the links Google Sheet")
+        print("8. Open Google Sheets")
         print("9. Open GitHub")
         print("0. Exit" + self.RESET)
         print("")
@@ -651,13 +651,13 @@ class LinkValidator:
                 elif choice == 4:
                     self.display_missing_aria_links_from_sheet()
                 elif choice == 5:
-                    self.empty_links_google_sheet()
-                elif choice == 6:
-                    self.open_google_sheet()
-                elif choice == 7:
-                    self.display_summary_of_findings()
-                elif choice == 8:
                     self.display_broken_links()
+                elif choice == 6:
+                    self.display_summary_of_findings()
+                elif choice == 7:
+                    self.empty_links_google_sheet()
+                elif choice == 8:
+                    self.open_google_sheet()
                 elif choice == 9:
                     self.open_github()
                 elif choice == 0:
