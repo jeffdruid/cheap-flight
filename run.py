@@ -121,7 +121,7 @@ class LinkValidator:
             with tqdm(total=len(data), desc=self.CYAN + "Saving data to Google Sheets", unit="row" + self.RESET) as pbar:
                 for link, link_info in data.items():
                     link_type, status, response = link_info
-                    self.WORKSHEET.append_row([link, link_type, status, response])
+                    self.WORKSHEET.append_row([link, link_type, status, response if response is not None else ''])
                     pbar.update(1)
 
             print(self.GREEN + "Data saved to Google Sheets successfully." + self.RESET)
@@ -234,12 +234,12 @@ class LinkValidator:
             # Update data with broken link statuses
             for link, status in internal_link_status.items():
                 if status[0] == 'broken':
-                    data[str(link)] = ('internal', status[0], 'none')  # Set response to 'none' for broken links
+                    data[str(link)] = ('internal', status[0], status[1])  # Set response to the actual response code for broken links
                 else:
                     data[str(link)] = ('internal', status[0], status[1])
             for link, status in external_link_status.items():
                 if status[0] == 'broken':
-                    data[str(link)] = ('external', status[0], 'none')  # Set response to 'none' for broken links
+                    data[str(link)] = ('external', status[0], status[1])  # Set response to the actual response code for broken links
                 else:
                     data[str(link)] = ('external', status[0], status[1])
 
@@ -423,6 +423,7 @@ class LinkValidator:
 
                 # Send a HEAD request to the link and check the status code
                 response = requests.head(link, allow_redirects=True, timeout=5)
+                print(f"Response for {link}: {response.status_code}")
                 if response.status_code >= 400:
                     print(f"Broken link found: {link}")
                     link_status[link] = ('broken', response.status_code)
