@@ -423,7 +423,6 @@ class LinkValidator:
 
                 # Send a HEAD request to the link and check the status code
                 response = requests.head(link, allow_redirects=True, timeout=5)
-                print(f"Response for {link}: {response.status_code}")
                 if response.status_code >= 400:
                     print(f"Broken link found: {link}")
                     link_status[link] = ('broken', response.status_code)
@@ -437,7 +436,7 @@ class LinkValidator:
                 # Check if the hostname resolution failed
                 if isinstance(e, requests.exceptions.ConnectionError):
                     print(f"Hostname resolution failed for link: {link}")
-                    link_status[link] = ('broken', None)
+                    link_status[link] = ('broken', 'hostname_resolution_failed')
             except Exception as e:
                 # Handle other exceptions
                 error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
