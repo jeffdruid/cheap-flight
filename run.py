@@ -55,19 +55,28 @@ class LinkValidator:
     def print_instructions(self):
         """
         Display the instructions for using the Link-Validator Tool.
-        """    
-        print(self.MAGENTA + "\nPlease select an option from the menu below:")
-        print(self.CYAN + "1. Scrape and validate links from a webpage")
-        print("2. Display all links scraped from the last webpage")
-        print("3. Display invalid links scraped from the last webpage")
-        print("4. Display links with missing aria labels from the last webpage")
-        print("5. Display broken links from the last webpage")
-        print("6. Display a summary of findings from the last webpage")
-        print("7. Empty the links Google Sheet")
-        print("8. Open Google Sheets")
-        print("9. Open GitHub")
-        print("0. Exit" + self.RESET)
-        print("")
+        """ 
+        
+        print(self.MAGENTA + "Menu options:" + self.RESET)
+        print(self.CYAN + "-" * 63)
+        print("1. Scrape and Validate Links from a Webpage")
+        print("-" * 63)
+        print(" Display Options:\n")
+        print("   2. Display All Links Scraped from the Last Webpage")
+        print("   3. Display Invalid Links Scraped from the Last Webpage")
+        print("   4. Display Links with Missing Aria Labels from the Last Webpage")
+        print("   5. Display Broken Links from the Last Webpage")
+        print("   6. Display a Summary of Findings from the Last Webpage")
+        print("-" * 63)
+        print(" Manage Options:\n")
+        print("   7. Empty the Links Google Sheet")
+        print("   8. Open Google Sheets")
+        print("-" * 63)
+        print(" Additional Information:\n")
+        print("   9. Open GitHub")
+        print("-" * 63)
+        print("0. Exit Program")
+        print("-" * 63 + self.RESET)
 
     def get_user_input(self):
         """
@@ -121,6 +130,7 @@ class LinkValidator:
             with tqdm(total=len(data), desc=self.CYAN + "Saving data to Google Sheets", unit="row" + self.RESET) as pbar:
                 for link, link_info in data.items():
                     link_type, status, response = link_info
+                    # TODO
                     # Determine if the link has missing aria label
                     missing_aria = "yes" if link_info[0] == "internal" and link_info[1] == "missing_aria" else "no"
                     # Add data row to the worksheet
