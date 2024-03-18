@@ -157,8 +157,7 @@ class LinkValidator:
                 # Check if href is "#" or starts with "#"
                 if href == "#" or href.startswith("#"):
                     full_link += "#"  # Add fragment identifier
-                print("href:", href)
-                print("full_link:", full_link)
+               
                 # Check if the full link is an internal link
                 if self.is_internal_link(base_url, full_link):
                     # Add internal link to the set
