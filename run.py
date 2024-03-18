@@ -90,7 +90,10 @@ class LinkValidator:
         Extract the base URL from the given URL.
         """
         parsed_url = urllib.parse.urlparse(url)
-        base_url = f"{parsed_url.scheme}://{parsed_url.netloc}{os.path.dirname(parsed_url.path)}"
+        if not parsed_url.path:  # No path (like in "https://example.com/")
+            base_url = f"{parsed_url.scheme}://{parsed_url.netloc}/"
+        else:
+            base_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path.rstrip('/')}/"
         return base_url
     
     def test_google_sheets(self):
