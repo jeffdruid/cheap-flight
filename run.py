@@ -214,34 +214,31 @@ class LinkValidator:
 
             # Check internal links
             internal_links = self.check_internal_links(soup, base_url)
-            for link in internal_links:
-                data[link] = ('internal', 'valid', None)  # Set initial status and response
 
             # Check external links
             external_links = self.check_external_links(soup, base_url)
-            for link in external_links:
-                data[link] = ('external', 'valid', None)  # Set initial status and response
 
+            # Convert internal_links to a list before concatenating
+            all_links = list(internal_links) + external_links
+            
             # Check for missing aria labels, and broken links
             missing_aria = self.check_missing_aria(soup.find_all("a"))
-            internal_link_status = self.check_broken_links(internal_links)
-            external_link_status = self.check_broken_links(external_links)
+            link_status = self.check_broken_links(all_links)
 
             # Update data with missing aria labels
             for link in missing_aria:
                 data[str(link)] = ('internal', 'missing_aria', 'None')
 
-            # Update data with broken link statuses
-            for link, status in internal_link_status.items():
-                if status[0] == 'broken':
-                    data[str(link)] = ('internal', status[0], status[1])  # Set response to the actual response code for broken links
+            # Update data with link statuses
+            for link, status in link_status.items():
+                if link in internal_links:
+                    link_type = 'internal'
                 else:
-                    data[str(link)] = ('internal', status[0], status[1])
-            for link, status in external_link_status.items():
+                    link_type = 'external'
                 if status[0] == 'broken':
-                    data[str(link)] = ('external', status[0], status[1])  # Set response to the actual response code for broken links
+                    data[str(link)] = (link_type, status[0], status[1])  # Set response to the actual response code for broken links
                 else:
-                    data[str(link)] = ('external', status[0], status[1])
+                    data[str(link)] = (link_type, status[0], status[1])
 
             # Write data to Google Sheets
             try:
@@ -406,8 +403,11 @@ class LinkValidator:
         print(self.CYAN + "Checking for broken links..." + self.RESET)
         link_status = {}
 
+        # Initialize the progress bar
+        pbar = tqdm(total=len(links), desc=self.CYAN + "Checking links", unit="link" + self.RESET)
+
         # Loop through all the links and check for broken links
-        for link in tqdm(links, desc=self.CYAN + "Checking links", unit="link" + self.RESET):
+        for link in links:
             try:
                 # Skip JavaScript void links
                 if link.startswith("javascript:"):
@@ -431,7 +431,7 @@ class LinkValidator:
             except requests.exceptions.RequestException as e:
                 # Handle connection errors
                 error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
-                print(f"Error checking link {link}: {error_msg}")
+                print(f"Error checking link {link}")
                 link_status[link] = ('error', '-')
                 # Check if the hostname resolution failed
                 if isinstance(e, requests.exceptions.ConnectionError):
@@ -443,6 +443,9 @@ class LinkValidator:
                 print(f"An unexpected error: {error_msg}")
                 link_status[link] = ('unexpected_error', '-')
 
+            pbar.update(1)  # Update the progress bar
+
+        pbar.close()  # Close the progress bar
         print(self.GREEN + "Broken links checked successfully." + self.RESET)
         print("Number of broken links:", sum(1 for status in link_status.values() if status[0] == 'broken'))
         return link_status
