@@ -551,33 +551,43 @@ class LinkValidator:
         """
         Display a summary of findings.
         """
-        # Load the existing data from Google Sheets
         try:
+            # Fetch all data from the worksheet
             data = self.WORKSHEET.get_all_values()
+
+            # Check if there is any data in the worksheet
             if not data:
                 print("No links found in Google Sheets.")
                 return
+            
+            # Convert data to DataFrame
+            df = pd.DataFrame(data[1:], columns=data[0])
+            
+            # Check if 'Status' column exists
+            if 'Status' not in df.columns:
+                print(self.RED + "No links have been scraped yet." + self.RESET)
+                return
+
+            # Count the number of links scraped
+            num_links_scraped = len(df)
+
+            # Count the number of missing aria labels if the column exists
+            if 'Missing Aria' in df.columns:
+                num_missing_aria = len(df[df['Missing Aria'] == 'yes'])
+            else:
+                num_missing_aria = 0
+
+            # Count the number of broken links if the column exists
+            if 'Status' in df.columns:
+                num_broken_links = len(df[df['Status'] == 'broken'])
+            else:
+                num_broken_links = 0
+
+            # Display the summary
+            self.summarize_findings(num_links_scraped, num_missing_aria, num_broken_links)
+        
         except Exception as e:
             print("An unexpected error occurred:", str(e))
-            return
-
-        # Convert data to DataFrame
-        df = pd.DataFrame(data[1:], columns=data[0])
-
-        # Count the number of links scraped
-        num_links_scraped = len(df)
-
-        # Count the number of missing aria labels if the column exists
-        if 'Missing Aria' in df.columns:
-            num_missing_aria = len(df[df['Missing Aria'] == 'yes'])
-        else:
-            num_missing_aria = 0
-
-        # Count the number of broken links
-        num_broken_links = len(df[df['Status'] == 'broken'])
-
-        # Display the summary
-        self.summarize_findings(num_links_scraped, num_missing_aria, num_broken_links)
     
     def ask_continue(self):
         """
