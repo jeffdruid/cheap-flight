@@ -109,7 +109,7 @@ class LinkValidator:
         """
         try:
             # Define the header row
-            header = ['Link URL', 'Type', 'Status', 'Response']
+            header = ['Link URL', 'Type', 'Status', 'Response', 'Missing Aria']
 
             # Clear existing data (including header)
             self.WORKSHEET.clear()
@@ -121,7 +121,10 @@ class LinkValidator:
             with tqdm(total=len(data), desc=self.CYAN + "Saving data to Google Sheets", unit="row" + self.RESET) as pbar:
                 for link, link_info in data.items():
                     link_type, status, response = link_info
-                    self.WORKSHEET.append_row([link, link_type, status, response if response is not None else ''])
+                    # Determine if the link has missing aria label
+                    missing_aria = "yes" if link_info[0] == "internal" and link_info[1] == "missing_aria" else "no"
+                    # Add data row to the worksheet
+                    self.WORKSHEET.append_row([link, link_type, status, response if response is not None else '', missing_aria])
                     pbar.update(1)
 
             print(self.GREEN + "Data saved to Google Sheets successfully." + self.RESET)
