@@ -124,6 +124,56 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
+    def check_internal_links(self, soup, base_url):
+        """
+        Check internal links found in the webpage.
+        """
+        internal_links = set()  # Set to store internal links
+
+        # Find all the links on the page
+        all_links = soup.find_all("a")
+
+        # Loop through all the links and get the href attribute
+        for link in all_links:
+            # Get the href attribute of the link
+            href = link.get("href")
+            # Check if href is not None and is not an empty string
+            if href:
+                # Check if href is a relative path
+                if not urllib.parse.urlparse(href).netloc:
+                    # Create absolute URL using base_url and href
+                    full_link = urllib.parse.urljoin(base_url, href)
+                    # Check if the full link is an internal link
+                    if full_link.startswith(base_url):
+                        # Add internal link to the set
+                        internal_links.add(full_link)
+        return internal_links
+
+    def check_external_links(self, soup, base_url):
+        """
+        Check external links found in the webpage.
+        """
+        external_links = []
+
+        # Find all the links on the page
+        all_links = soup.find_all("a")
+
+        # Loop through all the links and get the href attribute
+        for link in all_links:
+            # Get the href attribute of the link
+            href = link.get("href")
+            # Check if href is not None and is not an empty string
+            if href:
+                # Check if href is a relative path
+                if not urllib.parse.urlparse(href).netloc:
+                    # Create absolute URL using base_url and href
+                    full_link = urllib.parse.urljoin(base_url, href)
+                    # Check if the full link is an external link
+                    if not full_link.startswith(base_url):
+                        # This is an external link
+                        external_links.append(full_link)
+        return external_links
+
     def scrape_and_validate_links(self):
         """
         Scrape and validate links from a webpage.
@@ -145,7 +195,7 @@ class LinkValidator:
             print(self.RED + f"An error occurred while fetching the webpage: {e}" + self.RESET)
             return
 
-        data = []  # List to store URLs
+        data = []  # List to store external links
 
         # Load the existing data from Google Sheets
         try:
@@ -157,53 +207,45 @@ class LinkValidator:
             return
 
         if soup:
-            # Find all the links on the page
-            all_links = soup.find_all("a")
-
             # Extract base URL
             base_url = self.get_base_url(url)
 
-            # Loop through all the links and get the href attribute
-            for link in all_links:
-                # Get the href attribute of the link
-                href = link.get("href")
-                # Check if href is not None and is not an empty string
-                if href:
-                    # Check if href is a relative path
-                    if not urllib.parse.urlparse(href).netloc:
-                        # Create absolute URL using base_url and href
-                        full_link = urllib.parse.urljoin(base_url, href)
-                    else:
-                        # Use href directly as it's already an absolute URL
-                        full_link = href
-                    # Add full link to data if it's not empty
-                    if full_link:
-                        data.append([full_link])
+            # Check internal links
+            internal_links = self.check_internal_links(soup, base_url)
 
-            # Print the number of links found on the page
-            num_links_scraped = len(data)
-            print(self.GREEN + f"Found {num_links_scraped} links on {url}." + self.RESET)
+            # Check external links
+            external_links = self.check_external_links(soup, base_url)
+
+            # Print the number of internal links found on the page
+            num_internal_links = len(internal_links)
+            print(self.GREEN + f"Found {num_internal_links} internal links on {url}." + self.RESET)
+
+            # Print the number of external links found on the page
+            num_external_links = len(external_links)
+            print(self.GREEN + f"Found {num_external_links} external links on {url}." + self.RESET)
 
             # Check for missing alt tags and capture the returned list
-            missing_alt = self.check_missing_alt(all_links)
+            missing_alt = self.check_missing_alt(soup.find_all("a"))
             num_missing_alt = len(missing_alt)
 
             # Check for missing aria labels and capture the returned list
-            missing_aria = self.check_missing_aria(all_links)
+            missing_aria = self.check_missing_aria(soup.find_all("a"))
             num_missing_aria = len(missing_aria)
 
-            # Filter out empty lists from data
-            data = [link[0] for link in data if link]
-
             # Check for broken links
-            link_status = self.check_broken_links(data)
-           
-            # Count the number of broken links
-            num_broken_links = sum(1 for status in link_status.values() if status[0] == 'broken')
+            internal_link_status = self.check_broken_links(internal_links)
+            external_link_status = {link: ("external", None) for link in external_links}
+
+            # Count the number of broken internal links
+            num_broken_internal_links = sum(1 for status in internal_link_status.values() if status[0] == 'broken')
+
+            # Count the number of broken external links
+            num_broken_external_links = sum(1 for status in external_link_status.values() if status[0] == 'broken')
 
             # Write data to Google Sheets
             try:
-                self.write_to_google_sheets(link_status)  # Write extracted links to Google Sheets
+                self.write_to_google_sheets(internal_link_status)  # Write internal links to Google Sheets
+                self.write_to_google_sheets(external_link_status)  # Write external links to Google Sheets
             except Exception as e:
                 print(self.RED + "An error occurred while writing data to Google Sheets:", str(e) + self.RESET)
 
