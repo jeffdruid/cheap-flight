@@ -117,10 +117,11 @@ class LinkValidator:
             # Write the header row to the worksheet
             self.WORKSHEET.append_row(header)
 
-            # Append new data with status
-            with tqdm(total=len(data), desc= self.CYAN + "Saving data to Google Sheets", unit="row" + self.RESET) as pbar:
-                for link, (status, response) in data.items():
-                    self.WORKSHEET.append_row([link, '', status, response])
+            # Append new data with status and response
+            with tqdm(total=len(data), desc=self.CYAN + "Saving data to Google Sheets", unit="row" + self.RESET) as pbar:
+                for link, link_info in data.items():
+                    link_type, status, response = link_info
+                    self.WORKSHEET.append_row([link, link_type, status, response])
                     pbar.update(1)
 
             print(self.GREEN + "Data saved to Google Sheets successfully." + self.RESET)
@@ -205,16 +206,7 @@ class LinkValidator:
             print(self.RED + f"An error occurred while fetching the webpage: {e}" + self.RESET)
             return
 
-        data = []  # List to store external links
-
-        # Load the existing data from Google Sheets
-        try:
-            data = self.WORKSHEET.get_all_values()
-            if not data:
-                print("No links found in Google Sheets.")
-        except Exception as e:
-            print("An unexpected error occurred:", str(e))
-            return
+        data = {}  # Dictionary to store link data
 
         if soup:
             # Extract base URL
@@ -222,45 +214,37 @@ class LinkValidator:
 
             # Check internal links
             internal_links = self.check_internal_links(soup, base_url)
+            for link in internal_links:
+                data[link] = ('internal', 'valid', None)  # Set initial status and response
 
             # Check external links
             external_links = self.check_external_links(soup, base_url)
+            for link in external_links:
+                data[link] = ('external', 'valid', None)  # Set initial status and response
 
-            # Print the number of internal links found on the page
-            num_internal_links = len(internal_links)
-            print(self.GREEN + f"Found {num_internal_links} internal links on {url}." + self.RESET)
-
-            # Print the number of external links found on the page
-            num_external_links = len(external_links)
-            print(self.GREEN + f"Found {num_external_links} external links on {url}." + self.RESET)
-
-            # Check for missing alt tags and capture the returned list
+            # Check for missing alt tags and aria labels, and broken links
             missing_alt = self.check_missing_alt(soup.find_all("a"))
-            num_missing_alt = len(missing_alt)
-
-            # Check for missing aria labels and capture the returned list
             missing_aria = self.check_missing_aria(soup.find_all("a"))
-            num_missing_aria = len(missing_aria)
-
-            # Check for broken links
             internal_link_status = self.check_broken_links(internal_links)
-            external_link_status = {link: ("external", None) for link in external_links}
+            external_link_status = self.check_broken_links(external_links)
 
-            # Count the number of broken internal links
-            num_broken_internal_links = sum(1 for status in internal_link_status.values() if status[0] == 'broken')
+            # Update data with missing alt tags and aria labels
+            for link in missing_alt:
+                data[link] = ('internal', 'missing_alt', None)
+            for link in missing_aria:
+                data[link] = ('internal', 'missing_aria', None)
 
-            # Count the number of broken external links
-            num_broken_external_links = sum(1 for status in external_link_status.values() if status[0] == 'broken')
+            # Update data with broken link statuses
+            for link, status in internal_link_status.items():
+                data[link] = ('internal', status[0], status[1])
+            for link, status in external_link_status.items():
+                data[link] = ('external', status[0], status[1])
 
             # Write data to Google Sheets
             try:
-                self.write_to_google_sheets(internal_link_status)  # Write internal links to Google Sheets
-                self.write_to_google_sheets(external_link_status)  # Write external links to Google Sheets
+                self.write_to_google_sheets(data)
             except Exception as e:
                 print(self.RED + "An error occurred while writing data to Google Sheets:", str(e) + self.RESET)
-
-            # Sort the data by type
-            self.sort_data_by_type()
 
             print("Scraping complete!\n")
     
