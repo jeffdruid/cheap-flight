@@ -485,7 +485,7 @@ class LinkValidator:
         """
         Display invalid links with unsupported schemes scraped from the last webpage.
         """
-        print(self.CYAN + "Displaying invalid links with unsupported schemes scraped from the last webpage...\n" + self.RESET)
+        print(self.CYAN + "Displaying invalid links scraped from the last webpage...\n" + self.RESET)
         try:
             # Fetch all data from the worksheet
             data = self.WORKSHEET.get_all_values()
@@ -504,7 +504,7 @@ class LinkValidator:
             if invalid_links.empty:
                 print(self.GREEN + "No invalid links found." + self.RESET)
             else:
-                print(self.RED + "Invalid links with unsupported schemes found:" + self.RESET)
+                print(self.RED + "Invalid links found:" + self.RESET)
                 for invalid_link in invalid_links['Link URL']:
                     print(invalid_link)
         
