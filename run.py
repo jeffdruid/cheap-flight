@@ -390,11 +390,28 @@ class LinkValidator:
         Display links with missing aria labels.
         """
         if missing_aria:
-            print("\n" + self.GREEN + "Links with missing aria labels:" + self.RESET)
+            print("\n" + self.RED + "Links with missing aria labels:" + self.RESET)
             for link in missing_aria:
                 print(link)
         else:
             print("\n" + self.GREEN + "No links with missing aria labels found." + self.RESET)
+
+    def display_missing_aria_links_from_sheet(self):
+        """
+        Display links missing aria labels from the Google Sheets.
+        """
+        try:
+            # Retrieve data from the Google Sheets
+            data = self.WORKSHEET.get_all_values()
+            
+            if data:
+                df = pd.DataFrame(data[1:], columns=data[0])
+                missing_aria_links = list(df[df['Missing Aria'] == 'yes']['Link URL'])
+                self.display_missing_aria(missing_aria_links)
+            else:
+                print("No data found in Google Sheets.")
+        except Exception as e:
+            print("An error occurred while retrieving data from Google Sheets:", str(e))
 
     def check_broken_links(self, links):
         """
@@ -632,7 +649,7 @@ class LinkValidator:
                 elif choice == 3:
                     self.display_invalid_links()
                 elif choice == 4:
-                    self.display_missing_aria(missing_aria=[])
+                    self.display_missing_aria_links_from_sheet()
                 elif choice == 5:
                     self.empty_links_google_sheet()
                 elif choice == 6:
