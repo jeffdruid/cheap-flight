@@ -9,6 +9,7 @@ import urllib.parse
 import gspread
 from google.oauth2.service_account import Credentials
 import webbrowser
+from urllib.parse import urljoin
 
 class LinkValidator:
     """
@@ -222,10 +223,12 @@ class LinkValidator:
         if soup:
             # Check all links for aria labels
             for link in soup.find_all("a"):
+                href = link.get('href')
+                full_link = urljoin(url, href)  # Join base URL with relative URL to get full URL
                 if link.get('aria-label'):
-                    links_with_aria.append(link.get('href'))
+                    links_with_aria.append(full_link)
                 else:
-                    links_without_aria.append(link.get('href'))
+                    links_without_aria.append(full_link)
             
             # Update data with missing aria labels for links with aria
             for link in links_with_aria:
@@ -274,12 +277,18 @@ class LinkValidator:
                 if link in internal_links:
                     link_type = 'internal'
                     # Check missing aria for internal links
-                    missing_aria = 'no' if link in links_without_aria else 'yes'
+                    missing_aria = 'yes' if link in links_without_aria else 'no'
+                    print(f"Missing aria for internal link {link}: {missing_aria}")
                 else:
                     link_type = 'external'
                     # For external links, keep the existing missing aria value
                     missing_aria = 'yes' if link in links_without_aria else 'no2' if status[0] == 'broken' else 'no'
+                    print(f"Missing aria for external link {link}: {missing_aria}")
                 data[str(link)] = (link_type, status[0], status[1], missing_aria)  # Set response to the actual response code for broken links
+            print(f"Links without aria: {links_without_aria}")
+            print(f"Links with aria: {links_with_aria}")
+            print(f"Internal links {internal_links}")
+            print(f"External links {external_links}")
 
             # Write data to Google Sheets
             try:
