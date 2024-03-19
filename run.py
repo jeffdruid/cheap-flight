@@ -170,7 +170,7 @@ class LinkValidator:
                 # Create absolute URL using base_url and href
                 full_link = urllib.parse.urljoin(base_url, href)
                 # Check if the full_link is internal or pointing to the same page with "#"
-                if self.is_internal_link(base_url, full_link) or href == "#":
+                if self.is_internal_link(base_url, full_link) or href == "#" or full_link.startswith(base_url):
                     internal_links.add(full_link)
 
         return internal_links
