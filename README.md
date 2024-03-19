@@ -46,6 +46,8 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 ## Technologies Used
 
+- TODO - List
+
 ### Python
 
 - Python is a high-level programming language known for its simplicity and readability. It is widely used in web development, data analysis, artificial intelligence, and more. In the Link-Validator Tool, Python serves as the primary programming language for backend development.
@@ -146,26 +148,134 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 ### URLParse Import
 
-- TODO - Definition
+- The URLParse import provides functions for parsing URLs into their components and joining URL components to form absolute URLs.
 
-- Example Usage:
+  - Example Usage:
 
-  ```bash
-  from urllib.parse import urljoin, urlparse
-  ```
+    ```bash
+    from urllib.parse import urljoin, urlparse
+    ```
 
 - Explanation:
 
   - <b>urljoin</b>: Function for joining a base URL with another URL component to form an absolute URL.
   - <b>urlparse</b>: Function for parsing URLs into their components.
 
-- TODO - add the other libraries
-  - import pandas as pd
-  - from tqdm import tqdm
-  - import colorama
-  - from colorama import Back, Fore, Style
-  - import os
-  - import webbrowser
+- TODO - explain the other libraries
+
+### pandas
+
+- pandas is a powerful Python library for data manipulation and analysis. It provides data structures and functions designed to make working with structured data fast, easy, and expressive.
+
+- Example Usage in the Code:
+
+  ```bash
+  import pandas as pd
+
+  # Reading a CSV file into a pandas DataFrame
+  df = pd.read_csv('data.csv')
+
+  # Performing operations on the DataFrame
+  df_filtered = df[df['column'] > 10]
+
+  # Writing the modified DataFrame back to a CSV file
+  df_filtered.to_csv('filtered_data.csv', index=False)
+  ```
+
+- Explanation:
+  - In this example, pandas is imported as pd for convenience.
+  - The read_csv() function is used to read data from a CSV file into a pandas DataFrame.
+  - Various operations, such as filtering rows based on a condition, can be performed on the DataFrame.
+  - The modified DataFrame can be written back to a CSV file using the to_csv() function.
+
+### tqdm
+
+- tqdm is a Python library that provides a fast, extensible progress bar for loops and other iterative processes. It offers a simple way to visualize the progress of tasks, making it easier to monitor long-running operations.
+
+- Example Usage in the Code:
+
+  ```bash
+  from tqdm import tqdm
+
+  # Iterating over a range with tqdm
+  for i in tqdm(range(100)):
+      # Perform some task here
+      pass
+
+  ```
+
+- Explanation:
+  - In this example, tqdm is imported to visualize the progress of a loop.
+  - The tqdm() function wraps the iterable (in this case, range(100)) and displays a progress bar as the loop iterates.
+  - Inside the loop, tasks are performed, and tqdm updates the progress bar accordingly.
+
+### Colorama
+
+- colorama is a Python library that makes it easy to add ANSI colors and styles to terminal output. It provides cross-platform support for colored text, allowing developers to create visually appealing command-line interfaces.
+
+- Example Usage in the Code:
+
+  ```bash
+  import colorama
+  from colorama import Fore, Back, Style
+
+  # Initialize colorama
+  colorama.init()
+
+  # Print colored text
+  print(Fore.RED + 'Error: Something went wrong!' + Style.RESET_ALL)
+  ```
+
+- Explanation:
+  - In this example, colorama is imported to add color to terminal output.
+  - The init() function is called to initialize colorama and set up the necessary environment variables.
+  - ANSI color codes from colorama's Fore and Style modules are used to change the text color.
+  - Style.RESET_ALL is used to reset the text color to the default after printing.
+
+### os
+
+- The os module in Python provides a way to interact with the operating system. It offers functions for performing tasks such as file operations, directory manipulation, and process management.
+
+  - Example Usage in the Code:
+
+    ```bash
+    import os
+
+    # Get the current working directory
+    cwd = os.getcwd()
+    print('Current directory:', cwd)
+
+    # List files in a directory
+    files = os.listdir(cwd)
+    print('Files in current directory:', files)
+    ```
+
+  - Explanation:
+    - In this example, os is imported to perform operating system-related tasks.
+    - The getcwd() function is used to get the current working directory.
+  - listdir() is used to list the files in the current working directory.
+
+### webbrowser
+
+- The webbrowser module in Python provides a high-level interface for displaying web-based documents to users. It allows Python scripts to open web browsers and display web pages, URLs, and HTML documents.
+
+- Example Usage in the Code:
+
+  ```bash
+  import webbrowser
+
+  # Open a web page in the default browser
+  webbrowser.open('https://example.com')
+
+  # Open a specific browser with a URL
+  webbrowser.get('firefox').open_new_tab('https://example.com')
+  ```
+
+- Explanation:
+
+  - In this example, webbrowser is imported to interact with web browsers.
+  - The open() function opens the specified URL in the default web browser.
+  - get() allows selecting a specific browser (e.g., Firefox) and opening a URL in a new tab using open_new_tab().
 
 ## User stories
 
