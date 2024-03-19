@@ -126,13 +126,11 @@ class LinkValidator:
             # Write the header row to the worksheet
             self.WORKSHEET.append_row(header)
 
-            # Append new data with status and response
+            # Append new data with status, response, and missing aria
             with tqdm(total=len(data), desc=self.CYAN + "Saving data to Google Sheets", unit="row" + self.RESET) as pbar:
                 for link, link_info in data.items():
-                    link_type, status, response = link_info
-                    # TODO
-                    # Determine if the link has missing aria label
-                    missing_aria = "yes" if link_info[0] == "internal" and link_info[1] == "missing_aria" else "no"
+                    link_type, status, response, missing_aria = link_info  # Unpack all four values
+
                     # Add data row to the worksheet
                     self.WORKSHEET.append_row([link, link_type, status, response if response is not None else '', missing_aria])
                     pbar.update(1)
@@ -219,8 +217,34 @@ class LinkValidator:
             return
 
         data = {}  # Dictionary to store link data
-
+        links_with_aria = []  # List to store links with aria labels
+        links_without_aria = []    # List to store links without aria labels
         if soup:
+            # Check all links for aria labels
+            for link in soup.find_all("a"):
+                if link.get('aria-label'):
+                    links_with_aria.append(link.get('href'))
+                else:
+                    links_without_aria.append(link.get('href'))
+            
+            # Update data with missing aria labels for links with aria
+            for link in links_with_aria:
+                # Check if the link is already in data
+                if str(link) in data:
+                    # Get the existing values for the link
+                    link_type, status, response = data[str(link)][:3]
+                    # Update the missing aria column to 'no'
+                    data[str(link)] = (link_type, status, response, 'no')
+
+            # Update data with missing aria labels for links without aria
+            for link in links_without_aria:
+                # Check if the link is already in data
+                if str(link) in data:
+                    # Get the existing values for the link
+                    link_type, status, response = data[str(link)][:3]
+                    # Update the missing aria column to 'yes'
+                    data[str(link)] = (link_type, status, response, 'yes')
+
             # Extract base URL
             base_url = self.get_base_url(url)
 
@@ -232,25 +256,30 @@ class LinkValidator:
 
             # Convert internal_links to a list before concatenating
             all_links = list(internal_links) + external_links
-            
-            # Check for missing aria labels, and broken links
-            missing_aria = self.check_missing_aria(soup.find_all("a"))
-            link_status = self.check_broken_links(all_links)
+            # REMOVE 
+            # Check for missing aria labels while scraping
+            # missing_aria = self.check_missing_aria(soup.find_all("a"))
 
             # Update data with missing aria labels
-            for link in missing_aria:
-                data[str(link)] = ('internal', 'missing_aria', 'None')
+            # for link in missing_aria:
+            #     if str(link) in data:
+            #         data[str(link)] = (data[str(link)][0], data[str(link)][1], data[str(link)][2], 'yes')
+            #     else:
+            #         # Add missing aria link to data
+            #         data[str(link)] = ('internal' if link in internal_links else 'external', 'missing_aria', 'None', 'yes')
 
-            # Update data with link statuses
+            # Check for broken links and update data
+            link_status = self.check_broken_links(all_links)
             for link, status in link_status.items():
                 if link in internal_links:
                     link_type = 'internal'
+                    # Check missing aria for internal links
+                    missing_aria = 'no' if link in links_without_aria else 'yes'
                 else:
                     link_type = 'external'
-                if status[0] == 'broken':
-                    data[str(link)] = (link_type, status[0], status[1])  # Set response to the actual response code for broken links
-                else:
-                    data[str(link)] = (link_type, status[0], status[1])
+                    # For external links, keep the existing missing aria value
+                    missing_aria = 'yes' if link in links_without_aria else 'no2' if status[0] == 'broken' else 'no'
+                data[str(link)] = (link_type, status[0], status[1], missing_aria)  # Set response to the actual response code for broken links
 
             # Write data to Google Sheets
             try:
@@ -377,8 +406,8 @@ class LinkValidator:
         Check for missing aria labels in anchor elements.
         """
         try:
-            # Initialize a list to store links with missing aria labels
-            missing_aria = []
+            # Initialize a dictionary to store missing aria labels for each link
+            missing_aria_dict = {}
 
             # Loop through all links
             for link in all_links:
@@ -386,14 +415,20 @@ class LinkValidator:
                 if link.name == 'a':
                     # Check if aria-label attribute exists and is not empty
                     aria_label = link.get('aria-label')
-                    if not aria_label or aria_label.strip() == '':
-                        missing_aria.append(link)
+                    # REMOVE
+                    # if not aria_label or aria_label.strip() == '':
+                    #     missing_aria_dict[str(link)] = 'yes'  # Missing aria label
+                    # else:
+                    #     missing_aria_dict[str(link)] = 'no'   # Aria label exists
 
-            print("Number of missing aria labels:", len(missing_aria))
-            return missing_aria
+            print("\n" + self.GREEN + "Missing aria labels checked successfully." + self.RESET)
+            print("Number of links checked:", len(all_links))
+            print("Number of links with missing aria labels:", sum(1 for value in missing_aria_dict.values() if value == 'yes'))
+            print("Number of links with aria labels:", sum(1 for value in missing_aria_dict.values() if value == 'no'))
+            return missing_aria_dict
         except Exception as e:
             print("Error:", e)
-            return []
+            return {}
 
     def display_missing_aria(self, missing_aria):
         """
