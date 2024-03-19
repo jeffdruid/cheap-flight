@@ -144,7 +144,11 @@ class LinkValidator:
         """
         Check if a link is internal based on the base URL.
         """
-        return urllib.parse.urlparse(link).netloc == urllib.parse.urlparse(base_url).netloc
+        parsed_link = urllib.parse.urlparse(link)
+        parsed_base_url = urllib.parse.urlparse(base_url)
+        
+        # Check if the link has the same scheme and netloc (domain) as the base URL
+        return parsed_link.scheme == parsed_base_url.scheme and parsed_link.netloc == parsed_base_url.netloc
     
     def check_internal_links(self, soup, base_url):
         """
@@ -165,12 +169,10 @@ class LinkValidator:
                 full_link = urllib.parse.urljoin(base_url, href)
                 # Check if href is "#" or starts with "#"
                 if href == "#" or href.startswith("#"):
-                    full_link += "#"  # Add fragment identifier
-               
-                # Check if the full link is an internal link
-                if self.is_internal_link(base_url, full_link):
-                    # Add internal link to the set
-                    internal_links.add(full_link)
+                    full_link = base_url  # Use base_url if href is "#" or starts with "#"
+
+                # Add internal link to the set
+                internal_links.add(full_link)
         return internal_links
 
     def check_external_links(self, soup, base_url):
