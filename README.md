@@ -46,7 +46,16 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 ## Technologies Used
 
-- TODO - List
+- Python
+- BeautifulSoup
+- Requests
+- Google Sheets API
+- URLParse Import
+- pandas
+- tqdm
+- colorama
+- os
+- webbrowser
 
 ### Python
 
