@@ -52,13 +52,13 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Python is a high-level programming language known for its simplicity and readability. It is widely used in web development, data analysis, artificial intelligence, and more. In the Link-Validator Tool, Python serves as the primary programming language for backend development.
 
-      - Example Usage:
+- Example Usage:
 
-```bash
-      import requests
-      response = requests.get('https://example.com')
-      print(response.status_code)
-```
+  ```bash
+        import requests
+        response = requests.get('https://example.com')
+        print(response.status_code)
+  ```
 
 - Explanation:
   - In this example, Python's requests library is used to send an HTTP GET request to a URL (https://example.com).
@@ -92,15 +92,15 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Requests is an elegant and simple HTTP library for Python, allowing you to send HTTP requests easily. It is commonly used for interacting with web APIs and fetching web pages.
 
-  - Example Usage:
+- Example Usage:
 
-    ```bash
-    import requests
+  ```bash
+  import requests
 
-    response = requests.get('https://api.example.com/data')
-    data = response.json()
-    print(data)
-    ```
+  response = requests.get('https://api.example.com/data')
+  data = response.json()
+  print(data)
+  ```
 
 - Explanation:
   - Here, the requests.get() function is used to send an HTTP GET request to the specified URL (https://api.example.com/data).
@@ -150,18 +150,16 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - The URLParse import provides functions for parsing URLs into their components and joining URL components to form absolute URLs.
 
-  - Example Usage:
+- Example Usage:
 
-    ```bash
-    from urllib.parse import urljoin, urlparse
-    ```
+  ```bash
+  from urllib.parse import urljoin, urlparse
+  ```
 
 - Explanation:
 
   - <b>urljoin</b>: Function for joining a base URL with another URL component to form an absolute URL.
   - <b>urlparse</b>: Function for parsing URLs into their components.
-
-- TODO - explain the other libraries
 
 ### pandas
 
@@ -236,23 +234,23 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - The os module in Python provides a way to interact with the operating system. It offers functions for performing tasks such as file operations, directory manipulation, and process management.
 
-  - Example Usage in the Code:
+- Example Usage in the Code:
 
-    ```bash
-    import os
+  ```bash
+  import os
 
-    # Get the current working directory
-    cwd = os.getcwd()
-    print('Current directory:', cwd)
+  # Get the current working directory
+  cwd = os.getcwd()
+  print('Current directory:', cwd)
 
-    # List files in a directory
-    files = os.listdir(cwd)
-    print('Files in current directory:', files)
-    ```
+  # List files in a directory
+  files = os.listdir(cwd)
+  print('Files in current directory:', files)
+  ```
 
-  - Explanation:
-    - In this example, os is imported to perform operating system-related tasks.
-    - The getcwd() function is used to get the current working directory.
+- Explanation:
+  - In this example, os is imported to perform operating system-related tasks.
+  - The getcwd() function is used to get the current working directory.
   - listdir() is used to list the files in the current working directory.
 
 ### webbrowser
