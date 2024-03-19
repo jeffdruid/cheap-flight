@@ -277,17 +277,17 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 ## User stories
 
-- TODO - Create a table here
-
-- As a user, I want to be able to input a URL so that I can validate its links.
-- As a user, I want to receive a list of all links found on the provided URL so that I can review them.
-- As a user, I want to see the status of each link (valid or broken) so that I can assess the health of the website.
-- As a user, I want the tool to handle different types of links (internal, external, anchor links) so that I can validate any type of URL.
-- As a user, I want the tool to handle redirects and follow them to the final destination so that I can accurately determine the status of each link.
-- As a user, I want to see a progress indicator while the tool is scanning the webpage so that I know it's working.
-- As a user, I want the tool to provide detailed error messages for broken links so that I can understand why they failed.
-- As a user, I want the tool to be easy to use with a simple command-line interface so that I can quickly validate URLs without any hassle.
-- As a user, I want the tool to generate a report summarizing the results of the link validation process so that I can easily share it with others.
+| As a user...                                                                                                                             | I know I'm done when...                                   |
+| ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| I want to be able to input a URL so that I can validate its links.                                                                       | I see a prompt or interface to enter the URL              |
+| I want to receive a list of all links found on the provided URL so that I can review them.                                               | I see a list of links displayed                           |
+| I want to see the status of each link (valid or broken) so that I can assess the health of the website.                                  | I see each link marked as valid or broken                 |
+| I want the tool to handle different types of links (internal, external, anchor links) so that I can validate any type of URL.            | I can validate internal, external, and anchor links       |
+| I want the tool to handle redirects and follow them to the final destination so that I can accurately determine the status of each link. | I see the final destination status of each link           |
+| I want to see a progress indicator while the tool is scanning the webpage so that I know it's working.                                   | I see a visual indicator or message showing progress      |
+| I want the tool to provide detailed error messages for broken links so that I can understand why they failed.                            | I receive clear messages explaining why links failed      |
+| I want the tool to be easy to use with a simple command-line interface so that I can quickly validate URLs without any hassle.           | I can easily run the tool from the command line           |
+| I want the tool to generate a report summarizing the results of the link validation process so that I can easily share it with others.   | I receive a summary report of the link validation process |
 
 ## Wireframe
 
