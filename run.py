@@ -148,8 +148,10 @@ class LinkValidator:
         parsed_base_url = urllib.parse.urlparse(base_url)
         
         # Check if the link has the same scheme and netloc (domain) as the base URL
-        return parsed_link.scheme == parsed_base_url.scheme and parsed_link.netloc == parsed_base_url.netloc
-    
+        is_internal = parsed_link.scheme == parsed_base_url.scheme and parsed_link.netloc == parsed_base_url.netloc
+        
+        return is_internal
+
     def check_internal_links(self, soup, base_url):
         """
         Check internal links found in the webpage.
@@ -164,15 +166,13 @@ class LinkValidator:
             # Get the href attribute of the link
             href = link.get("href")
             # Check if href is not None and is not an empty string
-            if href is not None and href != "":
+            if href is not None and href.strip() != "":
                 # Create absolute URL using base_url and href
                 full_link = urllib.parse.urljoin(base_url, href)
-                # Check if href is "#" or starts with "#"
-                if href == "#" or href.startswith("#"):
-                    full_link = base_url  # Use base_url if href is "#" or starts with "#"
+                # Check if the full_link is internal or pointing to the same page with "#"
+                if self.is_internal_link(base_url, full_link) or href == "#":
+                    internal_links.add(full_link)
 
-                # Add internal link to the set
-                internal_links.add(full_link)
         return internal_links
 
     def check_external_links(self, soup, base_url):
