@@ -288,6 +288,8 @@ class LinkValidator:
                 print(self.RED + "An error occurred while writing data to Google Sheets:", str(e) + self.RESET)
 
             print("Scraping complete!\n")
+            print("Links with aria labels:", len(links_with_aria))
+            print("Links without aria labels:", len(links_without_aria))
     
     def display_all_links(self):
         """
