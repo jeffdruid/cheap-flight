@@ -392,7 +392,11 @@ TODO - Add more test scenarios
 
 - TODO
 
-## Prerequisites
+## Setup
+
+- TODO
+
+### Prerequisites
 
 Before running the Link-Validator Tool, ensure you have the following installed:
 
@@ -400,7 +404,7 @@ Before running the Link-Validator Tool, ensure you have the following installed:
 - pip package manager
 - Google Account (for Google Sheets integration)
 
-## Installation
+### Installation
 
 1. Clone the repository to your local machine:
 
@@ -427,13 +431,37 @@ Before running the Link-Validator Tool, ensure you have the following installed:
    - Create service account credentials and download the JSON file.
    - Rename the JSON file to `creds.json` and place it in the project directory.
 
-## Usage
+### Usage
 
 To run the Link-Validator Tool, execute the following command in your terminal:
 
 ```bash
 python run.py
 ```
+
+## Deployment
+
+### Cloning & Forking
+
+#### Cloning
+
+- To clone this repository to your local machine, use the following command:
+
+```bash
+git clone
+```
+
+#### Forking
+
+- To fork this repository, click the Fork button in the upper right corner of the repository page.
+
+### Local Deployment
+
+- To deploy this project locally, follow the installation instructions provided in the Setup section.
+
+### Remote Deployment
+
+- To deploy this project remotely, consider using a cloud platform such as Heroku, AWS, or Google Cloud Platform.
 
 ## Bugs
 
