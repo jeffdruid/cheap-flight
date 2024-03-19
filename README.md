@@ -37,6 +37,10 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
      - [Python](#python)
    - [Manual Testing](#manual-testing)
      - [Acceptance Test](#acceptance-test)
+     - [Testing with invalid URLs](#testing-with-invalid-urls)
+     - [Testing with various types of links (internal, external, anchor links)](#testing-with-various-types-of-links-internal-external-anchor-links)
+     - [Testing with URLs requiring authentication](#testing-with-urls-requiring-authentication)
+     - [Testing the Google Sheets integration functionality](#testing-the-google-sheets-integration-functionality)
 8. [Bugs](#bugs)
    - [Fixed Bugs](#fixed-bugs)
 9. [UI Improvements](#ui-improvements)
@@ -352,7 +356,33 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 ## Testing
 
-- TODO
+### Manual Testing
+
+#### Acceptance Test
+
+- Test Scenario: User inputs a valid URL and initiates the link validation process.
+
+- Test Steps:
+
+  - Open the command-line interface (CLI).
+  - Run the Link-Validator Tool by executing the appropriate command (python run.py).
+  - Enter a valid URL when prompted.
+  - Verify that the tool starts validating the links found on the provided URL.
+  - Verify that the tool displays progress indicators or messages during the validation process.
+  - Verify that the tool generates a summary report of the link validation process upon completion.
+  - Expected Result: The Link-Validator Tool successfully scrapes the webpage, validates all links, and generates a comprehensive report with accurate results.
+
+- This acceptance test ensures that the core functionality of the Link-Validator Tool, which includes inputting a URL, validating links, and generating a report, functions as expected.
+
+TODO - Add more test scenarios
+
+#### Testing with invalid URLs
+
+#### Testing with various types of links (internal, external, anchor links)
+
+#### Testing with URLs requiring authentication
+
+#### Testing the Google Sheets integration functionality
 
 ### Validator Testing
 
