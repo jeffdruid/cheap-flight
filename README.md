@@ -23,7 +23,14 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 3. [User Stories](#user-stories)
 4. [Wireframe](#wireframe)
 5. [Features](#features)
-   - [Header](#header)
+   - [Scraping and Validation](#scraping-and-validation)
+   - [Google Sheets Integration](#google-sheets-integration)
+   - [Interactive Command-Line Interface (CLI)](#interactive-command-line-interface-cli)
+   - [Color-Coded Output](#color-coded-output)
+   - [Error Handling](#error-handling)
+   - [Progress Indicator](#progress-indicator)
+   - [Reporting](#reporting)
+   - [GitHub Integration](#github-integration)
 6. [Troubleshooting](#troubleshooting)
 7. [Testing](#testing)
    - [Validator Testing](#validator-testing)
@@ -316,12 +323,38 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 ## Features
 
 - TODO - ADD screenshots
-- **Scraping and Validation**: Scrapes a webpage and validates all links found, checking for broken links, missing Aria labels, and more.
-- **Google Sheets Integration**: Stores link validation results in a Google Sheets document for easy access and sharing.
-- **Interactive Command-Line Interface (CLI)**: Provides a user-friendly CLI with menu options for different operations and displays results in real-time.
-- **Color-Coded Output**: Utilizes color-coded output for easy identification of link status (valid, invalid, etc.).
-- **Error Handling**: Implements robust error handling to handle various scenarios gracefully.
-- **GitHub Integration**: Provides a direct link to the project's GitHub repository for additional information and contributions.
+
+### Scraping and Validation
+
+- Scrapes a webpage and validates all links found, checking for broken links, missing Aria labels, and more.
+
+### Google Sheets Integration
+
+- Stores link validation results in a Google Sheets document for easy access and sharing.
+
+### Interactive Command-Line Interface (CLI)
+
+- Provides a user-friendly CLI with menu options for different operations and displays results in real-time.
+
+### Color-Coded Output
+
+- Utilizes color-coded output for easy identification of link status (valid, invalid, etc.).
+
+### Error Handling
+
+- Implements robust error handling to handle various scenarios gracefully.
+
+### Progress Indicator
+
+- Displays a progress indicator during the link validation process to indicate the status of the operation.
+
+### Reporting
+
+- Generates a comprehensive report summarizing the results of the link validation process, including statistics and detailed information about broken links.
+
+### GitHub Integration
+
+- Provides a direct link to the project's GitHub repository for additional information and contributions.
 
 ## Troubleshooting
 
