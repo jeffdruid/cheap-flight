@@ -44,6 +44,59 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
     - [Images](#images)
     - [Useful links](#useful-links)
 
+## Features
+
+- TODO - ADD screenshots
+- **Scraping and Validation**: Scrapes a webpage and validates all links found, checking for broken links, missing Aria labels, and more.
+- **Google Sheets Integration**: Stores link validation results in a Google Sheets document for easy access and sharing.
+- **Interactive Command-Line Interface (CLI)**: Provides a user-friendly CLI with menu options for different operations and displays results in real-time.
+- **Color-Coded Output**: Utilizes color-coded output for easy identification of link status (valid, invalid, etc.).
+- **Error Handling**: Implements robust error handling to handle various scenarios gracefully.
+- **GitHub Integration**: Provides a direct link to the project's GitHub repository for additional information and contributions.
+
+## Prerequisites
+
+Before running the Link-Validator Tool, ensure you have the following installed:
+
+- Python 3.x
+- pip package manager
+- Google Account (for Google Sheets integration)
+
+## Installation
+
+1. Clone the repository to your local machine:
+
+   ```bash
+   git clone https://github.com/yourusername/link-validator.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```bash
+   cd link-validator
+   ```
+
+3. Install the required Python packages:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. Obtain Google Sheets API credentials:
+   - Visit the [Google Developers Console](https://console.developers.google.com/).
+   - Create a new project.
+   - Enable the Google Sheets API for your project.
+   - Create service account credentials and download the JSON file.
+   - Rename the JSON file to `creds.json` and place it in the project directory.
+
+## Usage
+
+To run the Link-Validator Tool, execute the following command in your terminal:
+
+```bash
+python run.py
+```
+
 ## Wireframe
 
 ![Wireframe - Mobile](assets/media/Wireframe-mobile.png)
