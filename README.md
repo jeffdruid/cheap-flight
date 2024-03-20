@@ -398,7 +398,7 @@ TODO - Add more test scenarios
 
 ## Setup
 
-- TODO
+- If you want to deploy the Link-Validator Tool locally for testing or development purposes, follow these steps:
 
 ### Prerequisites
 
@@ -451,9 +451,9 @@ python run.py
 
 - To clone this repository to your local machine, use the following command:
 
-```bash
-git clone
-```
+  ```bash
+  git clone https://github.com/yourusername/link-validator.git
+  ```
 
 #### Forking
 
