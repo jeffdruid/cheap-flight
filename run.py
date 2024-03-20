@@ -620,6 +620,14 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format(self.RED + "Error Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Error Links", num_broken_links))
         print("+" + "-" * 40 + "+")
         # ASCII art for the summary
+        print(self.GREEN + """
+_____ _                 _     __   __          
+|_   _| |__   __ _ _ __ | | __ \ \ / /__  _   _ 
+  | | | '_ \ / _` | '_ \| |/ /  \ V / _ \| | | |
+  | | | | | | (_| | | | |   <    | | (_) | |_| |
+  |_| |_| |_|\__,_|_| |_|_|\_\   |_|\___/ \__,_|
+                                                        
+                """ + self.RESET)
     
     def display_summary_of_findings(self):
         """
