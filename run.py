@@ -247,8 +247,11 @@ class LinkValidator:
             print("External links found:", len(external_links))
             print("Internal links found:", len(links_with_aria) + len(links_without_aria))
             print("Broken links found:", sum(1 for value in data.values() if value[1] == 'broken'))
-            print("Invalid links found:", sum(1 for value in data.values() if value[1] == 'unsupported_scheme'))
-            print("Error links found:", sum(1 for value in data.values() if value[1] == 'error'), self.RESET)
+            
+            # Count the number of connection errors
+            num_connection_errors = sum(1 for value in data.values() if "No connection adapters were found" in str(value[2]))
+            print("Links with connection errors:", num_connection_errors)
+            
             print(self.GREEN + "\nPlease check the Google Sheets for more details." + self.RESET)
             print(self.RED + "Note: The Google Sheets will be emptied when you scrape a new webpage." + self.RESET)
             
@@ -260,10 +263,7 @@ class LinkValidator:
             response = requests.head(link)
             status_code = response.status_code
             if status_code >= 400:
-                if status_code == 404:
-                    return ('broken', f'{status_code} {response.reason}')  # Broken link (404 Not Found)
-                else:
-                    return ('error', f'{status_code} {response.reason}')  # Error link (other 4xx or 5xx status codes)
+                return ('broken', f'{status_code} {response.reason}')  # Broken link (404 Not Found)
             else:
                 return ('valid', f'{status_code} {response.reason}')  # Valid link (status code < 400)
         except requests.exceptions.RequestException as e:
@@ -274,14 +274,13 @@ class LinkValidator:
         Display all links scraped from the last webpage.
         """
         print(self.CYAN + "Displaying all links scraped from the last webpage...\n" + self.RESET)
-        # Check if the worksheet exists
         try:
             # Fetch all data from the worksheet
             data = self.WORKSHEET.get_all_values()
 
             # Check if there is any data in the worksheet
-            if not data:
-                print("No links found.")
+            if not data or len(data) <= 1:
+                print(self.ERROR_MESSAGE)
                 return
             
             # Convert data to DataFrame
@@ -456,7 +455,7 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
-    def summarize_findings(self, num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_invalid_links, num_error_links, num_broken_links, num_connection_errors):
+    def summarize_findings(self, num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_broken_links, num_connection_errors):
         """
         Generate a summary of findings and present them with ASCII art.
         """
@@ -470,8 +469,6 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format(self.GREEN + "Links with Aria", str(num_links_with_aria) + self.RESET))
         print("| {:<20} {:<15} |".format(self.RED + "Missing Aria", str(num_missing_aria) + self.RESET)) if num_missing_aria > 0 else print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
         print("| {:<20} {:<15} |".format(self.RED + "Broken Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
-        print("| {:<20} {:<15} |".format(self.RED + "Invalid Links", str(num_invalid_links) + self.RESET)) if num_invalid_links > 0 else print("| {:<20} {:<15} |".format("Invalid Links", num_invalid_links))
-        print("| {:<20} {:<15} |".format(self.RED + "Error Links", str(num_error_links) + self.RESET)) if num_error_links > 0 else print("| {:<20} {:<15} |".format("Error Links", num_error_links))
         print("| {:<20} {:<14} |".format(self.RED + "Connection Error", str(num_connection_errors) + self.RESET)) if num_connection_errors > 0 else print("| {:<20} {:<15} |".format("Connection Errors", num_connection_errors))
         print("+" + "-" * 40 + "+")
         # ASCII art for the summary
@@ -483,7 +480,7 @@ class LinkValidator:
   |_| |_| |_|\__,_|_| |_|_|\_\   |_|\___/ \__,_|
                                                             
                     """ + self.RESET)
-    
+
     def display_summary_of_findings(self):
         """
         Display a summary of findings.
@@ -532,18 +529,6 @@ class LinkValidator:
             else:
                 num_missing_aria = 0
 
-            # Count the number of invalid links
-            if 'Response' in df.columns:
-                num_invalid_links = len(df[df['Response'].str.contains(r'^[4-5]\d\d\b')])
-            else:
-                num_invalid_links = 0
-
-            # Count the number of error links
-            if 'Response' in df.columns:
-                num_error_links = len(df[df['Response'].str.contains(r'^[1-3]\d\d\b')])
-            else:
-                num_error_links = 0
-            
             # Count the number of connection errors
             if 'Response' in df.columns:
                 num_connection_errors = len(df[df['Response'].str.contains("No connection adapters were found")])
@@ -557,7 +542,7 @@ class LinkValidator:
                 num_broken_links = 0
 
             # Display the summary
-            self.summarize_findings(num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_invalid_links, num_error_links, num_broken_links, num_connection_errors)
+            self.summarize_findings(num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_broken_links, num_connection_errors)
         
         except Exception as e:
             print("An unexpected error occurred:", str(e))
