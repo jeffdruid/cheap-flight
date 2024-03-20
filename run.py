@@ -234,63 +234,39 @@ class LinkValidator:
             
             # Update data with missing aria labels for links with aria
             for link in links_with_aria:
-                # Check if the link is already in data
-                if str(link) in data:
-                    # Get the existing values for the link
-                    link_type, status, response = data[str(link)][:3]
-                    # Update the missing aria column to 'no'
-                    data[str(link)] = (link_type, status, response, 'no')
+                # Determine if internal or external link
+                link_type = 'internal' if link in links_with_aria or link in links_without_aria else 'external'
+                # Determine missing aria
+                missing_aria = 'yes' if link in links_without_aria else 'no'
+                data[str(link)] = (link_type, 'valid', '200', missing_aria)
 
             # Update data with missing aria labels for links without aria
             for link in links_without_aria:
-                # Check if the link is already in data
-                if str(link) in data:
-                    # Get the existing values for the link
-                    link_type, status, response = data[str(link)][:3]
-                    # Update the missing aria column to 'yes'
-                    data[str(link)] = (link_type, status, response, 'yes')
+                # Determine if internal or external link
+                link_type = 'internal' if link in links_with_aria or link in links_without_aria else 'external'
+                # Determine missing aria
+                missing_aria = 'yes' if link in links_without_aria else 'no'
+                data[str(link)] = (link_type, 'valid', '200', missing_aria)
 
             # Extract base URL
             base_url = self.get_base_url(url)
-
-            # Check internal links
-            internal_links = self.check_internal_links(soup, base_url)
 
             # Check external links
             external_links = self.check_external_links(soup, base_url)
 
             # Convert internal_links to a list before concatenating
-            all_links = list(internal_links) + external_links
-            # REMOVE 
-            # Check for missing aria labels while scraping
-            # missing_aria = self.check_missing_aria(soup.find_all("a"))
-
-            # Update data with missing aria labels
-            # for link in missing_aria:
-            #     if str(link) in data:
-            #         data[str(link)] = (data[str(link)][0], data[str(link)][1], data[str(link)][2], 'yes')
-            #     else:
-            #         # Add missing aria link to data
-            #         data[str(link)] = ('internal' if link in internal_links else 'external', 'missing_aria', 'None', 'yes')
+            all_links = links_with_aria + links_without_aria + external_links
 
             # Check for broken links and update data
             link_status = self.check_broken_links(all_links)
             for link, status in link_status.items():
-                if link in internal_links:
+                if link in links_with_aria or link in links_without_aria:
                     link_type = 'internal'
-                    # Check missing aria for internal links
-                    missing_aria = 'yes' if link in links_without_aria else 'no'
-                    print(f"Missing aria for internal link {link}: {missing_aria}")
                 else:
                     link_type = 'external'
-                    # For external links, keep the existing missing aria value
-                    missing_aria = 'yes' if link in links_without_aria else 'no' if status[0] == 'broken' else 'no'
-                    print(f"Missing aria for external link {link}: {missing_aria}")
-                data[str(link)] = (link_type, status[0], status[1], missing_aria)  # Set response to the actual response code for broken links
-            print(f"Links without aria: {links_without_aria}")
-            print(f"Links with aria: {links_with_aria}")
-            print(f"Internal links {internal_links}")
-            print(f"External links {external_links}")
+                # Determine missing aria
+                missing_aria = 'yes' if link in links_without_aria else 'no' if status[0] == 'broken' else 'no'
+                data[str(link)] = (link_type, status[0], status[1], missing_aria)
 
             # Write data to Google Sheets
             try:
