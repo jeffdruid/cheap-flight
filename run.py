@@ -608,9 +608,15 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format("Metric", "Count"))
         print("+" + "-" * 40 + "+")
         print("| {:<20} {:<15} |".format("Links Scraped", num_links_scraped))
-        print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
-        print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
+        print("| {:<20} {:<15} |".format("External Links", num_links_scraped - (num_links_scraped - num_missing_aria)))
+        print("| {:<20} {:<15} |".format("Internal Links", num_links_scraped - (num_links_scraped - num_missing_aria)))
+        print("| {:<20} {:<15} |".format("Links with Aria", num_links_scraped - num_missing_aria))
+        print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria) if num_missing_aria <= 0 else "| {:<20} {:<20} |".format( self.RED + "Missing Aria Labels", str(num_missing_aria) + self.RESET))
+        print("| {:<20} {:<15} |".format("Broken Links", num_broken_links) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Broken Links", 0))
+        print("| {:<20} {:<15} |".format("Invalid Links", num_broken_links) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Invalid Links", 0))
+        print("| {:<20} {:<15} |".format("Error Links", num_broken_links) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Error Links", 0))
         print("+" + "-" * 40 + "+")
+        # TODO: Add ASCII art for the summary
     
     def display_summary_of_findings(self):
         """
