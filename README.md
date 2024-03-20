@@ -624,6 +624,17 @@ heroku open
 ## Credits
 
 - TODO
+- TODO - Add credits for the libraries used
+- [BeautifulSoup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+- [Requests Documentation](https://docs.python-requests.org/en/master/)
+- [Google Sheets API Documentation](https://developers.google.com/sheets/api)
+- [URLParse Documentation](https://docs.python.org/3/library/urllib.parse.html)
+- [pandas Documentation](https://pandas.pydata.org/docs/)
+- [tqdm Documentation](https://tqdm.github.io/)
+- [Colorama Documentation](https://pypi.org/project/colorama/)
+- [os Documentation](https://docs.python.org/3/library/os.html)
+- [webbrowser Documentation](https://docs.python.org/3/library/webbrowser.html)
+- [Asci Art Generator](https://patorjk.com/software/taag/)
 
 ### Source Code
 
