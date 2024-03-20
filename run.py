@@ -284,7 +284,7 @@ class LinkValidator:
                 else:
                     link_type = 'external'
                     # For external links, keep the existing missing aria value
-                    missing_aria = 'yes' if link in links_without_aria else 'no2' if status[0] == 'broken' else 'no'
+                    missing_aria = 'yes' if link in links_without_aria else 'no' if status[0] == 'broken' else 'no'
                     print(f"Missing aria for external link {link}: {missing_aria}")
                 data[str(link)] = (link_type, status[0], status[1], missing_aria)  # Set response to the actual response code for broken links
             print(f"Links without aria: {links_without_aria}")

@@ -456,11 +456,9 @@ TODO - Add more test scenarios
 
 ## Bugs
 
-- TODO
-
 ### Fixed Bugs
 
-- TODO
+- Explain the bugs encountered during the development of the Link-Validator Tool and how they were resolved.
 
 ## UI Improvements
 
