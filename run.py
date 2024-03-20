@@ -249,6 +249,8 @@ class LinkValidator:
             print("Broken links found:", sum(1 for value in data.values() if value[1] == 'broken'))
             print("Invalid links found:", sum(1 for value in data.values() if value[1] == 'unsupported_scheme'))
             print("Error links found:", sum(1 for value in data.values() if value[1] == 'error'), self.RESET)
+            print(self.GREEN + "\nPlease check the Google Sheets for more details." + self.RESET)
+            print(self.RED + "Note: The Google Sheets will be emptied when you scrape a new webpage." + self.RESET)
             
     def check_link_status(self, link):
         """
@@ -297,7 +299,9 @@ class LinkValidator:
         """
         while True:
             try:
-                print(self.CYAN + "\nhttps://jeffdruid.github.io/link-test/" + self.RESET)
+                print(self.GREEN + "You can use the following URL for testing:" + self.RESET)
+                print(self.YELLOW + "example.com" + self.RESET)
+                print(self.YELLOW + "\nhttps://jeffdruid.github.io/link-test/" + self.RESET)
                 url = input(self.CYAN + "\nEnter the URL you want to scrape: \n" + self.RESET)
                 # Check if the URL starts with "http://" or "https://"
                 if not url.startswith(("http://", "https://")):
@@ -432,6 +436,7 @@ class LinkValidator:
         github_link = "https://github.com/jeffdruid/link-validator"
         print("\n" + self.GREEN + "GitHub link: " + github_link + self.RESET)
         try:
+            print(self.YELLOW + "\nOpening GitHub..." + self.RESET)
             webbrowser.open(github_link)
             print("\n" + self.GREEN + "GitHub has been opened in a new tab." + self.RESET)
         except Exception as e:
@@ -442,9 +447,10 @@ class LinkValidator:
         Empty the links Google Sheet.
         """
         try:
+            print(self.YELLOW + "\nEmptying the Google Sheet..." + self.RESET)
             # Clear existing data (including header)
             self.WORKSHEET.clear()
-            # print("\n" + self.GREEN + "The Google Sheet has been emptied." + self.RESET)
+            print("\n" + self.GREEN + "The Google Sheet has been emptied." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
