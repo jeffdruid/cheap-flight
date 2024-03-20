@@ -227,18 +227,22 @@ class LinkValidator:
                     links_with_aria.append(full_link)
                 else:
                     links_without_aria.append(full_link)
-            
+
             # Update data with missing aria labels for links with aria
             for link in links_with_aria:
                 # Determine missing aria
                 missing_aria = 'yes' if link in links_without_aria else 'no'
-                data[str(link)] = ('internal', 'valid', '200', missing_aria)
+                # Get status code and response from check_link_status function
+                status, response = self.check_link_status(link)
+                data[str(link)] = ('internal', status, response, missing_aria)
 
             # Update data with missing aria labels for links without aria
             for link in links_without_aria:
                 # Determine missing aria
                 missing_aria = 'yes' if link in links_without_aria else 'no'
-                data[str(link)] = ('internal', 'valid', '200', missing_aria)
+                # Get status code and response from check_link_status function
+                status, response = self.check_link_status(link)
+                data[str(link)] = ('internal', status, response, missing_aria)
 
             # Extract base URL
             base_url = self.get_base_url(url)
