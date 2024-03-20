@@ -199,7 +199,7 @@ class LinkValidator:
         Scrape and validate links from a webpage.
         """
         url = self.get_url_input()
-        print("You entered: " + url)
+        print(self.CYAN + "You entered: " + url + self.RESET)
 
         # Clear the Google Sheet first
         self.empty_links_google_sheet()
@@ -267,9 +267,15 @@ class LinkValidator:
             except Exception as e:
                 print(self.RED + "An error occurred while writing data to Google Sheets:", str(e) + self.RESET)
 
-            print("Scraping complete!\n")
+            print(self.GREEN + "Scraping complete!\n" + self.RESET)
+            print(self.CYAN + "Total links found:", len(links_with_aria) + len(links_without_aria) + len(external_links))
             print("Links with aria labels:", len(links_with_aria))
             print("Links without aria labels:", len(links_without_aria))
+            print("External links found:", len(external_links))
+            print("Internal links found:", len(links_with_aria) + len(links_without_aria))
+            print("Broken links found:", sum(1 for value in data.values() if value[1] == 'broken'))
+            print("Invalid links found:", sum(1 for value in data.values() if value[1] == 'unsupported_scheme'))
+            print("Error links found:", sum(1 for value in data.values() if value[1] == 'error'), self.RESET)
             
     def check_link_status(self, link):
         """
@@ -283,7 +289,7 @@ class LinkValidator:
             else:
                 return ('valid', f'{status_code} {response.reason}')
         except requests.exceptions.RequestException as e:
-            print(f"Error while checking link {link}: {str(e)}")
+            # print(f"Error while checking link {link}: {str(e)}")
             return ('broken', str(e))
         
     def display_all_links(self):
@@ -337,7 +343,7 @@ class LinkValidator:
         # Send a HEAD request to the URL and check the status code
         try:
             response = requests.head(url, allow_redirects=True, stream=True, timeout=5)
-            print(self.GREEN + "Status code: " + str(response.status_code) + self.RESET)
+            print(self.GREEN + "\nStatus code: " + str(response.status_code) + self.RESET)
             return response.status_code == 200
         except requests.exceptions.RequestException as e:
             print(Back.RED + f"Error: {e}" + self.RESET)
