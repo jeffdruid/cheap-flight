@@ -602,7 +602,7 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
-    def summarize_findings(self, num_links_scraped, num_missing_aria, num_broken_links):
+    def summarize_findings(self, num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_invalid_links, num_error_links, num_broken_links):
         """
         Generate a summary of findings and present them with ASCII art.
         """
@@ -611,23 +611,23 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format(self.YELLOW + "Metric", "Count" + self.RESET))
         print("+" + "-" * 40 + "+")
         print("| {:<20} {:<15} |".format(self.GREEN + "Links Scraped", str(num_links_scraped) + self.RESET))
-        print("| {:<20} {:<15} |".format(self.GREEN + "External Links", str(num_links_scraped - num_missing_aria) + self.RESET))
-        print("| {:<20} {:<15} |".format(self.GREEN + "Internal Links", str(num_links_scraped - num_missing_aria) + self.RESET))
-        print("| {:<20} {:<15} |".format(self.GREEN + "Links with Aria", str(num_links_scraped - num_missing_aria) + self.RESET))
+        print("| {:<20} {:<15} |".format(self.GREEN + "Links with Aria", str(num_links_with_aria) + self.RESET))
+        print("| {:<20} {:<15} |".format(self.GREEN + "Internal Links", str(num_internal_links) + self.RESET))
+        print("| {:<20} {:<15} |".format(self.GREEN + "External Links", str(num_external_links) + self.RESET))
         print("| {:<20} {:<15} |".format(self.RED + "Missing Aria", str(num_missing_aria) + self.RESET)) if num_missing_aria > 0 else print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
         print("| {:<20} {:<15} |".format(self.RED + "Broken Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
-        print("| {:<20} {:<15} |".format(self.RED + "Invalid Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Invalid Links", num_broken_links))
-        print("| {:<20} {:<15} |".format(self.RED + "Error Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Error Links", num_broken_links))
+        print("| {:<20} {:<15} |".format(self.RED + "Invalid Links", str(num_invalid_links) + self.RESET)) if num_invalid_links > 0 else print("| {:<20} {:<15} |".format("Invalid Links", num_invalid_links))
+        print("| {:<20} {:<15} |".format(self.RED + "Error Links", str(num_error_links) + self.RESET)) if num_error_links > 0 else print("| {:<20} {:<15} |".format("Error Links", num_error_links))
         print("+" + "-" * 40 + "+")
         # ASCII art for the summary
         print(self.GREEN + """
-_____ _                 _     __   __          
-|_   _| |__   __ _ _ __ | | __ \ \ / /__  _   _ 
-  | | | '_ \ / _` | '_ \| |/ /  \ V / _ \| | | |
-  | | | | | | (_| | | | |   <    | | (_) | |_| |
-  |_| |_| |_|\__,_|_| |_|_|\_\   |_|\___/ \__,_|
-                                                        
-                """ + self.RESET)
+   _____ _                 _     __   __          
+  |_   _| |__   __ _ _ __ | | __ \ \ / /__  _   _ 
+    | | | '_ \ / _` | '_ \| |/ /  \ V / _ \| | | |
+    | | | | | | (_| | | | |   <    | | (_) | |_| |
+    |_| |_| |_|\__,_|_| |_|_|\_\   |_|\___/ \__,_|
+                                                            
+                    """ + self.RESET)
     
     def display_summary_of_findings(self):
         """
@@ -654,13 +654,22 @@ _____ _                 _     __   __
             num_links_scraped = len(df)
 
             # Count the number of aria labels found if the column exists
-            # TODO - Update variable for number of links with aria labels
+            if 'Missing Aria' in df.columns:
+                num_links_with_aria = len(df[df['Missing Aria'] == 'no'])
+            else:
+                num_links_with_aria = 0
             
             # Count the number of internal links found if the column exists
-            # TODO - Update variable for number of internal links.
+            if 'Type' in df.columns:
+                num_internal_links = len(df[df['Type'] == 'internal'])
+            else:
+                num_internal_links = 0
             
             # Count the number of external links found if the column exists
-            # TODO - Update variable for number of external links.
+            if 'Type' in df.columns:
+                num_external_links = len(df[df['Type'] == 'external'])
+            else:
+                num_external_links = 0
             
             # Count the number of missing aria labels if the column exists
             if 'Missing Aria' in df.columns:
@@ -669,10 +678,16 @@ _____ _                 _     __   __
                 num_missing_aria = 0
 
             # Count the number of invalid links
-            # TODO - Update variable for number for invalid links 
+            if 'Status' in df.columns:
+                num_invalid_links = len(df[df['Status'] == 'invalid'])
+            else:
+                num_invalid_links = 0
             
             # Count the number of error links
-            # TODO - Update variable for number for error links 
+            if 'Status' in df.columns:
+                num_error_links = len(df[df['Status'] == 'error'])
+            else:
+                num_error_links = 0
             
             # Count the number of broken links if the column exists
             if 'Status' in df.columns:
@@ -681,8 +696,7 @@ _____ _                 _     __   __
                 num_broken_links = 0
 
             # Display the summary
-            self.summarize_findings(num_links_scraped, num_missing_aria, num_broken_links)
-            # TODO - Update variables here
+            self.summarize_findings(num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_invalid_links, num_error_links, num_broken_links)
         
         except Exception as e:
             print("An unexpected error occurred:", str(e))
