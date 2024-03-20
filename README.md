@@ -32,7 +32,9 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
    - [Reporting](#reporting)
    - [GitHub Integration](#github-integration)
 6. [Troubleshooting](#troubleshooting)
-   - [
+   - [Handling Redirects](#handling-redirects)
+   - [Invalid URL Handling](#invalid-url-handling)
+   - [Inconsistent Link Status](#inconsistent-link-status)
 7. [Testing](#testing)
    - [Validator Testing](#validator-testing)
      - [Python](#python)
