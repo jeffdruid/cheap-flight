@@ -614,13 +614,12 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format(self.GREEN + "External Links", str(num_links_scraped - num_missing_aria) + self.RESET))
         print("| {:<20} {:<15} |".format(self.GREEN + "Internal Links", str(num_links_scraped - num_missing_aria) + self.RESET))
         print("| {:<20} {:<15} |".format(self.GREEN + "Links with Aria", str(num_links_scraped - num_missing_aria) + self.RESET))
-        # TODO - Update values bellow.
-        print("| {:<20} {:<20} |".format( self.RED + "Missing Aria Labels", str(num_missing_aria) + self.RESET)) if num_missing_aria > 0 else "| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria) 
-        print("| {:<20} {:<24} |".format(self.RED + "Broken Links", str(num_missing_aria) + self.RESET)) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Broken Links", num_broken_links)
-        print("| {:<20} {:<24} |".format(self.RED + "Invalid Links", str(num_missing_aria) + self.RESET))if num_broken_links > 0 else "| {:<20} {:<15} |".format("Invalid Links", num_broken_links)
-        print("| {:<20} {:<24} |".format(self.RED + "Error Links", str(num_missing_aria) + self.RESET)) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Error Links", num_broken_links)
+        print("| {:<20} {:<15} |".format(self.RED + "Missing Aria", str(num_missing_aria) + self.RESET)) if num_missing_aria > 0 else print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
+        print("| {:<20} {:<15} |".format(self.RED + "Broken Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
+        print("| {:<20} {:<15} |".format(self.RED + "Invalid Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Invalid Links", num_broken_links))
+        print("| {:<20} {:<15} |".format(self.RED + "Error Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Error Links", num_broken_links))
         print("+" + "-" * 40 + "+")
-        # TODO: Add ASCII art for the summary
+        # ASCII art for the summary
     
     def display_summary_of_findings(self):
         """
