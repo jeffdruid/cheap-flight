@@ -463,9 +463,67 @@ python run.py
 
 - To deploy this project locally, follow the installation instructions provided in the Setup section.
 
-### Remote Deployment
+### Remote Deployment (Heroku)
 
-- To deploy this project remotely, consider using a cloud platform such as Heroku, AWS, or Google Cloud Platform.
+1. Create a Heroku Account
+   If you haven't already, sign up for a free account on [Heroku](https://signup.heroku.com/)
+
+2. Install Heroku CLI
+   Download and install the Heroku CLI for your operating system.
+
+3. Login to Heroku
+   Open a terminal or command prompt and login to your Heroku account using the following command:
+
+```bash
+heroku login
+```
+
+Follow the prompts to enter your Heroku credentials.
+
+4. Prepare Your Application
+   Ensure your application is ready for deployment to Heroku:
+
+- Make sure your application has a requirements.txt file listing all dependencies.
+- Include a Procfile in the root directory of your project. This file specifies the commands that Heroku should use to run your application.
+- If your application requires any environment variables, ensure they are properly configured.
+
+5. Initialize Git Repository
+
+- If your project is not already a Git repository, initialize one:
+
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+```
+
+6. Create a Heroku App
+   Create a new Heroku app using the Heroku CLI:
+
+```bash
+heroku create your-app-name
+```
+
+Replace your-app-name with a unique name for your Heroku app.
+
+7. Deploy Your Application
+   Deploy your application to Heroku using Git:
+
+```bash
+git push heroku main
+```
+
+Replace main with the name of your main branch if it's different (e.g., master).
+
+8. Open Your Application
+   Once the deployment is complete, you can open your application in the browser using the following command:
+
+```bash
+heroku open
+```
+
+- This will open your application in the default web browser.
+- Your Python application should now be deployed and running on Heroku. You can access it using the provided Heroku URL or custom domain if configured.
 
 ## Bugs
 
@@ -499,7 +557,7 @@ python run.py
 ### Source Code
 
 - TODO
-- TODO - Add test source code [Link-Test](github.com)
+- [Link-Test Github](https://github.com/jeffdruid/link-test)
 
 #### Images
 
@@ -508,7 +566,7 @@ python run.py
 #### Useful links
 
 - TODO
-
+- [Link-Test Page](https://jeffdruid.github.io/link-test/)
 - [Web Scraping with Python and BeautifulSoup is THIS easy! - Tom's Tech Academy](https://www.youtube.com/watch?v=nBzrMw8hkmY)
 - [Banner - Canva AI](https://www.canva.com)
 - [The Best Websites to Practice Your Web Scraping Skills in 2024 - Proxyway](https://proxyway.com/guides/best-websites-to-practice-your-web-scraping-skills)
