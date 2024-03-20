@@ -602,7 +602,7 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
-    def summarize_findings(self, num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_invalid_links, num_error_links, num_broken_links):
+    def summarize_findings(self, num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_invalid_links, num_error_links, num_broken_links, num_connection_errors):
         """
         Generate a summary of findings and present them with ASCII art.
         """
@@ -611,21 +611,22 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format(self.YELLOW + "Metric", "Count" + self.RESET))
         print("+" + "-" * 40 + "+")
         print("| {:<20} {:<15} |".format(self.GREEN + "Links Scraped", str(num_links_scraped) + self.RESET))
-        print("| {:<20} {:<15} |".format(self.GREEN + "Links with Aria", str(num_links_with_aria) + self.RESET))
         print("| {:<20} {:<15} |".format(self.GREEN + "Internal Links", str(num_internal_links) + self.RESET))
         print("| {:<20} {:<15} |".format(self.GREEN + "External Links", str(num_external_links) + self.RESET))
+        print("| {:<20} {:<15} |".format(self.GREEN + "Links with Aria", str(num_links_with_aria) + self.RESET))
         print("| {:<20} {:<15} |".format(self.RED + "Missing Aria", str(num_missing_aria) + self.RESET)) if num_missing_aria > 0 else print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
         print("| {:<20} {:<15} |".format(self.RED + "Broken Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
         print("| {:<20} {:<15} |".format(self.RED + "Invalid Links", str(num_invalid_links) + self.RESET)) if num_invalid_links > 0 else print("| {:<20} {:<15} |".format("Invalid Links", num_invalid_links))
         print("| {:<20} {:<15} |".format(self.RED + "Error Links", str(num_error_links) + self.RESET)) if num_error_links > 0 else print("| {:<20} {:<15} |".format("Error Links", num_error_links))
+        print("| {:<20} {:<14} |".format(self.RED + "Connection Error", str(num_connection_errors) + self.RESET)) if num_connection_errors > 0 else print("| {:<20} {:<15} |".format("Connection Errors", num_connection_errors))
         print("+" + "-" * 40 + "+")
         # ASCII art for the summary
         print(self.GREEN + """
-   _____ _                 _     __   __          
-  |_   _| |__   __ _ _ __ | | __ \ \ / /__  _   _ 
-    | | | '_ \ / _` | '_ \| |/ /  \ V / _ \| | | |
-    | | | | | | (_| | | | |   <    | | (_) | |_| |
-    |_| |_| |_|\__,_|_| |_|_|\_\   |_|\___/ \__,_|
+ _____ _                 _     __   __          
+|_   _| |__   __ _ _ __ | | __ \ \ / /__  _   _ 
+  | | | '_ \ / _` | '_ \| |/ /  \ V / _ \| | | |
+  | | | | | | (_| | | | |   <    | | (_) | |_| |
+  |_| |_| |_|\__,_|_| |_|_|\_\   |_|\___/ \__,_|
                                                             
                     """ + self.RESET)
     
@@ -678,16 +679,22 @@ class LinkValidator:
                 num_missing_aria = 0
 
             # Count the number of invalid links
-            if 'Status' in df.columns:
-                num_invalid_links = len(df[df['Status'] == 'invalid'])
+            if 'Response' in df.columns:
+                num_invalid_links = len(df[df['Response'].str.contains(r'^[4-5]\d\d\b')])
             else:
                 num_invalid_links = 0
-            
+
             # Count the number of error links
-            if 'Status' in df.columns:
-                num_error_links = len(df[df['Status'] == 'error'])
+            if 'Response' in df.columns:
+                num_error_links = len(df[df['Response'].str.contains(r'^[1-3]\d\d\b')])
             else:
                 num_error_links = 0
+            
+            # Count the number of connection errors
+            if 'Response' in df.columns:
+                num_connection_errors = len(df[df['Response'].str.contains("No connection adapters were found")])
+            else:
+                num_connection_errors = 0
             
             # Count the number of broken links if the column exists
             if 'Status' in df.columns:
@@ -696,7 +703,7 @@ class LinkValidator:
                 num_broken_links = 0
 
             # Display the summary
-            self.summarize_findings(num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_invalid_links, num_error_links, num_broken_links)
+            self.summarize_findings(num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_invalid_links, num_error_links, num_broken_links, num_connection_errors)
         
         except Exception as e:
             print("An unexpected error occurred:", str(e))
