@@ -372,6 +372,38 @@ class LinkValidator:
                 print("No data found in Google Sheets.")
         except Exception as e:
             print(self.ERROR_MESSAGE)
+            
+    def print_links_with_connection_errors(self):
+        """
+        Print links with connection errors from Google Sheets.
+        """
+        try:
+            # Fetch all data from the worksheet
+            data = self.WORKSHEET.get_all_values()
+        except Exception as e:
+            print(self.RED + "An error occurred while reading data from Google Sheets:", str(e) + self.RESET)
+            return
+        
+        if data:
+            # Convert data to a DataFrame for easier manipulation
+            df = pd.DataFrame(data[1:], columns=data[0])
+            
+            # Count the number of connection errors
+            if 'Response' in df.columns:
+                num_connection_errors = len(df[df['Response'].str.contains("No connection adapters were found")])
+                
+                if num_connection_errors > 0:
+                    print(self.RED + "Links with connection errors:\n")
+                    # Filter and print links with connection errors
+                    connection_errors = df[df['Response'].str.contains("No connection adapters were found")]
+                    for index, row in connection_errors.iterrows():
+                        print(row['Link URL'])
+                else:
+                    print(self.GREEN + "No links with connection errors found.")
+            else:
+                print(self.ERROR_MESSAGE)
+        else:
+            print(self.ERROR_MESSAGE)
 
     def display_broken_links(self):
         """
@@ -398,36 +430,6 @@ class LinkValidator:
                 print(self.RED + "Broken links found:" + self.RESET)
                 for broken_link in broken_links['Link URL']:
                     print(broken_link)
-        
-        except Exception as e:
-            print(self.ERROR_MESSAGE)
-
-    def display_invalid_links(self):
-        """
-        Display invalid links with unsupported schemes scraped from the last webpage.
-        """
-        print(self.CYAN + "Displaying invalid links scraped from the last webpage...\n" + self.RESET)
-        try:
-            # Fetch all data from the worksheet
-            data = self.WORKSHEET.get_all_values()
-
-            # Check if there is any data in the worksheet
-            if not data:
-                print("No links found.")
-                return
-            
-            # Convert data to DataFrame
-            df = pd.DataFrame(data[1:], columns=data[0])
-
-            # Filter DataFrame to get invalid links with unsupported schemes
-            invalid_links = df[(df['Status'] == 'unsupported_scheme')]
-
-            if invalid_links.empty:
-                print(self.GREEN + "No invalid links found." + self.RESET)
-            else:
-                print(self.RED + "Invalid links found:" + self.RESET)
-                for invalid_link in invalid_links['Link URL']:
-                    print(invalid_link)
         
         except Exception as e:
             print(self.ERROR_MESSAGE)
@@ -588,7 +590,7 @@ class LinkValidator:
                 elif choice == 2:
                     self.display_all_links()
                 elif choice == 3:
-                    self.display_invalid_links()
+                    self.print_links_with_connection_errors()
                 elif choice == 4:
                     self.display_missing_aria_links_from_sheet()
                 elif choice == 5:
