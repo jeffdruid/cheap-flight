@@ -357,7 +357,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 ## Troubleshooting
 
-- TODO
+- Encountered issues and how they were resolved during the development of the Link-Validator Tool.
 
 ### Handling Redirects
 
@@ -374,6 +374,8 @@ except requests.exceptions.RequestException as e:
     print(self.RED + f"An error occurred while fetching the webpage: {e}" + self.RESET)
     return
 ```
+
+- Explanation: The code snippet above uses the requests.get() method to send an HTTP GET request to the URL and automatically follow redirects. The raise_for_status() method is called to raise an HTTPError if the status code of the response is not 200 (OK). This ensures that the tool captures the final destination URL and status code accurately.
 
 ### Invalid URL Handling
 
@@ -394,6 +396,8 @@ except ValueError as e:
     return False
 ```
 
+- Explanation: The code snippet above uses the requests.head() method to send a HEAD request to the URL and check the status code of the response. If the URL is invalid or the request fails, an exception is caught, and an appropriate error message is displayed.
+
 ### Inconsistent Link Status
 
 - Issue: The tool was not consistently determining the status of links, leading to inaccuracies in link validation.
@@ -407,6 +411,8 @@ if response.status_code >= 400:
 else:
     link_status[link] = ('valid', response.status_code)
 ```
+
+- Explanation: The code snippet above checks the status code of the HTTP response and classifies links as either valid or broken based on the status code. If the status code is greater than or equal to 400, the link is considered broken, and the status code is stored in the link_status dictionary.
 
 ## Testing
 
