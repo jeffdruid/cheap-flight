@@ -61,26 +61,26 @@ class LinkValidator:
         Display the instructions for using the Link-Validator Tool.
         """ 
         
-        print(self.MAGENTA + "Menu options:" + self.RESET)
+        print(self.MAGENTA + "\nMenu options:" + self.RESET)
         print(self.CYAN + "-" * 63)
         print("1. Scrape and Validate Links from a Webpage")
         print("-" * 63)
-        print(" Display Options:\n")
-        print("   2. Display All Links Scraped from the Last Webpage")
+        print(self.YELLOW + "Display Options:" + self.RESET)
+        print(self.CYAN + "   2. Display All Links Scraped from the Last Webpage")
         print("   3. Display Invalid Links Scraped from the Last Webpage")
         print("   4. Display Links with Missing Aria Labels from the Last Webpage")
         print("   5. Display Broken Links from the Last Webpage")
         print("   6. Display a Summary of Findings from the Last Webpage")
         print("-" * 63)
-        print(" Manage Options:\n")
-        print("   7. Empty the Links Google Sheet")
+        print(self.YELLOW + "Manage Options:")
+        print(self.CYAN + "   7. Empty the Links Google Sheet")
         print("   8. Open Google Sheets")
         print("-" * 63)
-        print(" Additional Information:\n")
-        print("   9. Open GitHub")
+        print(self.YELLOW + "Source Code:")
+        print(self.CYAN + "   9. Open GitHub")
         print("-" * 63)
-        print("0. Exit Program")
-        print("-" * 63 + self.RESET)
+        print(self.RED + "0. Exit Program" + self.RESET)
+        print(self.CYAN + "-" * 63 + self.RESET)
 
     def get_user_input(self):
         """
@@ -241,7 +241,7 @@ class LinkValidator:
                 print(self.RED + "An error occurred while writing data to Google Sheets:", str(e) + self.RESET)
 
             print(self.GREEN + "Scraping complete!\n" + self.RESET)
-            print(self.CYAN + "Total links found:", len(links_with_aria) + len(links_without_aria) + len(external_links))
+            print(self.CYAN + "Total links found:", len(data))
             print("Links with aria labels:", len(links_with_aria))
             print("Links without aria labels:", len(links_without_aria))
             print("External links found:", len(external_links))
