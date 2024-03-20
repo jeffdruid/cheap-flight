@@ -81,7 +81,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage:
 
-  ```bash
+  ```python
         import requests
         response = requests.get('https://example.com')
         print(response.status_code)
@@ -98,7 +98,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage:
 
-  ```bash
+  ```python
      from bs4 import BeautifulSoup
 
      html_doc = """
@@ -121,7 +121,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage:
 
-  ```bash
+  ```python
   import requests
 
   response = requests.get('https://api.example.com/data')
@@ -140,7 +140,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage:
 
-  ```bash
+  ```python
   import gspread
   from oauth2client.service_account import ServiceAccountCredentials
 
@@ -179,7 +179,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage:
 
-  ```bash
+  ```python
   from urllib.parse import urljoin, urlparse
   ```
 
@@ -194,7 +194,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage in the Code:
 
-  ```bash
+  ```python
   import pandas as pd
 
   # Reading a CSV file into a pandas DataFrame
@@ -219,7 +219,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage in the Code:
 
-  ```bash
+  ```python
   from tqdm import tqdm
 
   # Iterating over a range with tqdm
@@ -240,7 +240,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage in the Code:
 
-  ```bash
+  ```python
   import colorama
   from colorama import Fore, Back, Style
 
@@ -263,7 +263,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage in the Code:
 
-  ```bash
+  ```python
   import os
 
   # Get the current working directory
@@ -286,7 +286,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Example Usage in the Code:
 
-  ```bash
+  ```python
   import webbrowser
 
   # Open a web page in the default browser
@@ -366,7 +366,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 - Issue: The tool was not following redirects properly, leading to inaccurate link status validation. When a URL redirects to another URL, the tool wasn't able to capture the final destination URL and status code.
 - Resolution: Updated the HTTP request handling code to automatically follow redirects and obtain the final destination URL and status code.
 
-```bash
+```python
 # Inside the 'scrape_and_validate_links' method
 try:
     response = requests.get(url)
@@ -384,7 +384,7 @@ except requests.exceptions.RequestException as e:
 - Issue: The tool may encounter invalid URLs entered by the user, causing the program to crash.
 - Resolution: Implemented URL validation to ensure that only valid URLs are accepted, and added handling for invalid URLs.
 
-```bash
+```python
 # Inside the 'validate_url' method
 try:
     response = requests.head(url, allow_redirects=True, stream=True, timeout=5)
@@ -405,7 +405,7 @@ except ValueError as e:
 - Issue: The tool was not consistently determining the status of links, leading to inaccuracies in link validation.
 - Resolution: Added logic to check the status code of the HTTP response and classify links as either valid or broken based on the status code.
 
-```bash
+```python
 # Inside the 'check_broken_links' method
 if response.status_code >= 400:
     print(f"Broken link found: {link}")
@@ -495,19 +495,19 @@ Before running the Link-Validator Tool, ensure you have the following installed:
 
 1. Clone the repository to your local machine:
 
-   ```bash
+   ```properties
    git clone https://github.com/yourusername/link-validator.git
    ```
 
 2. Navigate to the project directory:
 
-   ```bash
+   ```properties
    cd link-validator
    ```
 
 3. Install the required Python packages:
 
-   ```bash
+   ```properties
    pip install -r requirements.txt
    ```
 
@@ -522,7 +522,7 @@ Before running the Link-Validator Tool, ensure you have the following installed:
 
 To run the Link-Validator Tool, execute the following command in your terminal:
 
-```bash
+```properties
 python run.py
 ```
 
@@ -534,7 +534,7 @@ python run.py
 
 - To clone this repository to your local machine, use the following command:
 
-  ```bash
+  ```properties
   git clone https://github.com/yourusername/link-validator.git
   ```
 
@@ -557,7 +557,7 @@ python run.py
 3. Login to Heroku
    Open a terminal or command prompt and login to your Heroku account using the following command:
 
-```bash
+```properties
 heroku login
 ```
 
@@ -574,7 +574,7 @@ Follow the prompts to enter your Heroku credentials.
 
 - If your project is not already a Git repository, initialize one:
 
-```bash
+```properties
 git init
 git add .
 git commit -m "Initial commit"
@@ -583,7 +583,7 @@ git commit -m "Initial commit"
 6. Create a Heroku App
    Create a new Heroku app using the Heroku CLI:
 
-```bash
+```properties
 heroku create your-app-name
 ```
 
@@ -592,7 +592,7 @@ Replace your-app-name with a unique name for your Heroku app.
 7. Deploy Your Application
    Deploy your application to Heroku using Git:
 
-```bash
+```properties
 git push heroku main
 ```
 
@@ -601,7 +601,7 @@ Replace main with the name of your main branch if it's different (e.g., master).
 8. Open Your Application
    Once the deployment is complete, you can open your application in the browser using the following command:
 
-```bash
+```properties
 heroku open
 ```
 
