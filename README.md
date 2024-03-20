@@ -32,6 +32,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
    - [Reporting](#reporting)
    - [GitHub Integration](#github-integration)
 6. [Troubleshooting](#troubleshooting)
+   - [
 7. [Testing](#testing)
    - [Validator Testing](#validator-testing)
      - [Python](#python)
@@ -357,6 +358,55 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 ## Troubleshooting
 
 - TODO
+
+### Handling Redirects
+
+- Issue: The tool was not following redirects properly, leading to inaccurate link status validation. When a URL redirects to another URL, the tool wasn't able to capture the final destination URL and status code.
+- Resolution: Updated the HTTP request handling code to automatically follow redirects and obtain the final destination URL and status code.
+
+```bash
+# Inside the 'scrape_and_validate_links' method
+try:
+    response = requests.get(url)
+    response.raise_for_status()  # Raise an HTTPError if status code is not 200
+    soup = BeautifulSoup(response.content, "html.parser")
+except requests.exceptions.RequestException as e:
+    print(self.RED + f"An error occurred while fetching the webpage: {e}" + self.RESET)
+    return
+```
+
+### Invalid URL Handling
+
+- Issue: The tool may encounter invalid URLs entered by the user, causing the program to crash.
+- Resolution: Implemented URL validation to ensure that only valid URLs are accepted, and added handling for invalid URLs.
+
+```bash
+# Inside the 'validate_url' method
+try:
+    response = requests.head(url, allow_redirects=True, stream=True, timeout=5)
+    print(self.GREEN + "Status code: " + str(response.status_code) + self.RESET)
+    return response.status_code == 200
+except requests.exceptions.RequestException as e:
+    print(Back.RED + f"Error: {e}" + self.RESET)
+    return False
+except ValueError as e:
+    print(f"Invalid URL: {e}")
+    return False
+```
+
+### Inconsistent Link Status
+
+- Issue: The tool was not consistently determining the status of links, leading to inaccuracies in link validation.
+- Resolution: Added logic to check the status code of the HTTP response and classify links as either valid or broken based on the status code.
+
+```bash
+# Inside the 'check_broken_links' method
+if response.status_code >= 400:
+    print(f"Broken link found: {link}")
+    link_status[link] = ('broken', response.status_code)
+else:
+    link_status[link] = ('valid', response.status_code)
+```
 
 ## Testing
 
