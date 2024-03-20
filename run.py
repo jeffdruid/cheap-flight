@@ -42,13 +42,28 @@ class LinkValidator:
         self.GSPREAD_CLIENT = gspread.authorize(self.SCOPED_CREDS)
         self.SHEET = self.GSPREAD_CLIENT.open('LinkValidator')
         self.WORKSHEET = self.SHEET.sheet1
-                
+    
     def initialize_colorama(self):
         """
         Initialize colorama and set the color for the welcome message.
         """
         colorama.init()
 
+        # Check internet connectivity
+        if not self.check_internet_connection():
+            print(self.RED + "\nError: No internet connection. Please check your network connection and try again." + self.RESET)
+            exit()
+    
+    def check_internet_connection(self):
+        """
+        Check internet connectivity.
+        """
+        try:
+            requests.get("http://www.google.com", timeout=5)
+            return True
+        except requests.ConnectionError:
+            return False 
+                
     def print_welcome_message(self):
         """
         Print the welcome message for the Link-Validator Tool.
