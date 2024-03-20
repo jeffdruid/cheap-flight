@@ -456,9 +456,19 @@ TODO - Add more test scenarios
 
 ## Bugs
 
+- TODO
+
+### Trail slash in the URL
+
+- Issue: The tool was not handling URLs with trailing slashes correctly, leading to inaccurate link validation results.
+
 ### Fixed Bugs
 
 - Explain the bugs encountered during the development of the Link-Validator Tool and how they were resolved.
+
+#### Incorrect Identification of Internal Links
+
+- Issue: The tool was incorrectly saving internal links with the wrong base URL, leading to inaccurate validation results.
 
 ## UI Improvements
 

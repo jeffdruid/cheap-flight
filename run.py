@@ -140,17 +140,13 @@ class LinkValidator:
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
-    def is_internal_link(self, base_url, link):
+    def is_internal_link(self, link, base_url):
         """
         Check if a link is internal based on the base URL.
         """
         parsed_link = urllib.parse.urlparse(link)
         parsed_base_url = urllib.parse.urlparse(base_url)
-        
-        # Check if the link has the same scheme and netloc (domain) as the base URL
-        is_internal = parsed_link.scheme == parsed_base_url.scheme and parsed_link.netloc == parsed_base_url.netloc
-        
-        return is_internal
+        return parsed_link.netloc == parsed_base_url.netloc  
 
     def check_internal_links(self, soup, base_url):
         """
@@ -234,19 +230,15 @@ class LinkValidator:
             
             # Update data with missing aria labels for links with aria
             for link in links_with_aria:
-                # Determine if internal or external link
-                link_type = 'internal' if link in links_with_aria or link in links_without_aria else 'external'
                 # Determine missing aria
                 missing_aria = 'yes' if link in links_without_aria else 'no'
-                data[str(link)] = (link_type, 'valid', '200', missing_aria)
+                data[str(link)] = ('internal', 'valid', '200', missing_aria)
 
             # Update data with missing aria labels for links without aria
             for link in links_without_aria:
-                # Determine if internal or external link
-                link_type = 'internal' if link in links_with_aria or link in links_without_aria else 'external'
                 # Determine missing aria
                 missing_aria = 'yes' if link in links_without_aria else 'no'
-                data[str(link)] = (link_type, 'valid', '200', missing_aria)
+                data[str(link)] = ('internal', 'valid', '200', missing_aria)
 
             # Extract base URL
             base_url = self.get_base_url(url)
@@ -254,18 +246,15 @@ class LinkValidator:
             # Check external links
             external_links = self.check_external_links(soup, base_url)
 
-            # Convert internal_links to a list before concatenating
-            all_links = links_with_aria + links_without_aria + external_links
-
-            # Check for broken links and update data
-            link_status = self.check_broken_links(all_links)
-            for link, status in link_status.items():
-                if link in links_with_aria or link in links_without_aria:
+            # Determine if links are internal or external and check for broken links
+            for link in external_links:
+                if self.is_internal_link(link, base_url):
                     link_type = 'internal'
                 else:
                     link_type = 'external'
                 # Determine missing aria
-                missing_aria = 'yes' if link in links_without_aria else 'no' if status[0] == 'broken' else 'no'
+                missing_aria = 'yes' if link in links_without_aria else 'no'
+                status = self.check_link_status(link)
                 data[str(link)] = (link_type, status[0], status[1], missing_aria)
 
             # Write data to Google Sheets
@@ -277,7 +266,22 @@ class LinkValidator:
             print("Scraping complete!\n")
             print("Links with aria labels:", len(links_with_aria))
             print("Links without aria labels:", len(links_without_aria))
-    
+            
+    def check_link_status(self, link):
+        """
+        Check the status of a link.
+        """
+        try:
+            response = requests.head(link)
+            status_code = response.status_code
+            if status_code >= 400:
+                return ('broken', f'{status_code} {response.reason}')
+            else:
+                return ('valid', f'{status_code} {response.reason}')
+        except requests.exceptions.RequestException as e:
+            print(f"Error while checking link {link}: {str(e)}")
+            return ('broken', str(e))
+        
     def display_all_links(self):
         """
         Display all links scraped from the last webpage.
