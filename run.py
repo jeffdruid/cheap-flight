@@ -300,8 +300,9 @@ class LinkValidator:
         while True:
             try:
                 print(self.GREEN + "You can use the following URL for testing:" + self.RESET)
-                print(self.YELLOW + "example.com" + self.RESET)
+                print(self.YELLOW + "\nexample.com" + self.RESET)
                 print(self.YELLOW + "\nhttps://jeffdruid.github.io/link-test/" + self.RESET)
+                print(self.YELLOW + "\nhttps://www.w3.org/WAI/demos/bad/before/home.html" + self.RESET)
                 url = input(self.CYAN + "\nEnter the URL you want to scrape: \n" + self.RESET)
                 # Check if the URL starts with "http://" or "https://"
                 if not url.startswith(("http://", "https://")):
@@ -346,12 +347,15 @@ class LinkValidator:
         """
         Display links with missing aria labels.
         """
-        if missing_aria:
-            print("\n" + self.RED + "Links with missing aria labels:" + self.RESET)
-            for link in missing_aria:
-                print(link)
-        else:
-            print("\n" + self.GREEN + "No links with missing aria labels found." + self.RESET)
+        try:
+            if missing_aria:
+                print("\n" + self.RED + "Links with missing aria labels:" + self.RESET)
+                for link in missing_aria:
+                    print(link)
+            else:
+                print("\n" + self.GREEN + "No links with missing aria labels found." + self.RESET)
+        except Exception as e:
+            print("An error occurred while retrieving data from Google Sheets:", str(e))
 
     def display_missing_aria_links_from_sheet(self):
         """
@@ -368,7 +372,7 @@ class LinkValidator:
             else:
                 print("No data found in Google Sheets.")
         except Exception as e:
-            print("An error occurred while retrieving data from Google Sheets:", str(e))
+            print(self.ERROR_MESSAGE)
 
     def display_broken_links(self):
         """
@@ -447,10 +451,8 @@ class LinkValidator:
         Empty the links Google Sheet.
         """
         try:
-            print(self.YELLOW + "\nEmptying the Google Sheet..." + self.RESET)
             # Clear existing data (including header)
             self.WORKSHEET.clear()
-            print("\n" + self.GREEN + "The Google Sheet has been emptied." + self.RESET)
         except Exception as e:
             print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
             
@@ -500,7 +502,7 @@ class LinkValidator:
             
             # Check if 'Status' column exists
             if 'Status' not in df.columns:
-                print(self.RED + "No links have been scraped yet." + self.RESET)
+                print(self.ERROR_MESSAGE)
                 return
 
             # Count the number of links scraped
@@ -610,6 +612,7 @@ class LinkValidator:
                     self.display_summary_of_findings()
                 elif choice == 7:
                     self.empty_links_google_sheet()
+                    print("\n" + self.GREEN + "The Google Sheet has been emptied." + self.RESET)
                 elif choice == 8:
                     self.open_google_sheet()
                 elif choice == 9:
