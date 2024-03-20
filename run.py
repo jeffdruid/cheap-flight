@@ -26,6 +26,7 @@ class LinkValidator:
         self.BLACK = Fore.BLACK
         self.RESET = Style.RESET_ALL
         self.ERROR_MESSAGE = (self.RED + "\nNo links found. Please scrape a webpage first." + self.RESET)
+        # TODO - Create functions to handle error messages. (avoid repetition)
         self.initialize_colorama()
         
         self.SCOPE = [
@@ -51,6 +52,8 @@ class LinkValidator:
         """
         Print the welcome message for the Link-Validator Tool.
         """
+        # Clear the console
+        self.clear_console()
         print(Style.BRIGHT + Back.GREEN + Fore.WHITE + "\nWelcome to the Link-Validator Tool!\n" + self.RESET + self.YELLOW + "\nThis tool allows you to scrape a webpage and validate all the links." + self.RESET)
 
     def print_instructions(self):
@@ -603,18 +606,19 @@ class LinkValidator:
         """
         Generate a summary of findings and present them with ASCII art.
         """
-        print("\n" + self.GREEN + "Summary of Findings:" + self.RESET)
+        print("\n" + self.CYAN + "Summary of Findings:" + self.RESET)
         print("+" + "-" * 40 + "+")
-        print("| {:<20} {:<15} |".format("Metric", "Count"))
+        print("| {:<20} {:<15} |".format(self.YELLOW + "Metric", "Count" + self.RESET))
         print("+" + "-" * 40 + "+")
-        print("| {:<20} {:<15} |".format("Links Scraped", num_links_scraped))
-        print("| {:<20} {:<15} |".format("External Links", num_links_scraped - (num_links_scraped - num_missing_aria)))
-        print("| {:<20} {:<15} |".format("Internal Links", num_links_scraped - (num_links_scraped - num_missing_aria)))
-        print("| {:<20} {:<15} |".format("Links with Aria", num_links_scraped - num_missing_aria))
-        print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria) if num_missing_aria <= 0 else "| {:<20} {:<20} |".format( self.RED + "Missing Aria Labels", str(num_missing_aria) + self.RESET))
-        print("| {:<20} {:<15} |".format("Broken Links", num_broken_links) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Broken Links", 0))
-        print("| {:<20} {:<15} |".format("Invalid Links", num_broken_links) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Invalid Links", 0))
-        print("| {:<20} {:<15} |".format("Error Links", num_broken_links) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Error Links", 0))
+        print("| {:<20} {:<15} |".format(self.GREEN + "Links Scraped", str(num_links_scraped) + self.RESET))
+        print("| {:<20} {:<15} |".format(self.GREEN + "External Links", str(num_links_scraped - num_missing_aria) + self.RESET))
+        print("| {:<20} {:<15} |".format(self.GREEN + "Internal Links", str(num_links_scraped - num_missing_aria) + self.RESET))
+        print("| {:<20} {:<15} |".format(self.GREEN + "Links with Aria", str(num_links_scraped - num_missing_aria) + self.RESET))
+        # TODO - Update values bellow.
+        print("| {:<20} {:<20} |".format( self.RED + "Missing Aria Labels", str(num_missing_aria) + self.RESET)) if num_missing_aria > 0 else "| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria) 
+        print("| {:<20} {:<24} |".format(self.RED + "Broken Links", str(num_missing_aria) + self.RESET)) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Broken Links", num_broken_links)
+        print("| {:<20} {:<24} |".format(self.RED + "Invalid Links", str(num_missing_aria) + self.RESET))if num_broken_links > 0 else "| {:<20} {:<15} |".format("Invalid Links", num_broken_links)
+        print("| {:<20} {:<24} |".format(self.RED + "Error Links", str(num_missing_aria) + self.RESET)) if num_broken_links > 0 else "| {:<20} {:<15} |".format("Error Links", num_broken_links)
         print("+" + "-" * 40 + "+")
         # TODO: Add ASCII art for the summary
     
@@ -642,12 +646,27 @@ class LinkValidator:
             # Count the number of links scraped
             num_links_scraped = len(df)
 
+            # Count the number of aria labels found if the column exists
+            # TODO - Update variable for number of links with aria labels
+            
+            # Count the number of internal links found if the column exists
+            # TODO - Update variable for number of internal links.
+            
+            # Count the number of external links found if the column exists
+            # TODO - Update variable for number of external links.
+            
             # Count the number of missing aria labels if the column exists
             if 'Missing Aria' in df.columns:
                 num_missing_aria = len(df[df['Missing Aria'] == 'yes'])
             else:
                 num_missing_aria = 0
 
+            # Count the number of invalid links
+            # TODO - Update variable for number for invalid links 
+            
+            # Count the number of error links
+            # TODO - Update variable for number for error links 
+            
             # Count the number of broken links if the column exists
             if 'Status' in df.columns:
                 num_broken_links = len(df[df['Status'] == 'broken'])
@@ -656,6 +675,7 @@ class LinkValidator:
 
             # Display the summary
             self.summarize_findings(num_links_scraped, num_missing_aria, num_broken_links)
+            # TODO - Update variables here
         
         except Exception as e:
             print("An unexpected error occurred:", str(e))

@@ -457,6 +457,7 @@ TODO - Add more test scenarios
 ## Bugs
 
 - TODO
+- TODO - Error handling for when user tries to scrape but there is no internet connection.
 
 ### Trail slash in the URL
 
@@ -473,6 +474,10 @@ TODO - Add more test scenarios
 ## UI Improvements
 
 - TODO
+- TODO - Implementation of the colorama library
+- TODO - Implementation of the Asci art
+- TODO - Improve Main Menu
+- TODO - Update overall look of google sheets file.
 
 ## Futures Improvements
 
