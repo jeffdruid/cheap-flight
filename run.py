@@ -109,13 +109,6 @@ class LinkValidator:
             base_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path.rstrip('/')}/"
         return base_url
     
-    def test_google_sheets(self):
-        """
-        Test writing data to Google Sheets.
-        """
-        test_data = [['Test1', 'Test2', 'Test3'], ['Value1', 'Value2', 'Value3']]
-        self.write_to_google_sheets(test_data)
-    
     def write_to_google_sheets(self, data):
         """
         Write data to Google Sheets.
@@ -150,29 +143,6 @@ class LinkValidator:
         parsed_link = urllib.parse.urlparse(link)
         parsed_base_url = urllib.parse.urlparse(base_url)
         return parsed_link.netloc == parsed_base_url.netloc  
-
-    def check_internal_links(self, soup, base_url):
-        """
-        Check internal links found in the webpage.
-        """
-        internal_links = set()  # Set to store internal links
-
-        # Find all the links on the page
-        all_links = soup.find_all("a")
-
-        # Loop through all the links and get the href attribute
-        for link in all_links:
-            # Get the href attribute of the link
-            href = link.get("href")
-            # Check if href is not None and is not an empty string
-            if href is not None and href.strip() != "":
-                # Create absolute URL using base_url and href
-                full_link = urllib.parse.urljoin(base_url, href)
-                # Check if the full_link is internal or pointing to the same page with "#"
-                if self.is_internal_link(base_url, full_link) or href == "#" or full_link.startswith(base_url):
-                    internal_links.add(full_link)
-
-        return internal_links
 
     def check_external_links(self, soup, base_url):
         """
@@ -288,12 +258,14 @@ class LinkValidator:
             response = requests.head(link)
             status_code = response.status_code
             if status_code >= 400:
-                return ('broken', f'{status_code} {response.reason}')
+                if status_code == 404:
+                    return ('broken', f'{status_code} {response.reason}')  # Broken link (404 Not Found)
+                else:
+                    return ('error', f'{status_code} {response.reason}')  # Error link (other 4xx or 5xx status codes)
             else:
-                return ('valid', f'{status_code} {response.reason}')
+                return ('valid', f'{status_code} {response.reason}')  # Valid link (status code < 400)
         except requests.exceptions.RequestException as e:
-            # print(f"Error while checking link {link}: {str(e)}")
-            return ('broken', str(e))
+            return ('broken', str(e))  # Broken link due to connection error
         
     def display_all_links(self):
         """
@@ -354,48 +326,7 @@ class LinkValidator:
         except ValueError as e:
             print(f"Invalid URL: {e}")
             return False
-
-    def sort_data_by_type(self):
-        """
-        Sort the data by type and update the 'Type' column in the Google Sheets.
-        """
-        try:
-            # Fetch all data from the worksheet
-            data = self.WORKSHEET.get_all_values()
-
-            # Check if there is any data in the worksheet
-            if not data:
-                print("No links found.")
-                return
-
-            # Convert data to DataFrame
-            df = pd.DataFrame(data[1:], columns=data[0])
-
-            # Add a new column 'Type'
-            df['Type'] = df['Link URL'].apply(self.get_link_type)
-
-            # Sort DataFrame by 'Type' with progress bar
-            sorted_df = df.sort_values(by="Type")
-            total_rows = len(sorted_df)
-            with tqdm(total=total_rows, desc=self.CYAN + "Sorting data", unit="row" + self.RESET) as pbar:
-                for index, row in sorted_df.iterrows():
-                    self.WORKSHEET.update([row.values.tolist()], f'A{index+2}')
-                    pbar.update(1)
-
-            print(self.GREEN + "Data sorted by type successfully." + self.RESET)
-        except Exception as e:
-            print(self.ERROR_MESSAGE)
-
-    def get_link_type(self, link):
-        """
-        Get the type of the link.
-        """
-        # Check if the link is external or internal
-        if link.startswith("http://") or link.startswith("https://"):
-            return "external"
-        else:
-            return "internal"
-        
+    
     def open_google_sheet(self):
         """
         Open the Google Sheet in a web browser.
@@ -406,35 +337,6 @@ class LinkValidator:
             print("\n" + self.GREEN + "Google Sheet has been opened in a web browser." + self.RESET)
         except Exception as e:
             print(self.RED + "\nFailed to open Google Sheet:", e + self.RESET)
-
-    def check_missing_aria(self, all_links):
-        """
-        Check for missing aria labels in anchor elements.
-        """
-        try:
-            # Initialize a dictionary to store missing aria labels for each link
-            missing_aria_dict = {}
-
-            # Loop through all links
-            for link in all_links:
-                # Check for anchor elements
-                if link.name == 'a':
-                    # Check if aria-label attribute exists and is not empty
-                    aria_label = link.get('aria-label')
-                    # REMOVE
-                    # if not aria_label or aria_label.strip() == '':
-                    #     missing_aria_dict[str(link)] = 'yes'  # Missing aria label
-                    # else:
-                    #     missing_aria_dict[str(link)] = 'no'   # Aria label exists
-
-            print("\n" + self.GREEN + "Missing aria labels checked successfully." + self.RESET)
-            print("Number of links checked:", len(all_links))
-            print("Number of links with missing aria labels:", sum(1 for value in missing_aria_dict.values() if value == 'yes'))
-            print("Number of links with aria labels:", sum(1 for value in missing_aria_dict.values() if value == 'no'))
-            return missing_aria_dict
-        except Exception as e:
-            print("Error:", e)
-            return {}
 
     def display_missing_aria(self, missing_aria):
         """
@@ -463,62 +365,6 @@ class LinkValidator:
                 print("No data found in Google Sheets.")
         except Exception as e:
             print("An error occurred while retrieving data from Google Sheets:", str(e))
-
-    def check_broken_links(self, links):
-        """
-        Check for broken links in the provided list of links.
-        Returns a dictionary mapping each link to its status (valid, broken, error, etc.)
-        and its response code.
-        """
-        print(self.CYAN + "Checking for broken links..." + self.RESET)
-        link_status = {}
-
-        # Initialize the progress bar
-        pbar = tqdm(total=len(links), desc=self.CYAN + "Checking links", unit="link" + self.RESET)
-
-        # Loop through all the links and check for broken links
-        for link in links:
-            try:
-                # Skip JavaScript void links
-                if link.startswith("javascript:"):
-                    print(f"Skipping JavaScript void link: {link}")
-                    link_status[link] = ('skipped', None)
-                    continue
-
-                # Handle URLs with unsupported schemes
-                if not link.startswith(("http://", "https://")):
-                    print(f"Unsupported URL scheme for link: {link}")
-                    link_status[link] = ('unsupported_scheme', 'None')
-                    continue
-
-                # Send a HEAD request to the link and check the status code
-                response = requests.head(link, allow_redirects=True, timeout=5)
-                if response.status_code >= 400:
-                    print(f"Broken link found: {link}")
-                    link_status[link] = ('broken', response.status_code)
-                else:
-                    link_status[link] = ('valid', response.status_code)
-            except requests.exceptions.RequestException as e:
-                # Handle connection errors
-                error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
-                print(f"Error checking link {link}")
-                link_status[link] = ('error', '-')
-                # Check if the hostname resolution failed
-                if isinstance(e, requests.exceptions.ConnectionError):
-                    print(f"Hostname resolution failed for link: {link}")
-                    link_status[link] = ('broken', 'hostname_resolution_failed')
-            except Exception as e:
-                # Handle other exceptions
-                error_msg = str(e).split('\n')[0]  # Extract the first line of the error message
-                print(f"An unexpected error: {error_msg}")
-                link_status[link] = ('unexpected_error', '-')
-
-            pbar.update(1)  # Update the progress bar
-
-        pbar.close()  # Close the progress bar
-        print(self.GREEN + "Broken links checked successfully." + self.RESET)
-        print("Number of broken links:", sum(1 for status in link_status.values() if status[0] == 'broken'))
-        return link_status
 
     def display_broken_links(self):
         """
