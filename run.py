@@ -67,7 +67,7 @@ class LinkValidator:
         print("-" * 63)
         print(self.YELLOW + "Display Options:" + self.RESET)
         print(self.CYAN + "   2. Display All Links Scraped from the Last Webpage")
-        print("   3. Display Invalid Links Scraped from the Last Webpage")
+        print("   3. Display Links not Verified due to Connection Errors from the Last Webpage")
         print("   4. Display Links with Missing Aria Labels from the Last Webpage")
         print("   5. Display Broken Links from the Last Webpage")
         print("   6. Display a Summary of Findings from the Last Webpage")
@@ -393,7 +393,7 @@ class LinkValidator:
                 num_connection_errors = len(df[df['Response'].str.contains("No connection adapters were found")])
                 
                 if num_connection_errors > 0:
-                    print(self.RED + "Links with connection errors:\n")
+                    print(self.RED + "Links not verified due to connection errors:" + self.RESET)
                     # Filter and print links with connection errors
                     connection_errors = df[df['Response'].str.contains("No connection adapters were found")]
                     for index, row in connection_errors.iterrows():
@@ -471,7 +471,7 @@ class LinkValidator:
         print("| {:<20} {:<15} |".format(self.GREEN + "Links with Aria", str(num_links_with_aria) + self.RESET))
         print("| {:<20} {:<15} |".format(self.RED + "Missing Aria", str(num_missing_aria) + self.RESET)) if num_missing_aria > 0 else print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
         print("| {:<20} {:<15} |".format(self.RED + "Broken Links", str(num_broken_links) + self.RESET)) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
-        print("| {:<20} {:<14} |".format(self.RED + "Connection Error", str(num_connection_errors) + self.RESET)) if num_connection_errors > 0 else print("| {:<20} {:<15} |".format("Connection Errors", num_connection_errors))
+        print("| {:<20} {:<14} |".format(self.RED + "Not Verified", str(num_connection_errors) + self.RESET)) if num_connection_errors > 0 else print("| {:<20} {:<15} |".format("Connection Errors", num_connection_errors))
         print("+" + "-" * 40 + "+")
         # ASCII art for the summary
         print(self.GREEN + """
