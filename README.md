@@ -464,11 +464,42 @@ else:
 | 7           | Main Menu Validation                 | Input other characters | Error message                                            | Error message displayed                                | Pass        |
 | 8           | Program termination by user (Ctrl+C) | Ctrl+C                 | Program terminates gracefully with a termination message | Program terminated gracefully with termination message | Pass        |
 
-#### Testing with various types of links (internal, external, anchor links)
+#### Option 1 - Scrape and Validate Links
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
 
-#### Testing with URLs requiring authentication
+#### Option 2 - Display All Links Scraped
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
 
-#### Testing the Google Sheets integration functionality
+#### Option 3 - Display Links not Verified due to Connection Errors
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+#### Option 4 - Display Links with Missing Aria Labels
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+#### Option 5 - Display Broken Links
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+#### Option 6 - Display a Summary of Findings
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+#### Option 7 - Empty the Links Google Sheet
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+#### Option 8 - Open Google Sheets
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+#### Option 9 - Open GitHub
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
 
 ### Validator Testing
 
