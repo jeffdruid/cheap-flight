@@ -488,8 +488,10 @@ class LinkValidator:
         Open the Google Sheet in a web browser.
         """
         try:
+            print(self.YELLOW + "Opening Google Sheet..." + self.RESET)
             sheet_url = self.SHEET.url
             os.system(f"start {sheet_url}")
+            print(self.CYAN + "\nLink to Google Sheet: " + sheet_url)
             print(
                 "\n"
                 + self.GREEN

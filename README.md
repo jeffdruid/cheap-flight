@@ -1,4 +1,4 @@
-# Web scraping project for link validation
+# [Web scraping project for link validation](https://link-validator-b9009544d013.herokuapp.com/)
 
 ![Banner](assets/media/Banner-LV.png)
 
@@ -476,7 +476,6 @@ TODO - Add more test scenarios
 - TODO - Implementation of the colorama library
 - TODO - Implementation of the Asci art
 - TODO - Improve Main Menu
-- TODO - Update overall look of google sheets file.
 
 ## Futures Improvements
 
