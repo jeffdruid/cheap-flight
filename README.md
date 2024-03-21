@@ -457,15 +457,14 @@ TODO - Add more test scenarios
 ## Bugs
 
 - TODO
-- TODO - Error handling for when user tries to scrape but there is no internet connection.
-
-### Trail slash in the URL
-
-- Issue: The tool was not handling URLs with trailing slashes correctly, leading to inaccurate link validation results.
 
 ### Fixed Bugs
 
 - Explain the bugs encountered during the development of the Link-Validator Tool and how they were resolved.
+
+### Trail slash in the URL
+
+- Issue: The tool was not handling URLs with trailing slashes correctly, leading to inaccurate link validation results.
 
 #### Incorrect Identification of Internal Links
 
@@ -541,7 +540,11 @@ python run.py
 
 ## Deployment
 
+- Deploying the Link-Validator Tool locally or remotely using Heroku.
+
 ### Cloning & Forking
+
+- To clone or fork the Link-Validator Tool repository, follow the instructions below:
 
 #### Cloning
 
