@@ -37,13 +37,21 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
    - [Inconsistent Link Status](#inconsistent-link-status)
 7. [Testing](#testing)
    - [Validator Testing](#validator-testing)
-     - [Python](#python)
+     - [flake8](#flake8)
    - [Manual Testing](#manual-testing)
      - [Acceptance Test](#acceptance-test)
-     - [Testing with invalid URLs](#testing-with-invalid-urls)
-     - [Testing with various types of links (internal, external, anchor links)](#testing-with-various-types-of-links-internal-external-anchor-links)
-     - [Testing with URLs requiring authentication](#testing-with-urls-requiring-authentication)
-     - [Testing the Google Sheets integration functionality](#testing-the-google-sheets-integration-functionality)
+     - [Application Start-Up Tests](#application-start-up-tests)
+     - [Main menu](#main-menu)
+     - [Option 1 - Scrape and Validate Links](#option-1---scrape-and-validate-links)
+     - [Option 2 - Display All Links Scraped](#option-2---display-all-links-scraped)
+     - [Option 3 - Display Links not Verified due to Connection Errors](#option-3---display-links-not-verified-due-to-connection-errors)
+     - [Option 4 - Display Links with Missing Aria Labels](#option-4---display-links-with-missing-aria-labels)
+     - [Option 5 - Display Broken Links](#option-5---display-broken-links)
+     - [Option 6 - Display a Summary of Findings](#option-6---display-a-summary-of-findings)
+     - [Option 7 - Empty the Links Google Sheet](#option-7---empty-the-links-google-sheet)
+     - [Option 8 - Open Google Sheets](#option-8---open-google-sheets)
+     - [Option 9 - Open GitHub](#option-9---open-github)
+     - [Prompt to Continue or Exit](#prompt-to-continue-or-exit)
 8. [Bugs](#bugs)
    - [Fixed Bugs](#fixed-bugs)
 9. [UI Improvements](#ui-improvements)
@@ -534,7 +542,7 @@ else:
 
 - The Link-Validator Tool was tested using the following validation methods:
 
-#### Python test
+#### Flake8
 
 - Flake8 was used to check the code for PEP8 compliance and to identify any potential issues or inconsistencies in the codebase.
 
