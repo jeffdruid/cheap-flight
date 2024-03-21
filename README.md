@@ -556,7 +556,10 @@ python run.py
 
 #### Forking
 
-- To fork this repository, click the Fork button in the upper right corner of the repository page.
+1. Visit [Link-Validator Tool](github.com/jeffdruid/link-validator)
+2. Click on the "Fork" button located in the top-right corner of the page.
+3. Optionally, you can provide a description for your fork.
+4. Select "Create fork". You will be redirected to your newly created forked repository.
 
 ### Local Deployment
 
@@ -627,7 +630,6 @@ heroku open
 ## Credits
 
 - TODO
-- TODO - Add credits for the libraries used
 - [Code Institute - Terminal](https://codeinstitute.net/)
 - [Heroku - Cloud Application Platform](https://www.heroku.com/)
 - [BeautifulSoup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
@@ -645,7 +647,6 @@ heroku open
 
 ### Source Code
 
-- TODO
 - [Link-Test Github](https://github.com/jeffdruid/link-test)
 
 #### Images
