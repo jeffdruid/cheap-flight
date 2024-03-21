@@ -420,23 +420,11 @@ else:
 
 ### Manual Testing
 
-#### Acceptance Test
+#### Acceptance Test    
+| Test Scenario                                              | Test Steps                                                                                                                                   | Expected Result                                                                                                                              |
+|------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| User inputs an invalid URL and attempts to validate links | 1. Open the command-line interface (CLI).<br> 2. Run the Link-Validator Tool by executing the appropriate command (python run.py).<br> 3. Enter an invalid URL when prompted.                                                    | The Link-Validator Tool detects the invalid URL and displays an error message indicating the issue.                                      |
 
-- Test Scenario: User inputs a valid URL and initiates the link validation process.
-
-- Test Steps:
-
-  - Open the command-line interface (CLI).
-  - Run the Link-Validator Tool by executing the appropriate command (python run.py).
-  - Enter a valid URL when prompted.
-  - Verify that the tool starts validating the links found on the provided URL.
-  - Verify that the tool displays progress indicators or messages during the validation process.
-  - Verify that the tool generates a summary report of the link validation process upon completion.
-  - Expected Result: The Link-Validator Tool successfully scrapes the webpage, validates all links, and generates a comprehensive report with accurate results.
-
-- This acceptance test ensures that the core functionality of the Link-Validator Tool, which includes inputting a URL, validating links, and generating a report, functions as expected.
-
-TODO - Add more test scenarios
 
 #### Testing with invalid URLs
 
@@ -448,11 +436,19 @@ TODO - Add more test scenarios
 
 ### Validator Testing
 
-- TODO
+- The Link-Validator Tool was tested using the following validation methods:
 
 #### Python test
 
-- TODO
+- Flake8 was used to check the code for PEP8 compliance and to identify any potential issues or inconsistencies in the codebase.
+
+  ```properties
+  flake8 run.py
+  ```
+
+  - The Flake8 tool was used to check the code for PEP8 compliance and identify any potential issues or inconsistencies in the codebase. The output of the Flake8 command provides information about the specific lines of code that need to be addressed to ensure PEP8 compliance.
+
+  - TODO - Add the output of the Flake8 command and any necessary corrections made to the code.
 
 ## Bugs
 
