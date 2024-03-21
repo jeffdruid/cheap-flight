@@ -93,7 +93,7 @@ class LinkValidator:
             + "\nWelcome to the Link-Validator Tool!\n"
             + self.RESET
             + self.YELLOW
-            + "\nThis tool allows you to scrape a webpage"
+            + "This tool allows you to scrape a webpage"
             + " and validate all the links."
             + self.RESET
         )

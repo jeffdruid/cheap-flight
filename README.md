@@ -444,7 +444,25 @@ else:
 | User chooses to open the Google Sheets                     | Select the option to open the Google Sheets.                                                                                                                               | The Link-Validator Tool opens the Google Sheets for viewing and management.                                                                |
 | User chooses to view the source code on GitHub             | Select the option to view the source code on GitHub.                                                                                                                       | The Link-Validator Tool opens the GitHub repository in the default web browser for users to explore the source code.                       |
 
+#### Application Start-Up Tests
+
+| Test Number | Test                      | Test Data              | Expected Result                                                                             | Actual Result                                                                                     | Test Result |
+| ----------- | ------------------------- | ---------------------- | ------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ----------- |
+| 1           | Check Internet Connection | Internet connection    | Displays a colorful welcome message and menu options if an internet connection is available | Colorful welcome message displayed along with menu options if an internet connection is available | Pass        |
+| 2           | Check Internet Connection | No internet connection | Program terminates with a connection error message                                          | Program terminated with a connection error message                                                | Pass        |
+
 #### Main menu
+
+| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
+| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+| 1           | Main Menu Validation                 | Input " "              | Error message                                            | Error message displayed                                | Pass        |
+| 2           | Main Menu Validation                 | Input "a"              | Error message                                            | Error message displayed                                | Pass        |
+| 3           | Main Menu Validation                 | Input 20               | Error message                                            | Error message displayed                                | Pass        |
+| 4           | Main Menu Validation                 | Input "$"              | Error message                                            | Error message displayed                                | Pass        |
+| 5           | Main Menu Validation                 | Input 0                | Exits the program                                        | Program exited successfully                            | Pass        |
+| 6           | Main Menu Validation                 | Input 1-9              | Displays the corresponding functionality menu            | Correct menu displayed for the entered option          | Pass        |
+| 7           | Main Menu Validation                 | Input other characters | Error message                                            | Error message displayed                                | Pass        |
+| 8           | Program termination by user (Ctrl+C) | Ctrl+C                 | Program terminates gracefully with a termination message | Program terminated gracefully with termination message | Pass        |
 
 #### Testing with various types of links (internal, external, anchor links)
 
