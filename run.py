@@ -27,7 +27,6 @@ class LinkValidator:
         self.BLACK = Fore.BLACK
         self.RESET = Style.RESET_ALL
         self.ERROR_MESSAGE = (self.RED + "\nNo links found. Please scrape a webpage first." + self.RESET)
-        # TODO - Create functions to handle error messages. (avoid repetition)
         self.initialize_colorama()
         
         self.SCOPE = [
@@ -62,6 +61,9 @@ class LinkValidator:
             requests.get("http://www.google.com", timeout=5)
             return True
         except requests.ConnectionError:
+            return False
+        except requests.Timeout:
+            print("Connection timed out. Please check your internet connection and try again later.")
             return False 
                 
     def print_welcome_message(self):
@@ -196,6 +198,9 @@ class LinkValidator:
         # Print the current page being scraped
         print(f"\nScraping {url}...")
         
+        # Extract base URL
+        base_url = self.get_base_url(url)
+
         try:
             response = requests.get(url)
             response.raise_for_status()  # Raise an HTTPError if status code is not 200
@@ -211,7 +216,7 @@ class LinkValidator:
             # Check all links for aria labels
             for link in soup.find_all("a"):
                 href = link.get('href')
-                full_link = urljoin(url, href)  # Join base URL with relative URL to get full URL
+                full_link = urljoin(base_url, href)  # Join base URL with relative URL to get full URL
                 if link.get('aria-label'):
                     links_with_aria.append(full_link)
                 else:
@@ -232,9 +237,6 @@ class LinkValidator:
                 # Get status code and response from check_link_status function
                 status, response = self.check_link_status(link)
                 data[str(link)] = ('internal', status, response, missing_aria)
-
-            # Extract base URL
-            base_url = self.get_base_url(url)
 
             # Check external links
             external_links = self.check_external_links(soup, base_url)
