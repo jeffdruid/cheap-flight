@@ -628,6 +628,8 @@ heroku open
 
 - TODO
 - TODO - Add credits for the libraries used
+- [Code Institute - Terminal](https://codeinstitute.net/)
+- [Heroku - Cloud Application Platform](https://www.heroku.com/)
 - [BeautifulSoup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
 - [Requests Documentation](https://docs.python-requests.org/en/master/)
 - [Google Sheets API Documentation](https://developers.google.com/sheets/api)
@@ -638,6 +640,8 @@ heroku open
 - [os Documentation](https://docs.python.org/3/library/os.html)
 - [webbrowser Documentation](https://docs.python.org/3/library/webbrowser.html)
 - [Asci Art Generator](https://patorjk.com/software/taag/)
+- [Black - The Uncompromising Code Formatter](https://black.readthedocs.io/en/stable/)
+- [flake8 - Your Tool For Style Guide Enforcement](https://flake8.pycqa.org/en/latest/)
 
 ### Source Code
 
@@ -658,6 +662,7 @@ heroku open
 - [Web Scraping with Python: A Beginner's Guide - DataCamp](https://www.datacamp.com/community/tutorials/web-scraping-using-python)
 - [freeCodeCamp.org - Web Scraping with Python](https://www.freecodecamp.org/news/web-scraping-python-tutorial-how-to-scrape-data-from-a-website/)
 - [Learn python - Full Course for Beginners - freeCodeCamp.org](https://www.youtube.com/watch?v=rfscVS0vtbw)
+- [Stack Overflow - Max line length in Python](https://stackoverflow.com/questions/39973318/what-is-the-maximum-length-of-a-line-in-python)
 
 ## License
 

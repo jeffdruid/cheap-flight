@@ -347,10 +347,7 @@ class LinkValidator:
             print("Links with aria labels:", len(links_with_aria))
             print("Links without aria labels:", len(links_without_aria))
             print("External links found:", len(external_links))
-            print(
-                "Internal links found:",
-                len(links_with_aria) + len(links_without_aria),
-            )
+            print("Internal links found:", len(data) - len(external_links))
             print(
                 "Broken links found:",
                 sum(1 for value in data.values() if value[1] == "broken"),
