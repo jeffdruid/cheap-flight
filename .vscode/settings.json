@@ -1,0 +1,10 @@
+{
+    "cSpell.words": [
+        "CREDS",
+        "iterrows",
+        "pbar"
+    ],
+    "autopep8.args": [
+        " --max-line-length=79"
+    ]
+}

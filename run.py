@@ -15,7 +15,7 @@ from tqdm import tqdm
 
 class LinkValidator:
     """
-        Initialize the LinkValidator class.
+    Initialize the LinkValidator class.
     """
 
     def __init__(self):
@@ -29,20 +29,23 @@ class LinkValidator:
         self.BLACK = Fore.BLACK
         self.RESET = Style.RESET_ALL
         self.ERROR_MESSAGE = (
-            self.RED + "\nNo links found. Please scrape a webpage first." + self.RESET)
+            self.RED
+            + "\nNo links found. Please scrape a webpage first."
+            + self.RESET
+        )
         self.initialize_colorama()
 
         self.SCOPE = [
             "https://www.googleapis.com/auth/spreadsheets",
             "https://www.googleapis.com/auth/drive.file",
-            "https://www.googleapis.com/auth/drive"
+            "https://www.googleapis.com/auth/drive",
         ]
 
         # Google Sheets API credentials
-        self.CREDS = Credentials.from_service_account_file('creds.json')
+        self.CREDS = Credentials.from_service_account_file("creds.json")
         self.SCOPED_CREDS = self.CREDS.with_scopes(self.SCOPE)
         self.GSPREAD_CLIENT = gspread.authorize(self.SCOPED_CREDS)
-        self.SHEET = self.GSPREAD_CLIENT.open('LinkValidator')
+        self.SHEET = self.GSPREAD_CLIENT.open("LinkValidator")
         self.WORKSHEET = self.SHEET.sheet1
 
     def initialize_colorama(self):
@@ -53,7 +56,12 @@ class LinkValidator:
 
         # Check internet connectivity
         if not self.check_internet_connection():
-            print(self.RED + "\nError: No internet connection. Please check your network connection and try again." + self.RESET)
+            print(
+                self.RED
+                + "\nError: No internet connection. Please"
+                + " check your network connection and try again."
+                + self.RESET
+            )
             exit()
 
     def check_internet_connection(self):
@@ -67,7 +75,9 @@ class LinkValidator:
             return False
         except requests.Timeout:
             print(
-                "Connection timed out. Please check your internet connection and try again later.")
+                "Connection timed out. Please check your"
+                + " internet connection and try again later."
+            )
             return False
 
     def print_welcome_message(self):
@@ -76,8 +86,17 @@ class LinkValidator:
         """
         # Clear the console
         self.clear_console()
-        print(Style.BRIGHT + Back.GREEN + Fore.WHITE + "\nWelcome to the Link-Validator Tool!\n" + self.RESET +
-              self.YELLOW + "\nThis tool allows you to scrape a webpage and validate all the links." + self.RESET)
+        print(
+            Style.BRIGHT
+            + Back.GREEN
+            + Fore.WHITE
+            + "\nWelcome to the Link-Validator Tool!\n"
+            + self.RESET
+            + self.YELLOW
+            + "\nThis tool allows you to scrape a webpage"
+            + " and validate all the links."
+            + self.RESET
+        )
 
     def print_instructions(self):
         """
@@ -89,11 +108,11 @@ class LinkValidator:
         print("1. Scrape and Validate Links from a Webpage")
         print("-" * 63)
         print(self.YELLOW + "Display Options:" + self.RESET)
-        print(self.CYAN + "   2. Display All Links Scraped from the Last Webpage")
-        print("   3. Display Links not Verified due to Connection Errors from the Last Webpage")
-        print("   4. Display Links with Missing Aria Labels from the Last Webpage")
-        print("   5. Display Broken Links from the Last Webpage")
-        print("   6. Display a Summary of Findings from the Last Webpage")
+        print(self.CYAN + "   2. Display All Links Scraped")
+        print("   3. Display Links not Verified due to Connection Errors")
+        print("   4. Display Links with Missing Aria Labels")
+        print("   5. Display Broken Links")
+        print("   6. Display a Summary of Findings")
         print("-" * 63)
         print(self.YELLOW + "Manage Options:")
         print(self.CYAN + "   7. Empty the Links Google Sheet")
@@ -112,26 +131,41 @@ class LinkValidator:
         while True:
             try:
                 choice = input(
-                    self.YELLOW + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): " + self.RESET)
+                    self.YELLOW
+                    + "Enter your choice (1, 2, 3, 4, 5, 6, 7, 8, 9 or 0): "
+                    + self.RESET
+                )
                 # Convert input to integer
                 choice = int(choice)
                 if choice in [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]:
                     return choice
                 else:
                     print(
-                        self.RED + "Invalid choice. Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n" + self.RESET)
+                        self.RED
+                        + "Invalid choice."
+                        + " Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n"
+                        + self.RESET
+                    )
             except ValueError:
-                print(self.RED + "Invalid input. Please enter a number." + self.RESET)
+                print(
+                    self.RED
+                    + "Invalid input. Please enter a number."
+                    + self.RESET
+                )
 
     def get_base_url(self, url):
         """
         Extract the base URL from the given URL.
         """
         parsed_url = urllib.parse.urlparse(url)
-        if not parsed_url.path:  # No path (like in "https://example.com/")
+        # No path (like in "https://example.com/")
+        if not parsed_url.path:
             base_url = f"{parsed_url.scheme}://{parsed_url.netloc}/"
         else:
-            base_url = f"{parsed_url.scheme}://{parsed_url.netloc}{parsed_url.path.rstrip('/')}/"
+            base_url = (
+                f"{parsed_url.scheme}://{parsed_url.netloc}"
+                f"{parsed_url.path.rstrip('/')}/"
+            )
         return base_url
 
     def write_to_google_sheets(self, data):
@@ -140,7 +174,13 @@ class LinkValidator:
         """
         try:
             # Define the header row
-            header = ['Link URL', 'Type', 'Status', 'Response', 'Missing Aria']
+            header = [
+                "Link URL",
+                "Type",
+                "Status",
+                "Response",
+                "Missing Aria",
+            ]
 
             # Clear existing data (including header)
             self.WORKSHEET.clear()
@@ -149,18 +189,38 @@ class LinkValidator:
             self.WORKSHEET.append_row(header)
 
             # Append new data with status, response, and missing aria
-            with tqdm(total=len(data), desc=self.CYAN + "Saving data to Google Sheets", unit="row" + self.RESET) as pbar:
+            with tqdm(
+                total=len(data),
+                desc=self.CYAN + "Saving data to Google Sheets",
+                unit="row" + self.RESET,
+            ) as pbar:
                 for link, link_info in data.items():
-                    link_type, status, response, missing_aria = link_info  # Unpack all four values
+                    link_type, status, response, missing_aria = (
+                        link_info  # Unpack all four values
+                    )
 
                     # Add data row to the worksheet
                     self.WORKSHEET.append_row(
-                        [link, link_type, status, response if response is not None else '', missing_aria])
+                        [
+                            link,
+                            link_type,
+                            status,
+                            response if response is not None else "",
+                            missing_aria,
+                        ]
+                    )
                     pbar.update(1)
 
-            print(self.GREEN + "Data saved to Google Sheets successfully." + self.RESET)
+            print(
+                self.GREEN
+                + "Data saved to Google Sheets successfully."
+                + self.RESET
+            )
         except Exception as e:
-            print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
+            print(
+                self.RED + "An unexpected error occurred:",
+                str(e) + self.RESET,
+            )
 
     def is_internal_link(self, link, base_url):
         """
@@ -211,23 +271,27 @@ class LinkValidator:
 
         try:
             response = requests.get(url)
-            response.raise_for_status()  # Raise an HTTPError if status code is not 200
+            # Raise an HTTPError if status code is not 200
+            response.raise_for_status()
             soup = BeautifulSoup(response.content, "html.parser")
         except requests.exceptions.RequestException as e:
             print(
-                self.RED + f"An error occurred while fetching the webpage: {e}" + self.RESET)
+                self.RED
+                + f"An error occurred while fetching the webpage: {e}"
+                + self.RESET
+            )
             return
 
         data = {}  # Dictionary to store link data
         links_with_aria = []  # List to store links with aria labels
-        links_without_aria = []    # List to store links without aria labels
+        links_without_aria = []  # List to store links without aria labels
         if soup:
             # Check all links for aria labels
             for link in soup.find_all("a"):
-                href = link.get('href')
+                href = link.get("href")
                 # Join base URL with relative URL to get full URL
                 full_link = urljoin(base_url, href)
-                if link.get('aria-label'):
+                if link.get("aria-label"):
                     links_with_aria.append(full_link)
                 else:
                     links_without_aria.append(full_link)
@@ -235,60 +299,82 @@ class LinkValidator:
             # Update data with missing aria labels for links with aria
             for link in links_with_aria:
                 # Determine missing aria
-                missing_aria = 'yes' if link in links_without_aria else 'no'
+                missing_aria = "yes" if link in links_without_aria else "no"
                 # Get status code and response from check_link_status function
                 status, response = self.check_link_status(link)
-                data[str(link)] = ('internal', status, response, missing_aria)
+                data[str(link)] = ("internal", status, response, missing_aria)
 
             # Update data with missing aria labels for links without aria
             for link in links_without_aria:
                 # Determine missing aria
-                missing_aria = 'yes' if link in links_without_aria else 'no'
+                missing_aria = "yes" if link in links_without_aria else "no"
                 # Get status code and response from check_link_status function
                 status, response = self.check_link_status(link)
-                data[str(link)] = ('internal', status, response, missing_aria)
+                data[str(link)] = ("internal", status, response, missing_aria)
 
             # Check external links
             external_links = self.check_external_links(soup, base_url)
 
-            # Determine if links are internal or external and check for broken links
+            # Determine if links are internal or external
+            # and check for broken links
             for link in external_links:
                 if self.is_internal_link(link, base_url):
-                    link_type = 'internal'
+                    link_type = "internal"
                 else:
-                    link_type = 'external'
+                    link_type = "external"
                 # Determine missing aria
-                missing_aria = 'yes' if link in links_without_aria else 'no'
+                missing_aria = "yes" if link in links_without_aria else "no"
                 status = self.check_link_status(link)
-                data[str(link)] = (link_type, status[0],
-                                   status[1], missing_aria)
+                data[str(link)] = (
+                    link_type,
+                    status[0],
+                    status[1],
+                    missing_aria,
+                )
 
             # Write data to Google Sheets
             try:
                 self.write_to_google_sheets(data)
             except Exception as e:
                 print(
-                    self.RED + "An error occurred while writing data to Google Sheets:", str(e) + self.RESET)
+                    self.RED
+                    + "An error occurred while writing data to Google Sheets:",
+                    str(e) + self.RESET,
+                )
 
             print(self.GREEN + "Scraping complete!\n" + self.RESET)
             print(self.CYAN + "Total links found:", len(data))
             print("Links with aria labels:", len(links_with_aria))
             print("Links without aria labels:", len(links_without_aria))
             print("External links found:", len(external_links))
-            print("Internal links found:", len(
-                links_with_aria) + len(links_without_aria))
-            print("Broken links found:", sum(
-                1 for value in data.values() if value[1] == 'broken'))
+            print(
+                "Internal links found:",
+                len(links_with_aria) + len(links_without_aria),
+            )
+            print(
+                "Broken links found:",
+                sum(1 for value in data.values() if value[1] == "broken"),
+            )
 
             # Count the number of connection errors
-            num_connection_errors = sum(1 for value in data.values(
-            ) if "No connection adapters were found" in str(value[2]))
+            num_connection_errors = sum(
+                1
+                for value in data.values()
+                if "No connection adapters were found" in str(value[2])
+            )
             print("Links with connection errors:", num_connection_errors)
 
             print(
-                self.GREEN + "\nPlease check the Google Sheets for more details." + self.RESET)
+                self.GREEN
+                + "\nPlease check the Google Sheets for more details."
+                + self.RESET
+            )
             print(
-                self.RED + "Note: The Google Sheets will be emptied when you scrape a new webpage." + self.RESET)
+                self.RED
+                + "Note: The Google Sheets will be emptied"
+                + " when you scrape a new webpage."
+                + self.RESET
+            )
 
     def check_link_status(self, link):
         """
@@ -299,18 +385,22 @@ class LinkValidator:
             status_code = response.status_code
             if status_code >= 400:
                 # Broken link (404 Not Found)
-                return ('broken', f'{status_code} {response.reason}')
+                return ("broken", f"{status_code} {response.reason}")
             else:
                 # Valid link (status code < 400)
-                return ('valid', f'{status_code} {response.reason}')
+                return ("valid", f"{status_code} {response.reason}")
         except requests.exceptions.RequestException as e:
-            return ('broken', str(e))  # Broken link due to connection error
+            return ("broken", str(e))  # Broken link due to connection error
 
     def display_all_links(self):
         """
         Display all links scraped from the last webpage.
         """
-        print(self.CYAN + "Displaying all links scraped from the last webpage...\n" + self.RESET)
+        print(
+            self.CYAN
+            + "Displaying all links scraped from the last webpage...\n"
+            + self.RESET
+        )
         try:
             # Fetch all data from the worksheet
             data = self.WORKSHEET.get_all_values()
@@ -326,7 +416,7 @@ class LinkValidator:
             # Display DataFrame
             print(df)
 
-        except Exception as e:
+        except Exception:
             print(self.ERROR_MESSAGE)
 
     def get_url_input(self):
@@ -336,14 +426,26 @@ class LinkValidator:
         while True:
             try:
                 print(
-                    self.GREEN + "You can use the following URL for testing:" + self.RESET)
+                    self.GREEN
+                    + "You can use the following URL for testing:"
+                    + self.RESET
+                )
                 print(self.YELLOW + "\nexample.com" + self.RESET)
-                print(self.YELLOW +
-                      "\nhttps://jeffdruid.github.io/link-test/" + self.RESET)
                 print(
-                    self.YELLOW + "\nhttps://www.w3.org/WAI/demos/bad/before/home.html" + self.RESET)
+                    self.YELLOW
+                    + "\nhttps://jeffdruid.github.io/link-test/"
+                    + self.RESET
+                )
+                print(
+                    self.YELLOW
+                    + "\nhttps://www.w3.org/WAI/demos/bad/before/home.html"
+                    + self.RESET
+                )
                 url = input(
-                    self.CYAN + "\nEnter the URL you want to scrape: \n" + self.RESET)
+                    self.CYAN
+                    + "\nEnter the URL you want to scrape: \n"
+                    + self.RESET
+                )
                 # Check if the URL starts with "http://" or "https://"
                 if not url.startswith(("http://", "https://")):
                     # If not, add "http://" to the beginning of the URL
@@ -351,21 +453,31 @@ class LinkValidator:
                 if self.validate_url(url):
                     return url
                 else:
-                    print(self.RED + "Invalid URL. Please try again." + self.RESET)
+                    print(
+                        self.RED
+                        + "Invalid URL. Please try again."
+                        + self.RESET
+                    )
             except KeyboardInterrupt:
                 print(self.RED + "\nProgram terminated by user." + self.RESET)
                 exit()
 
     def validate_url(self, url):
         """
-        Validate the URL by sending a HEAD request and checking the status code.
+        Validate the URL by sending a HEAD request
+        and checking the status code.
         """
         # Send a HEAD request to the URL and check the status code
         try:
             response = requests.head(
-                url, allow_redirects=True, stream=True, timeout=5)
-            print(self.GREEN + "\nStatus code: " +
-                  str(response.status_code) + self.RESET)
+                url, allow_redirects=True, stream=True, timeout=5
+            )
+            print(
+                self.GREEN
+                + "\nStatus code: "
+                + str(response.status_code)
+                + self.RESET
+            )
             return response.status_code == 200
         except requests.exceptions.RequestException as e:
             print(Back.RED + f"Error: {e}" + self.RESET)
@@ -381,8 +493,12 @@ class LinkValidator:
         try:
             sheet_url = self.SHEET.url
             os.system(f"start {sheet_url}")
-            print("\n" + self.GREEN +
-                  "Google Sheet has been opened in a web browser." + self.RESET)
+            print(
+                "\n"
+                + self.GREEN
+                + "Google Sheet has been opened in a web browser."
+                + self.RESET
+            )
         except Exception as e:
             print(self.RED + "\nFailed to open Google Sheet:", e + self.RESET)
 
@@ -392,15 +508,26 @@ class LinkValidator:
         """
         try:
             if missing_aria:
-                print("\n" + self.RED +
-                      "Links with missing aria labels:" + self.RESET)
+                print(
+                    "\n"
+                    + self.RED
+                    + "Links with missing aria labels:"
+                    + self.RESET
+                )
                 for link in missing_aria:
                     print(link)
             else:
-                print("\n" + self.GREEN +
-                      "No links with missing aria labels found." + self.RESET)
+                print(
+                    "\n"
+                    + self.GREEN
+                    + "No links with missing aria labels found."
+                    + self.RESET
+                )
         except Exception as e:
-            print("An error occurred while retrieving data from Google Sheets:", str(e))
+            print(
+                "An error occurred while retrieving data from Google Sheets:",
+                str(e),
+            )
 
     def display_missing_aria_links_from_sheet(self):
         """
@@ -413,11 +540,12 @@ class LinkValidator:
             if data:
                 df = pd.DataFrame(data[1:], columns=data[0])
                 missing_aria_links = list(
-                    df[df['Missing Aria'] == 'yes']['Link URL'])
+                    df[df["Missing Aria"] == "yes"]["Link URL"]
+                )
                 self.display_missing_aria(missing_aria_links)
             else:
                 print("No data found in Google Sheets.")
-        except Exception as e:
+        except Exception:
             print(self.ERROR_MESSAGE)
 
     def print_links_with_connection_errors(self):
@@ -428,8 +556,11 @@ class LinkValidator:
             # Fetch all data from the worksheet
             data = self.WORKSHEET.get_all_values()
         except Exception as e:
-            print(self.RED + "An error occurred while reading data from Google Sheets:",
-                  str(e) + self.RESET)
+            print(
+                self.RED
+                + "An error occurred while reading data from Google Sheets:",
+                str(e) + self.RESET,
+            )
             return
 
         if data:
@@ -437,20 +568,33 @@ class LinkValidator:
             df = pd.DataFrame(data[1:], columns=data[0])
 
             # Count the number of connection errors
-            if 'Response' in df.columns:
+            if "Response" in df.columns:
                 num_connection_errors = len(
-                    df[df['Response'].str.contains("No connection adapters were found")])
+                    df[
+                        df["Response"].str.contains(
+                            "No connection adapters were found"
+                        )
+                    ]
+                )
 
                 if num_connection_errors > 0:
                     print(
-                        self.RED + "Links not verified due to connection errors:" + self.RESET)
+                        self.RED
+                        + "Links not verified due to connection errors:"
+                        + self.RESET
+                    )
                     # Filter and print links with connection errors
-                    connection_errors = df[df['Response'].str.contains(
-                        "No connection adapters were found")]
+                    connection_errors = df[
+                        df["Response"].str.contains(
+                            "No connection adapters were found"
+                        )
+                    ]
                     for index, row in connection_errors.iterrows():
-                        print(row['Link URL'])
+                        print(row["Link URL"])
                 else:
-                    print(self.GREEN + "No links with connection errors found.")
+                    print(
+                        self.GREEN + "No links with connection errors found."
+                    )
             else:
                 print(self.ERROR_MESSAGE)
         else:
@@ -473,16 +617,16 @@ class LinkValidator:
             df = pd.DataFrame(data[1:], columns=data[0])
 
             # Filter DataFrame to get broken links
-            broken_links = df[df['Status'] == 'broken']
+            broken_links = df[df["Status"] == "broken"]
 
             if broken_links.empty:
                 print(self.GREEN + "No broken links found." + self.RESET)
             else:
                 print(self.RED + "Broken links found:" + self.RESET)
-                for broken_link in broken_links['Link URL']:
+                for broken_link in broken_links["Link URL"]:
                     print(broken_link)
 
-        except Exception as e:
+        except Exception:
             print(self.ERROR_MESSAGE)
 
     def open_github(self):
@@ -494,8 +638,12 @@ class LinkValidator:
         try:
             print(self.YELLOW + "\nOpening GitHub..." + self.RESET)
             webbrowser.open(github_link)
-            print("\n" + self.GREEN +
-                  "GitHub has been opened in a new tab." + self.RESET)
+            print(
+                "\n"
+                + self.GREEN
+                + "GitHub has been opened in a new tab."
+                + self.RESET
+            )
         except Exception as e:
             print(self.RED + "\nFailed to open GitHub:", e + self.RESET)
 
@@ -507,41 +655,96 @@ class LinkValidator:
             # Clear existing data (including header)
             self.WORKSHEET.clear()
         except Exception as e:
-            print(self.RED + "An unexpected error occurred:", str(e) + self.RESET)
+            print(
+                self.RED + "An unexpected error occurred:",
+                str(e) + self.RESET,
+            )
 
-    def summarize_findings(self, num_links_scraped, num_links_with_aria, num_internal_links, num_external_links, num_missing_aria, num_broken_links, num_connection_errors):
+    def summarize_findings(
+        self,
+        num_links_scraped,
+        num_links_with_aria,
+        num_internal_links,
+        num_external_links,
+        num_missing_aria,
+        num_broken_links,
+        num_connection_errors,
+    ):
         """
         Generate a summary of findings and present them with ASCII art.
         """
         print("\n" + self.CYAN + "Summary of Findings:" + self.RESET)
         print("+" + "-" * 40 + "+")
-        print("| {:<20} {:<15} |".format(
-            self.YELLOW + "Metric", "Count" + self.RESET))
+        print(
+            "| {:<20} {:<15} |".format(
+                self.YELLOW + "Metric", "Count" + self.RESET
+            )
+        )
         print("+" + "-" * 40 + "+")
-        print("| {:<20} {:<15} |".format(self.GREEN +
-              "Links Scraped", str(num_links_scraped) + self.RESET))
-        print("| {:<20} {:<15} |".format(self.GREEN +
-              "Internal Links", str(num_internal_links) + self.RESET))
-        print("| {:<20} {:<15} |".format(self.GREEN +
-              "External Links", str(num_external_links) + self.RESET))
-        print("| {:<20} {:<15} |".format(self.GREEN +
-              "Links with Aria", str(num_links_with_aria) + self.RESET))
-        print("| {:<20} {:<15} |".format(self.RED + "Missing Aria", str(num_missing_aria) + self.RESET)
-              ) if num_missing_aria > 0 else print("| {:<20} {:<15} |".format("Missing Aria Labels", num_missing_aria))
-        print("| {:<20} {:<15} |".format(self.RED + "Broken Links", str(num_broken_links) + self.RESET)
-              ) if num_broken_links > 0 else print("| {:<20} {:<15} |".format("Broken Links", num_broken_links))
-        print("| {:<20} {:<15} |".format(self.RED + "Not Verified", str(num_connection_errors) + self.RESET)
-              ) if num_connection_errors > 0 else print("| {:<20} {:<15} |".format("Connection Errors", num_connection_errors))
-        print("+" + "-" * 40 + "+")
-        # ASCII art for the summary
-        print(self.GREEN + """
- _____ _                 _     __   __          
-|_   _| |__   __ _ _ __ | | __ \ \ / /__  _   _ 
-  | | | '_ \ / _` | '_ \| |/ /  \ V / _ \| | | |
-  | | | | | | (_| | | | |   <    | | (_) | |_| |
-  |_| |_| |_|\__,_|_| |_|_|\_\   |_|\___/ \__,_|
-                                                            
-                    """ + self.RESET)
+        print(
+            "| {:<20} {:<15} |".format(
+                self.GREEN + "Links Scraped",
+                str(num_links_scraped) + self.RESET,
+            )
+        )
+        print(
+            "| {:<20} {:<15} |".format(
+                self.GREEN + "Internal Links",
+                str(num_internal_links) + self.RESET,
+            )
+        )
+        print(
+            "| {:<20} {:<15} |".format(
+                self.GREEN + "External Links",
+                str(num_external_links) + self.RESET,
+            )
+        )
+        print(
+            "| {:<20} {:<15} |".format(
+                self.GREEN + "Links with Aria",
+                str(num_links_with_aria) + self.RESET,
+            )
+        )
+        (
+            print(
+                "| {:<20} {:<15} |".format(
+                    self.RED + "Missing Aria",
+                    str(num_missing_aria) + self.RESET,
+                )
+            )
+            if num_missing_aria > 0
+            else print(
+                "| {:<20} {:<15} |".format(
+                    "Missing Aria Labels", num_missing_aria
+                )
+            )
+        )
+        (
+            print(
+                "| {:<20} {:<15} |".format(
+                    self.RED + "Broken Links",
+                    str(num_broken_links) + self.RESET,
+                )
+            )
+            if num_broken_links > 0
+            else print(
+                "| {:<20} {:<15} |".format("Broken Links", num_broken_links)
+            )
+        )
+        (
+            print(
+                "| {:<20} {:<15} |".format(
+                    self.RED + "Not Verified",
+                    str(num_connection_errors) + self.RESET,
+                )
+            )
+            if num_connection_errors > 0
+            else print(
+                "| {:<20} {:<15} |".format(
+                    "Connection Errors", num_connection_errors
+                )
+            )
+        )
 
     def display_summary_of_findings(self):
         """
@@ -560,7 +763,7 @@ class LinkValidator:
             df = pd.DataFrame(data[1:], columns=data[0])
 
             # Check if 'Status' column exists
-            if 'Status' not in df.columns:
+            if "Status" not in df.columns:
                 print(self.ERROR_MESSAGE)
                 return
 
@@ -568,45 +771,57 @@ class LinkValidator:
             num_links_scraped = len(df)
 
             # Count the number of aria labels found if the column exists
-            if 'Missing Aria' in df.columns:
-                num_links_with_aria = len(df[df['Missing Aria'] == 'no'])
+            if "Missing Aria" in df.columns:
+                num_links_with_aria = len(df[df["Missing Aria"] == "no"])
             else:
                 num_links_with_aria = 0
 
             # Count the number of internal links found if the column exists
-            if 'Type' in df.columns:
-                num_internal_links = len(df[df['Type'] == 'internal'])
+            if "Type" in df.columns:
+                num_internal_links = len(df[df["Type"] == "internal"])
             else:
                 num_internal_links = 0
 
             # Count the number of external links found if the column exists
-            if 'Type' in df.columns:
-                num_external_links = len(df[df['Type'] == 'external'])
+            if "Type" in df.columns:
+                num_external_links = len(df[df["Type"] == "external"])
             else:
                 num_external_links = 0
 
             # Count the number of missing aria labels if the column exists
-            if 'Missing Aria' in df.columns:
-                num_missing_aria = len(df[df['Missing Aria'] == 'yes'])
+            if "Missing Aria" in df.columns:
+                num_missing_aria = len(df[df["Missing Aria"] == "yes"])
             else:
                 num_missing_aria = 0
 
             # Count the number of connection errors
-            if 'Response' in df.columns:
+            if "Response" in df.columns:
                 num_connection_errors = len(
-                    df[df['Response'].str.contains("No connection adapters were found")])
+                    df[
+                        df["Response"].str.contains(
+                            "No connection adapters were found"
+                        )
+                    ]
+                )
             else:
                 num_connection_errors = 0
 
             # Count the number of broken links if the column exists
-            if 'Status' in df.columns:
-                num_broken_links = len(df[df['Status'] == 'broken'])
+            if "Status" in df.columns:
+                num_broken_links = len(df[df["Status"] == "broken"])
             else:
                 num_broken_links = 0
 
             # Display the summary
-            self.summarize_findings(num_links_scraped, num_links_with_aria, num_internal_links,
-                                    num_external_links, num_missing_aria, num_broken_links, num_connection_errors)
+            self.summarize_findings(
+                num_links_scraped,
+                num_links_with_aria,
+                num_internal_links,
+                num_external_links,
+                num_missing_aria,
+                num_broken_links,
+                num_connection_errors,
+            )
 
         except Exception as e:
             print("An unexpected error occurred:", str(e))
@@ -617,7 +832,8 @@ class LinkValidator:
         """
         while True:
             choice = input(
-                self.YELLOW + "\nDo you want to continue? (y/n): " + self.RESET)
+                self.YELLOW + "\nDo you want to continue? (y/n): " + self.RESET
+            )
             if choice.lower() in ["y", "yes"]:
                 # Clear the console
                 self.clear_console()
@@ -627,13 +843,17 @@ class LinkValidator:
                 print(self.RED + "\nExiting the program..." + self.RESET)
                 exit()
             else:
-                print(self.RED + "Invalid choice. Please enter 'y' or 'n'." + self.RESET)
+                print(
+                    self.RED
+                    + "Invalid choice. Please enter 'y' or 'n'."
+                    + self.RESET
+                )
 
     def clear_console(self):
         """
         Clear the console.
         """
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system("cls" if os.name == "nt" else "clear")
 
     def main(self):
         """
@@ -662,8 +882,12 @@ class LinkValidator:
                     self.display_summary_of_findings()
                 elif choice == 7:
                     self.empty_links_google_sheet()
-                    print("\n" + self.GREEN +
-                          "The Google Sheet has been emptied." + self.RESET)
+                    print(
+                        "\n"
+                        + self.GREEN
+                        + "The Google Sheet has been emptied."
+                        + self.RESET
+                    )
                 elif choice == 8:
                     self.open_google_sheet()
                 elif choice == 9:
