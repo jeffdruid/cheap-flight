@@ -465,51 +465,70 @@ else:
 | 8           | Program termination by user (Ctrl+C) | Ctrl+C                 | Program terminates gracefully with a termination message | Program terminated gracefully with termination message | Pass        |
 
 #### Option 1 - Scrape and Validate Links
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
-| 1           | User selects Option 1 and provides a valid URL                                                  | Valid URL               | The tool scrapes the webpage, validates all links, and generates a comprehensive report with accurate results            | Webpage scraped, links validated, and accurate report generated                                                   | Pass        |
-| 2           | User selects Option 1 and provides an invalid URL                                                | Invalid URL             | The tool displays an error message indicating the invalid URL                                                              | Error message displayed indicating the invalid URL                                                                 | Pass        |
-| 3           | User selects Option 1 but does not provide a URL                                                  | No URL provided         | The tool prompts the user to enter a valid URL                                                                             | Prompt displayed asking for a valid URL                                                                             | Pass        |
-| 4           | User cancels Option 1 selection                                                                 | Cancel selection        | The tool returns to the main menu without any action                                                                        | Returned to main menu without any action                                                                           | Pass        |
-| 5           | User selects Option 1 and enters a URL with no links                                              | URL with no links       | The tool completes validation with no links found                                                                           | Validation completed with no links found                                                                           | Pass        |
-| 6           | User selects Option 1 and enters a URL with only internal links                                  | URL with internal links | The tool validates internal links only                                                                                   | Internal links validated                                                                                          | Pass        |
-| 7           | User selects Option 1 and enters a URL with only external links                                  | URL with external links | The tool validates external links only                                                                                   | External links validated                                                                                          | Pass        |
-| 8           | User selects Option 1 and enters a URL with both internal and external links                     | URL with internal and external links | The tool validates both internal and external links                                                                  | Both internal and external links validated                                                                         | Pass        |
-| 9           | User selects Option 1 and enters a URL with anchor links only                                    | URL with anchor links   | The tool validates anchor links only                                                                                     | Anchor links validated                                                                                             | Pass        |
-| 10          | User selects Option 1 and enters a URL with mixed link types                                     | URL with mixed link types | The tool validates all types of links found on the webpage                                                               | All types of links validated                                                                                       | Pass        |
+
+| Test Number | Test                                                                         | Test Data                            | Expected Result                                                                                               | Actual Result                                                   | Test Result |
+| ----------- | ---------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- | ----------- |
+| 1           | User selects Option 1 and provides a valid URL                               | Valid URL                            | The tool scrapes the webpage, validates all links, and generates a comprehensive report with accurate results | Webpage scraped, links validated, and accurate report generated | Pass        |
+| 2           | User selects Option 1 and provides an invalid URL                            | Invalid URL                          | The tool displays an error message indicating the invalid URL                                                 | Error message displayed indicating the invalid URL              | Pass        |
+| 3           | User selects Option 1 but does not provide a URL                             | No URL provided                      | The tool prompts the user to enter a valid URL                                                                | Prompt displayed asking for a valid URL                         | Pass        |
+| 4           | User cancels Option 1 selection                                              | Cancel selection                     | The tool returns to the main menu without any action                                                          | Returned to main menu without any action                        | Pass        |
+| 5           | User selects Option 1 and enters a URL with no links                         | URL with no links                    | The tool completes validation with no links found                                                             | Validation completed with no links found                        | Pass        |
+| 6           | User selects Option 1 and enters a URL with only internal links              | URL with internal links              | The tool validates internal links only                                                                        | Internal links validated                                        | Pass        |
+| 7           | User selects Option 1 and enters a URL with only external links              | URL with external links              | The tool validates external links only                                                                        | External links validated                                        | Pass        |
+| 8           | User selects Option 1 and enters a URL with both internal and external links | URL with internal and external links | The tool validates both internal and external links                                                           | Both internal and external links validated                      | Pass        |
+| 9           | User selects Option 1 and enters a URL with anchor links only                | URL with anchor links                | The tool validates anchor links only                                                                          | Anchor links validated                                          | Pass        |
+| 10          | User selects Option 1 and enters a URL with mixed link types                 | URL with mixed link types            | The tool validates all types of links found on the webpage                                                    | All types of links validated                                    | Pass        |
 
 #### Option 2 - Display All Links Scraped
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+| Test Number | Test                                                      | Test Data | Expected Result                                       | Actual Result                               | Test Result |
+| ----------- | --------------------------------------------------------- | --------- | ----------------------------------------------------- | ------------------------------------------- | ----------- |
+| 1           | User selects Option 2 when no links have been scraped yet | NA        | The tool displays a message indicating no links found | Message displayed indicating no links found | Pass        |
+| 2           | User selects Option 2 after scraping links from a webpage | NA        | The tool displays all links scraped from the webpage  | All links from the last webpage displayed   | Pass        |
+| 3           | User cancels Option 2 selection                           | NA        | The tool returns to the main menu                     | Returned to main menu without any action    | Pass        |
 
 #### Option 3 - Display Links not Verified due to Connection Errors
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
+| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
 
 #### Option 4 - Display Links with Missing Aria Labels
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
+| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
 
 #### Option 5 - Display Broken Links
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
+| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
 
 #### Option 6 - Display a Summary of Findings
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
+| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
 
 #### Option 7 - Empty the Links Google Sheet
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
+| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
 
 #### Option 8 - Open Google Sheets
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
+
+| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
+| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
 
 #### Option 9 - Open GitHub
-| Test Number | Test                                 | Test Data              | Expected Result                                          | Actual Result                                          | Test Result |
-| ----------- | ------------------------------------ | ---------------------- | -------------------------------------------------------- | ------------------------------------------------------ | ----------- |
 
+| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
+| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
+
+#### Prompt to Continue or Exit
+
+| Test Number | Test                                                       | Test Data | Expected Result                                      | Actual Result                                       | Test Result |
+| ----------- | ---------------------------------------------------------- | --------- | ---------------------------------------------------- | --------------------------------------------------- | ----------- |
+| 1           | User selects an option and chooses to continue             | 'y'       | The tool returns to the main menu                    | Returned to main menu without any action            | Pass        |
+| 2           | User selects an option and chooses to exit                 | 'n'       | The tool terminates with a goodbye message           | Program terminated with a goodbye message           | Pass        |
+| 3           | User provides an invalid choice during the continue prompt | 'x'       | The tool displays an error message and prompts again | Error message displayed, prompting for choice again | Pass        |
 
 ### Validator Testing
 
