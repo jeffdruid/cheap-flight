@@ -536,15 +536,26 @@ else:
 
 #### Option 8 - Open Google Sheets
 
-| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
-| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
+| Test Number | Test                                                                 | Test Data | Expected Result                               | Actual Result                           | Test Result |
+| ----------- | -------------------------------------------------------------------- | --------- | --------------------------------------------- | --------------------------------------- | ----------- |
+| 1           | User selects Option 8 to open Google Sheets                          | N/A       | Opens the Google Sheets in the web browser    | Google Sheets not opened in the browser | Fail        |
+| 4           | User unable to open Google Sheets and opts to view the link provided | N/A       | Google Sheets link provided for manual access | Google Sheets link displayed            | Pass        |
 
 #### Option 9 - Open GitHub
 
 | Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
 | ----------- | ---- | --------- | --------------- | ------------- | ----------- |
 
+#### Option 9 - View Source Code on GitHub
+
+| Test Number | Test                                                   | Test Data | Expected Result                                   | Actual Result                                   | Test Result |
+| ----------- | ------------------------------------------------------ | --------- | ------------------------------------------------- | ----------------------------------------------- | ----------- |
+| 1           | User selects Option 9 to view source code on GitHub    | NA        | Opens the GitHub repository in the web browser    | GitHub repository not opened in the web browser | Fail        |
+| 2           | User selects Option 9 and the GitHub link doesn't open | NA        | Displays a message with the GitHub repository URL | GitHub repository URL display link              | Pass        |
+
 #### Prompt to Continue or Exit
+
+- The tool prompts the user to continue or exit after completing an operation.
 
 | Test Number | Test                                                       | Test Data | Expected Result                                      | Actual Result                                       | Test Result |
 | ----------- | ---------------------------------------------------------- | --------- | ---------------------------------------------------- | --------------------------------------------------- | ----------- |
