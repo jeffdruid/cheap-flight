@@ -488,16 +488,9 @@ class LinkValidator:
         Open the Google Sheet in a web browser.
         """
         try:
-            print(self.YELLOW + "Opening Google Sheet..." + self.RESET)
             sheet_url = self.SHEET.url
             os.system(f"start {sheet_url}")
             print(self.CYAN + "\nLink to Google Sheet: " + sheet_url)
-            print(
-                "\n"
-                + self.GREEN
-                + "Google Sheet has been opened in a web browser."
-                + self.RESET
-            )
         except Exception as e:
             print(self.RED + "\nFailed to open Google Sheet:", e + self.RESET)
 
@@ -635,14 +628,7 @@ class LinkValidator:
         github_link = "https://github.com/jeffdruid/link-validator"
         print("\n" + self.GREEN + "GitHub link: " + github_link + self.RESET)
         try:
-            print(self.YELLOW + "\nOpening GitHub..." + self.RESET)
             webbrowser.open(github_link)
-            print(
-                "\n"
-                + self.GREEN
-                + "GitHub has been opened in a new tab."
-                + self.RESET
-            )
         except Exception as e:
             print(self.RED + "\nFailed to open GitHub:", e + self.RESET)
 
