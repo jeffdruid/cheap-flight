@@ -350,8 +350,8 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 ## Flowchart
 
-- TODO - Add flow chart instead of wireframes
-  ![Wireframe](assets/media/wireframe.png)
+- The flowchart below illustrates the main functionalities and user interactions of the Link-Validator Tool. It outlines the steps involved in scraping a webpage, validating links, generating reports, and interacting with Google Sheets and GitHub.
+  ![Flowchart](assets/media/flowchart.png)
 
 ## Features
 
