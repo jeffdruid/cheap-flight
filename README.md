@@ -445,10 +445,13 @@ else:
 - Explanation: The code snippet above checks the status code of the HTTP response and classifies links as either valid or broken based on the status code. If the status code is greater than or equal to 400, the link is considered broken, and the status code is stored in the link_status dictionary.
 
 ## Testing
+- The Link-Validator Tool was tested using a combination of manual testing and automated validation methods to ensure its functionality, reliability, and accuracy.
 
 ### Manual Testing
+- Manual testing was performed to validate the tool's features, user interactions, and error handling mechanisms.
 
 #### Acceptance Test
+The following test scenarios were used to validate the Link-Validator Tool's functionality and user experience:
 
 | Test Scenario                                              | Test Steps                                                                                                                                                                 | Expected Result                                                                                                                            |
 | ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
