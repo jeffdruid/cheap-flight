@@ -5,6 +5,7 @@
 ## Introduction
 
 The Link-Validator Tool is a Python application that allows users to scrape a webpage and validate all the links found within it. It performs checks for various link attributes, including URL validity, HTTP status codes, and the presence of Aria labels. The tool is especially useful for web developers, content managers, and SEO specialists who need to ensure the quality and integrity of hyperlinks on their websites.
+![Menu](assets/media/feat-menu.png)
 
 ## Table of Contents
 
