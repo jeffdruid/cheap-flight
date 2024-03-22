@@ -393,7 +393,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 ### Progress Indicator
 
 - Displays a progress indicator during the link validation process to indicate the status of the operation.
-- ![Option 1 - Scrape and Validate ](assets/media/feat-option-1-result.png)
+![Progress Bar](assets/media/feat-progress-bar.gif)
 
 ### Reporting
 
