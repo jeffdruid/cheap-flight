@@ -513,13 +513,18 @@ else:
 
 #### Option 5 - Display Broken Links
 
-| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
-| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
+| Test Number | Test                                                                          | Test Data | Expected Result                               | Actual Result                              | Test Result |
+| ----------- | ----------------------------------------------------------------------------- | --------- | --------------------------------------------- | ------------------------------------------ | ----------- |
+| 1           | User selects Option 5 to display broken links (broken links count > 0)        | N/A       | Displays all broken links                     | Broken links displayed                     | Pass        |
+| 2           | User selects Option 5 when no broken links are found (broken links count = 0) | N/A       | Displays a message indicating no broken links | No broken links message displayed          | Pass        |
+| 3           | User selects Option 5 when Google Sheets is empty                             | N/A       | Displays an error message indicating no data  | Error message indicating no data displayed | Pass        |
 
 #### Option 6 - Display a Summary of Findings
 
-| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
-| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
+| Test Number | Test                                              | Test Data | Expected Result                | Actual Result                 | Test Result |
+| ----------- | ------------------------------------------------- | --------- | ------------------------------ | ----------------------------- | ----------- |
+| 1           | User selects Option 6 to display summary          | N/A       | Displays a summary of findings | Summary of findings displayed | Pass        |
+| 5           | User selects Option 6 when Google Sheets is empty | N/A       | Displays an error message      | Error message displayed       | Pass        |
 
 #### Option 7 - Empty the Links Google Sheet
 
