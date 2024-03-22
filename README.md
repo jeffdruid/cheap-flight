@@ -655,6 +655,31 @@ When the project is deployed on Heroku, clicking the option to view the GitHub r
 
 - Issue: The tool was not handling URLs with trailing slashes correctly, leading to inaccurate link validation results.
 
+```python
+  def get_base_url(self, url):
+          """
+          Extract the base URL from the given URL.
+          """
+          parsed_url = urllib.parse.urlparse(url)
+          # No path (like in "https://example.com/")
+          if not parsed_url.path:
+              base_url = f"{parsed_url.scheme}://{parsed_url.netloc}/"
+          else:
+              base_url = (
+                  f"{parsed_url.scheme}://{parsed_url.netloc}"
+                  f"{parsed_url.path.rstrip('/')}/"
+              )
+          return base_url
+```
+
+Explanation:
+
+- The get_base_url() method is responsible for extracting the base URL from a given URL.
+- It utilizes the urlparse() function from the urllib.parse module to parse the URL into its components.
+- If the URL has no path component (e.g., "https://example.com/"), it appends a trailing slash to the base URL.
+- If the URL has a path component, it removes any trailing slashes from the path before constructing the base URL.
+- This ensures that the base URL is properly formatted, regardless of whether the input URL has a trailing slash or not.
+
 #### Incorrect Identification of Internal Links
 
 - Issue: The tool was incorrectly saving internal links with the wrong base URL, leading to inaccurate validation results.
