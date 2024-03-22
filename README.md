@@ -350,43 +350,59 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 ## Wireframe
 
 - TODO - Add flow chart instead of wireframes
-  ![Wireframe - Mobile](assets/media/Wireframe-mobile.png)
+  ![Wireframe](assets/media/wireframe.png)
 
 ## Features
 
-- TODO - ADD screenshots
+- The Link-Validator Tool offers a range of features to help users scrape webpages, validate links, and generate reports. Key features include:
 
 ### Scraping and Validation
 
 - Scrapes a webpage and validates all links found, checking for broken links, missing Aria labels, and more.
+  ![Option 1 - Scrape and Validate ](assets/media/feat-option-1-result.png)
 
 ### Google Sheets Integration
 
 - Stores link validation results in a Google Sheets document for easy access and sharing.
+  ![Google Sheets](assets/media/feaat-google-sheets.png)
 
 ### Interactive Command-Line Interface (CLI)
 
 - Provides a user-friendly CLI with menu options for different operations and displays results in real-time.
+  ![Main Menu](assets/media/feat-menu.png)
 
 ### Color-Coded Output
 
 - Utilizes color-coded output for easy identification of link status (valid, invalid, etc.).
+  ![Summary of Findings](assets/media/feat-option-6-results.png)
 
 ### Error Handling
 
 - Implements robust error handling to handle various scenarios gracefully.
 
+| Error                                                                         | Description                                                                                                                                                                                                                                                 |
+| ----------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ![Error: Internet Connection](assets/media/error-internet.png)                | This error message appears when the program detects no internet connection. It terminates the program without crashing. Without internet access, the tool cannot scrape web pages or validate links.                                                        |
+| ![Error: Invalid Input](assets/media/error-invalid-input.png)                 | This error occurs when the user provides an invalid input, such as a non-numeric character in response to a menu prompt. The program prompts the user to enter a valid numeric choice corresponding to the available menu options.                          |
+| ![Error: Invalid URL Character](assets/media/error-invalid-url-character.png) | This error indicates that the URL provided by the user contains invalid characters. The program prompts the user to enter a valid URL for scraping and validation. It also suggests some sample URLs for testing.                                           |
+| ![Error: Empty URL](assets/media/error-empty-url.png)                         | This error indicates that the user has provided an invalid URL input. The program prompts the user to enter a valid URL for scraping and validation.                                                                                                        |
+| ![Error: Invalid Prompt](assets/media/error-invalid-prompt.png)               | This error arises when the program encounters an invalid input during the menu prompt. It suggests that the user try again.                                                                                                                                 |
+| ![Error: Empty Data](assets/media/error-empty-data.png)                       | This error occurs when attempting to display data, but the data retrieved is empty. It could happen due to various reasons, such as no data being scraped yet or an error in fetching the data. The user is informed that no data is available for display. |
+
 ### Progress Indicator
 
 - Displays a progress indicator during the link validation process to indicate the status of the operation.
+- ![Option 1 - Scrape and Validate ](assets/media/feat-option-1-result.png)
 
 ### Reporting
 
-- Generates a comprehensive report summarizing the results of the link validation process, including statistics and detailed information about broken links.
+- Generates a comprehensive report summarizing the results of the link validation process, including the number of valid and broken links, links with missing Aria labels, and more.
+  ![Option 2 - Display all links](assets/media/feat-option-2-results.png)
 
 ### GitHub Integration
 
 - Provides a direct link to the project's GitHub repository for additional information and contributions.
+  ![Option 9 - GitHub Link](assets/media/feat-option-9.png)
 
 ## Troubleshooting
 
@@ -604,9 +620,12 @@ The following test scenarios were used to validate the Link-Validator Tool's fun
   flake8 run.py
   ```
 
+  ![Flake8 - Erros](assets/media/validator-error.png)
+
   - The Flake8 tool was used to check the code for PEP8 compliance and identify any potential issues or inconsistencies in the codebase. The output of the Flake8 command provides information about the specific lines of code that need to be addressed to ensure PEP8 compliance.
 
-  - TODO - Add the output of the Flake8 command and any necessary corrections made to the code.
+  - Currently, there are no errors in the codebase, and the tool is PEP8 compliant.
+    ![Flake8 - No Erros](assets/media/validator-result.png)
 
 ## Bugs
 
@@ -645,11 +664,11 @@ When the project is deployed on Heroku, clicking the option to view the GitHub r
 
 - UI improvements made to enhance the user experience and usability of the Link-Validator Tool.
 
-- TODO - Add Screenshots
-
 ### Implementation of the colorama Library:
 
 - The colorama library was integrated into the tool to provide colorful output messages. This enhancement makes the output more visually appealing and easier to read for users. Different colors are used to highlight important messages, errors, prompts, and other information, improving the overall user experience.
+
+  ![Summary of Findings](assets/media/feat-option-6-results.png)
 
 ### Removal of ASCII Art:
 
@@ -662,6 +681,7 @@ When the project is deployed on Heroku, clicking the option to view the GitHub r
 ### Improved Main Menu:
 
 - The main menu of the tool was enhanced to improve navigation and user interaction. The menu options were organized in a clear and intuitive manner, making it easier for users to understand and access the various functionalities offered by the tool. Additionally, descriptive prompts and instructions were provided to guide users through the menu options and usage of the tool effectively.
+  ![Main Menu](assets/media/feat-menu.png)
 
 ## Futures Improvements
 
