@@ -713,7 +713,10 @@ class LinkValidator:
             )
             if num_broken_links > 0
             else print(
-                "| {:<20} {:<15} |".format("Broken Links", num_broken_links)
+                "| {:<20} {:<15} |".format(
+                    self.GREEN + "Broken Links",
+                    str(num_broken_links) + self.RESET,
+                )
             )
         )
         (
@@ -726,10 +729,12 @@ class LinkValidator:
             if num_connection_errors > 0
             else print(
                 "| {:<20} {:<15} |".format(
-                    "Connection Errors", num_connection_errors
+                    self.GREEN + "Errors",
+                    str(num_connection_errors) + self.RESET,
                 )
             )
         )
+        print("+" + "-" * 40 + "+")
 
     def display_summary_of_findings(self):
         """
