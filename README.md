@@ -655,22 +655,22 @@ When the project is deployed on Heroku, clicking the option to view the GitHub r
 
 - Issue: The tool was not handling URLs with trailing slashes correctly, leading to inaccurate link validation results.
 
-```python
-  def get_base_url(self, url):
-          """
-          Extract the base URL from the given URL.
-          """
-          parsed_url = urllib.parse.urlparse(url)
-          # No path (like in "https://example.com/")
-          if not parsed_url.path:
-              base_url = f"{parsed_url.scheme}://{parsed_url.netloc}/"
-          else:
-              base_url = (
-                  f"{parsed_url.scheme}://{parsed_url.netloc}"
-                  f"{parsed_url.path.rstrip('/')}/"
-              )
-          return base_url
-```
+  ```python
+    def get_base_url(self, url):
+            """
+            Extract the base URL from the given URL.
+            """
+            parsed_url = urllib.parse.urlparse(url)
+            # No path (like in "https://example.com/")
+            if not parsed_url.path:
+                base_url = f"{parsed_url.scheme}://{parsed_url.netloc}/"
+            else:
+                base_url = (
+                    f"{parsed_url.scheme}://{parsed_url.netloc}"
+                    f"{parsed_url.path.rstrip('/')}/"
+                )
+            return base_url
+  ```
 
 Explanation:
 
@@ -683,6 +683,23 @@ Explanation:
 #### Incorrect Identification of Internal Links
 
 - Issue: The tool was incorrectly saving internal links with the wrong base URL, leading to inaccurate validation results.
+  ```python
+  def is_internal_link(self, link, base_url):
+          """
+          Check if a link is internal based on the base URL.
+          """
+          parsed_link = urllib.parse.urlparse(link)
+          parsed_base_url = urllib.parse.urlparse(base_url)
+          return parsed_link.netloc == parsed_base_url.netloc
+  ```
+
+Explanation:
+
+- The is_internal_link() method is responsible for determining whether a given link is internal or external based on the provided base URL.
+- It utilizes the urlparse() function from the urllib.parse module to parse both the link and the base URL into their respective components.
+- By comparing the netloc attribute of both parsed URLs, the method checks if the link belongs to the same domain as the base URL.
+- If the netloc values match, the link is considered internal, and the method returns True; otherwise, it returns False.
+- This ensures that internal links are correctly identified and validated against the correct base URL, improving the accuracy of the link validation process.
 
 ## UI Improvements
 
