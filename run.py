@@ -851,6 +851,7 @@ class LinkValidator:
         """
         The main function of the Link-Validator Tool.
         """
+        self.clear_console()
         self.print_welcome_message()
         try:
             while True:
