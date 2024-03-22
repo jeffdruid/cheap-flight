@@ -499,6 +499,10 @@ else:
 
 | Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
 | ----------- | ---- | --------- | --------------- | ------------- | ----------- |
+| 1           | User selects Option 3 to display links with connection errors                           | N/A        | Displays links that were not verified due to connection errors | Links with connection errors displayed                 | Pass        |
+| 3          | No links with connection errors found                                                   | N/A        | Displays an error message indicating no connection errors     | Error message indicating no connection errors found  | Pass        |
+| 4           | No links scraped from the last webpage                                                  | N/A                            | Displays an error message indicating no links found                                                       | Error message indicating no links found displayed                           | Pass        |
+
 
 #### Option 4 - Display Links with Missing Aria Labels
 
