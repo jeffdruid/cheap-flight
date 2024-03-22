@@ -215,21 +215,31 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
   ```python
   import pandas as pd
 
-  # Reading a CSV file into a pandas DataFrame
-  df = pd.read_csv('data.csv')
+      def display_all_links(self):
+            """
+            Display all links scraped from the last webpage using pandas DataFrame.
+            """
+            print(self.CYAN + "Displaying all links scraped from the last webpage...\n" + self.RESET)
+            try:
+                # Fetch all data from the worksheet
+                data = self.WORKSHEET.get_all_values()
 
-  # Performing operations on the DataFrame
-  df_filtered = df[df['column'] > 10]
+                # Check if there is any data in the worksheet
+                if not data or len(data) <= 1:
+                    print(self.ERROR_MESSAGE)
+                    return
 
-  # Writing the modified DataFrame back to a CSV file
-  df_filtered.to_csv('filtered_data.csv', index=False)
+                # Convert data to DataFrame
+                df = pd.DataFrame(data[1:], columns=data[0])
+
+                # Display DataFrame
+                print(df)
   ```
 
 - Explanation:
   - In this example, pandas is imported as pd for convenience.
-  - The read_csv() function is used to read data from a CSV file into a pandas DataFrame.
-  - Various operations, such as filtering rows based on a condition, can be performed on the DataFrame.
-  - The modified DataFrame can be written back to a CSV file using the to_csv() function.
+  - The pd.DataFrame() function is used to create a DataFrame from the data fetched from the worksheet.
+  - The DataFrame is then printed to display all links scraped from the last webpage.
 
 ### tqdm
 
