@@ -524,12 +524,15 @@ else:
 | Test Number | Test                                              | Test Data | Expected Result                | Actual Result                 | Test Result |
 | ----------- | ------------------------------------------------- | --------- | ------------------------------ | ----------------------------- | ----------- |
 | 1           | User selects Option 6 to display summary          | N/A       | Displays a summary of findings | Summary of findings displayed | Pass        |
-| 5           | User selects Option 6 when Google Sheets is empty | N/A       | Displays an error message      | Error message displayed       | Pass        |
+| 2           | User selects Option 6 when Google Sheets is empty | N/A       | Displays an error message      | Error message displayed       | Pass        |
 
 #### Option 7 - Empty the Links Google Sheet
 
-| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
-| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
+| Test Number | Test                                        | Test Data | Expected Result                               | Actual Result                             | Test Result |
+| ----------- | ------------------------------------------- | --------- | --------------------------------------------- | ----------------------------------------- | ----------- |
+| 1           | User selects Option 7 to empty Google Sheet | N/A       | Empties the Google Sheet if not already empty | Google Sheet emptied if not already empty | Pass        |
+
+<!-- | 2           | Google Sheets is already empty              | N/A       | Displays an error message | Error message displayed | Pass        | -->
 
 #### Option 8 - Open Google Sheets
 
