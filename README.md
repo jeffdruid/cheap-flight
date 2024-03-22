@@ -110,21 +110,26 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 - Example Usage:
 
   ```python
-     from bs4 import BeautifulSoup
+  from bs4 import BeautifulSoup
 
-     html_doc = """
+    def scrape_webpage(self, url):
+        """
+        Scrape the webpage content using BeautifulSoup.
+        """
+        try:
+            # Fetch webpage content
+            response = requests.get(url)
+            soup = BeautifulSoup(response.text, 'html.parser')
 
-     <html><head><title>Example</title></head>
-     <body><p>Hello, world!</p></body></html>
-     """
-     soup = BeautifulSoup(html_doc, 'html.parser')
-     print(soup.p.text)
+            # Extract all links from the webpage
+            links = soup.find_all('a', href=True)
   ```
 
 - Explanation:
-  - In this example, BeautifulSoup is used to parse an HTML document (html_doc) and create a parse tree.
-  - The html.parser is used as the parser for parsing the HTML document.
-  - The soup.p.text expression extracts the text content of the first <p> tag found in the HTML document.
+  - In this example, BeautifulSoup is used to parse the HTML content of a webpage.
+  - The scrape_webpage method takes a URL as input and attempts to fetch the webpage content using the requests library.
+  - If the webpage is successfully fetched, BeautifulSoup is used to parse the HTML content (response.text) and create a parse tree (soup).
+  - The find_all method is then used to find all `<a>` (anchor) tags with an href attribute, which represent links on the webpage.
 
 ### Requests
 
