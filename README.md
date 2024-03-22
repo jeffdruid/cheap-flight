@@ -53,6 +53,8 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
      - [Option 9 - Open GitHub](#option-9---open-github)
      - [Prompt to Continue or Exit](#prompt-to-continue-or-exit)
 8. [Bugs](#bugs)
+   - [Google Sheets Not Opening in a New Tab (Deployment Issue)](#google-sheets-not-opening-in-a-new-tab-deployment-issue)
+   - [GitHub Link Not Opening in a New Tab (Deployment Issue)](#github-link-not-opening-in-a-new-tab-deployment-issue)
    - [Fixed Bugs](#fixed-bugs)
 9. [UI Improvements](#ui-improvements)
    - [Implementation of the colorama Library](#implementation-of-the-colorama-library)
@@ -445,12 +447,15 @@ else:
 - Explanation: The code snippet above checks the status code of the HTTP response and classifies links as either valid or broken based on the status code. If the status code is greater than or equal to 400, the link is considered broken, and the status code is stored in the link_status dictionary.
 
 ## Testing
+
 - The Link-Validator Tool was tested using a combination of manual testing and automated validation methods to ensure its functionality, reliability, and accuracy.
 
 ### Manual Testing
+
 - Manual testing was performed to validate the tool's features, user interactions, and error handling mechanisms.
 
 #### Acceptance Test
+
 The following test scenarios were used to validate the Link-Validator Tool's functionality and user experience:
 
 | Test Scenario                                              | Test Steps                                                                                                                                                                 | Expected Result                                                                                                                            |
@@ -605,16 +610,23 @@ The following test scenarios were used to validate the Link-Validator Tool's fun
 ## Bugs
 
 ### Google Sheets Not Opening in a New Tab (Deployment Issue)
+
 When the project is deployed on Heroku, users may encounter an issue where Google Sheets fail to open in a new tab when the corresponding option is selected from the Link-Validator Tool. This behavior differs from the expected functionality observed during local deployment, where Google Sheets open in a new tab successfully.
 
 #### Details:
+
 - **Issue Description:** When users choose to open Google Sheets to view link validation results, the Google Sheets fail to open in a new tab as intended.
 - **Observed Behavior:** Clicking the option to open Google Sheets results in the browser attempting to open the Sheets but ultimately failing to do so.
 - **Expected Behavior:** Upon selecting the option to open Google Sheets, the Sheets should open in a new browser tab, allowing users to view link validation results seamlessly.
 
 #### Possible Causes:
+
 - **Deployment Environment:** The discrepancy in behavior between local deployment and Heroku deployment suggests that the issue may be related to the differences in the deployment environments.
 - **Browser Configuration:** It's possible that the browser's configuration or security settings on Heroku are affecting the behavior of opening Google Sheets in a new tab.
+
+### GitHub Repository Link Not Opening in a New Tab (Deployment Issue)
+
+When the project is deployed on Heroku, clicking the option to view the GitHub repository does not open GitHub in a new tab as expected. This functionality works correctly in local deployment but fails to open in a new tab on Heroku.
 
 ### Fixed Bugs
 
