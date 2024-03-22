@@ -75,6 +75,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
     - [Icons](#icons)
     - [Images](#images)
     - [Useful links](#useful-links)
+14. [License](#license)
 
 ## Technologies Used
 
@@ -577,8 +578,6 @@ The following test scenarios were used to validate the Link-Validator Tool's fun
 | ----------- | ------------------------------------------- | --------- | --------------------------------------------- | ----------------------------------------- | ----------- |
 | 1           | User selects Option 7 to empty Google Sheet | N/A       | Empties the Google Sheet if not already empty | Google Sheet emptied if not already empty | Pass        |
 
-<!-- | 2           | Google Sheets is already empty              | N/A       | Displays an error message | Error message displayed | Pass        | -->
-
 #### Option 8 - Open Google Sheets
 
 | Test Number | Test                                                                 | Test Data | Expected Result                               | Actual Result                           | Test Result |
@@ -834,7 +833,6 @@ heroku open
 
 ## Credits
 
-- TODO
 - [Code Institute - Terminal](https://codeinstitute.net/)
 - [Heroku - Cloud Application Platform](https://www.heroku.com/)
 - [BeautifulSoup Documentation](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
@@ -860,7 +858,6 @@ heroku open
 
 #### Useful links
 
-- TODO
 - [Link-Test Page](https://jeffdruid.github.io/link-test/)
 - [Web Scraping with Python and BeautifulSoup is THIS easy! - Tom's Tech Academy](https://www.youtube.com/watch?v=nBzrMw8hkmY)
 - [The Best Websites to Practice Your Web Scraping Skills in 2024 - Proxyway](https://proxyway.com/guides/best-websites-to-practice-your-web-scraping-skills)
@@ -869,6 +866,7 @@ heroku open
 - [freeCodeCamp.org - Web Scraping with Python](https://www.freecodecamp.org/news/web-scraping-python-tutorial-how-to-scrape-data-from-a-website/)
 - [Learn python - Full Course for Beginners - freeCodeCamp.org](https://www.youtube.com/watch?v=rfscVS0vtbw)
 - [Stack Overflow - Max line length in Python](https://stackoverflow.com/questions/39973318/what-is-the-maximum-length-of-a-line-in-python)
+- [Stack Overflow - error with webbrowser module while deploying my app on heroku](https://stackoverflow.com/questions/62821072/error-with-webbrowser-module-while-deploying-my-app-on-heroku)
 
 ## License
 
