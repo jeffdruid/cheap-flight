@@ -505,8 +505,11 @@ else:
 
 #### Option 4 - Display Links with Missing Aria Labels
 
-| Test Number | Test | Test Data | Expected Result | Actual Result | Test Result |
-| ----------- | ---- | --------- | --------------- | ------------- | ----------- |
+| Test Number | Test                                                            | Test Data | Expected Result                                      | Actual Result                              | Test Result |
+| ----------- | --------------------------------------------------------------- | --------- | ---------------------------------------------------- | ------------------------------------------ | ----------- |
+| 1           | User selects Option 4 to display links with missing Aria labels | N/A       | Displays links with missing Aria labels              | Links with missing Aria labels displayed   | Pass        |
+| 2           | User selects Option 4 to display links with missing Aria labels | N/A       | Displays a message indicating no missing Aria labels | No missing Aria labels found               | Pass        |
+| 3           | User selects Option 4 when Google Sheets is empty               | N/A       | Displays an error message indicating no data         | Error message indicating no data displayed | Pass        |
 
 #### Option 5 - Display Broken Links
 
