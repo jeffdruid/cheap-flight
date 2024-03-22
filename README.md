@@ -55,6 +55,9 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 8. [Bugs](#bugs)
    - [Fixed Bugs](#fixed-bugs)
 9. [UI Improvements](#ui-improvements)
+   - [Implementation of the colorama Library](#implementation-of-the-colorama-library)
+   - [Removal of ASCII Art](#removal-of-ascii-art)
+   - [Improved Main Menu](#improved-main-menu)
 10. [Future Improvements](#future-improvements)
 11. [Setup](#setup)
     - [Prerequisites](#prerequisites)
@@ -597,10 +600,25 @@ else:
 
 ## UI Improvements
 
-- TODO
-- TODO - Implementation of the colorama library
-- TODO - Implementation of the Asci art
-- TODO - Improve Main Menu
+- UI improvements made to enhance the user experience and usability of the Link-Validator Tool.
+
+- TODO - Add Screenshots
+
+### Implementation of the colorama Library:
+
+- The colorama library was integrated into the tool to provide colorful output messages. This enhancement makes the output more visually appealing and easier to read for users. Different colors are used to highlight important messages, errors, prompts, and other information, improving the overall user experience.
+
+### Removal of ASCII Art:
+
+- Originally, ASCII art was planned to be implemented as part of the UI improvements to add visual interest and enhance the aesthetics of the tool. However, after consideration, it was decided to remove the ASCII art feature. This decision was made for several reasons:
+
+  - **Validator Error:** The ASCII art caused issues with the tool's validation process, leading to errors and inconsistencies in the output.
+  - **Focus on Functionality:** The primary focus of the tool is its functionality, specifically link scraping and validation. As such, it was deemed more important to prioritize the development and refinement of core features rather than decorative elements.
+  - **Simplicity and Clarity:** Removing ASCII art helps maintain a clean and uncluttered interface, ensuring that users can easily navigate the tool and focus on its essential functionalities without distractions.
+
+### Improved Main Menu:
+
+- The main menu of the tool was enhanced to improve navigation and user interaction. The menu options were organized in a clear and intuitive manner, making it easier for users to understand and access the various functionalities offered by the tool. Additionally, descriptive prompts and instructions were provided to guide users through the menu options and usage of the tool effectively.
 
 ## Futures Improvements
 
