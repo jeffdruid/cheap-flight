@@ -112,7 +112,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
   ```python
   from bs4 import BeautifulSoup
 
-    def scrape_webpage(self, url):
+    def scrape_and_validate_links(self, url):
         """
         Scrape the webpage content using BeautifulSoup.
         """
@@ -127,7 +127,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 - Explanation:
   - In this example, BeautifulSoup is used to parse the HTML content of a webpage.
-  - The scrape_webpage method takes a URL as input and attempts to fetch the webpage content using the requests library.
+  - The scrape_and_validate_links method takes a URL as input and attempts to fetch the webpage content using the requests library.
   - If the webpage is successfully fetched, BeautifulSoup is used to parse the HTML content (response.text) and create a parse tree (soup).
   - The find_all method is then used to find all `<a>` (anchor) tags with an href attribute, which represent links on the webpage.
 
@@ -196,13 +196,15 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 - Example Usage:
 
   ```python
-  from urllib.parse import urljoin, urlparse
+  for link in links:
+                href = link['href']
+                absolute_url = urljoin(url, href)
+                parsed_url = urlparse(absolute_url)
   ```
 
 - Explanation:
-
-  - <b>urljoin</b>: Function for joining a base URL with another URL component to form an absolute URL.
-  - <b>urlparse</b>: Function for parsing URLs into their components.
+  - The **urljoin** function is used to join a base URL with the URL extracted from the `<a>` tag to form an absolute URL. This ensures that relative URLs are converted to absolute URLs.
+  - The **urlparse** function is then used to parse the absolute URL into its components, such as the scheme, netloc, path, etc. This allows for easy access to different parts of the URL for further processing or validation.
 
 ### pandas
 
