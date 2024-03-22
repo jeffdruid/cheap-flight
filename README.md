@@ -22,7 +22,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
    - [os](#os)
    - [webbrowser](#webbrowser)
 3. [User Stories](#user-stories)
-4. [Wireframe](#wireframe)
+4. [Flowchart](#flowchart)
 5. [Features](#features)
    - [Scraping and Validation](#scraping-and-validation)
    - [Google Sheets Integration](#google-sheets-integration)
@@ -347,7 +347,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 | I want the tool to be easy to use with a simple command-line interface so that I can quickly validate URLs without any hassle.           | I can easily run the tool from the command line           |
 | I want the tool to generate a report summarizing the results of the link validation process so that I can easily share it with others.   | I receive a summary report of the link validation process |
 
-## Wireframe
+## Flowchart
 
 - TODO - Add flow chart instead of wireframes
   ![Wireframe](assets/media/wireframe.png)
