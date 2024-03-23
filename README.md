@@ -641,13 +641,13 @@ The following test scenarios were used to validate the Link-Validator Tool's fun
 
 When the project is deployed on Heroku, users may encounter an issue where Google Sheets fail to open in a new tab when the corresponding option is selected from the Link-Validator Tool. This behavior differs from the expected functionality observed during local deployment, where Google Sheets open in a new tab successfully.
 
-#### Details:
+Details:
 
 - **Issue Description:** When users choose to open Google Sheets to view link validation results, the Google Sheets fail to open in a new tab as intended.
 - **Observed Behavior:** Clicking the option to open Google Sheets results in the browser attempting to open the Sheets but ultimately failing to do so.
 - **Expected Behavior:** Upon selecting the option to open Google Sheets, the Sheets should open in a new browser tab, allowing users to view link validation results seamlessly.
 
-#### Possible Causes:
+Possible Causes:
 
 - **Deployment Environment:** The discrepancy in behavior between local deployment and Heroku deployment suggests that the issue may be related to the differences in the deployment environments.
 - **Browser Configuration:** It's possible that the browser's configuration or security settings on Heroku are affecting the behavior of opening Google Sheets in a new tab.
@@ -660,7 +660,7 @@ When the project is deployed on Heroku, clicking the option to view the GitHub r
 
 - Explain the bugs encountered during the development of the Link-Validator Tool and how they were resolved.
 
-### Trail slash in the URL
+#### Trail slash in the URL
 
 - Issue: The tool was not handling URLs with trailing slashes correctly, leading to inaccurate link validation results.
 
@@ -692,6 +692,7 @@ Explanation:
 #### Incorrect Identification of Internal Links
 
 - Issue: The tool was incorrectly saving internal links with the wrong base URL, leading to inaccurate validation results.
+
   ```python
   def is_internal_link(self, link, base_url):
           """
@@ -709,6 +710,31 @@ Explanation:
 - By comparing the netloc attribute of both parsed URLs, the method checks if the link belongs to the same domain as the base URL.
 - If the netloc values match, the link is considered internal, and the method returns True; otherwise, it returns False.
 - This ensures that internal links are correctly identified and validated against the correct base URL, improving the accuracy of the link validation process.
+
+#### Incorrect Base URL Extraction
+
+Issue:
+
+- The tool extracted incorrect base URLs when the URL path ended with ".html", resulting in inaccurate link validation.
+
+Description:
+
+- When extracting the base URL from a given URL, the LinkValidator tool encountered a bug specifically related to URLs ending with ".html".
+  The bug occurred in the get_base_url() method of the LinkValidator class.
+
+  ```python
+  if parsed_url.path.endswith(".html"):
+      base_url = (
+          f"{parsed_url.scheme}://{parsed_url.netloc}"
+          f"{'/'.join(parsed_url.path.split('/')[:-1])}/"
+      )
+  ```
+
+Explanation:
+
+- This modified code now includes a check to verify if the URL path ends with ".html" before proceeding to extract the base URL.
+  If the path ends with ".html", the code removes the last component (the HTML file) from the path to ensure the correct base URL extraction.
+  This fix resolves the bug and ensures accurate base URL extraction, especially for URLs ending with ".html".
 
 ## UI Improvements
 
