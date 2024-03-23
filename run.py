@@ -827,8 +827,11 @@ class LinkValidator:
         Ask the user if they want to continue.
         """
         while True:
+            print(self.CYAN + "\n" + "-" * 63 + self.RESET)
             choice = input(
-                self.YELLOW + "\nDo you want to continue? (y/n): " + self.RESET
+                self.YELLOW
+                + "\n Return to the main menu and continue? (y/n): "
+                + self.RESET
             )
             if choice.lower() in ["y", "yes"]:
                 # Clear the console
