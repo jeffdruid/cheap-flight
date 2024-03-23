@@ -39,6 +39,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 7. [Testing](#testing)
    - [Validator Testing](#validator-testing)
      - [flake8](#flake8)
+     - [CI Python Linter](#ci-python-linter)
    - [Manual Testing](#manual-testing)
      - [Acceptance Test](#acceptance-test)
      - [Application Start-Up Tests](#application-start-up-tests)
@@ -393,7 +394,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 ### Progress Indicator
 
 - Displays a progress indicator during the link validation process to indicate the status of the operation.
-![Progress Bar](assets/media/feat-progress-bar.gif)
+  ![Progress Bar](assets/media/feat-progress-bar.gif)
 
 ### Reporting
 
@@ -625,6 +626,14 @@ The following test scenarios were used to validate the Link-Validator Tool's fun
 
   - Currently, there are no errors in the codebase, and the tool is PEP8 compliant.
     ![Flake8 - No Erros](assets/media/validator-result.png)
+
+#### CI Python Linter
+
+- The CI Python Linter was used to check the code for PEP8 compliance and to identify any potential issues or inconsistencies in the codebase.
+
+  ![CI - Python Linter](assets/media/validator-ci-linter.png)
+
+  - The results of the CI Python Linter indicate that the codebase is PEP8 compliant, with no errors detected.
 
 ## Bugs
 
