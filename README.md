@@ -1,4 +1,4 @@
-# [Web scraping project for link validation](https://link-validator-b9009544d013.herokuapp.com/)
+# [Link-Validator Tool](https://link-validator-b9009544d013.herokuapp.com/)
 
 ![Banner](assets/media/Banner-LV.png)
 
@@ -11,6 +11,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 
 1. [Introduction](#introduction)
 2. [Technologies Used](#technologies-used)
+
    - [Python](#python)
    - [BeautifulSoup](#beautifulsoup)
    - [Requests](#requests)
@@ -21,6 +22,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
    - [Colorama](#colorama)
    - [os](#os)
    - [webbrowser](#webbrowser)
+
 3. [User Stories](#user-stories)
 4. [Flowchart](#flowchart)
 5. [Features](#features)
@@ -43,13 +45,16 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
    - [Manual Testing](#manual-testing)
 8. [Bugs](#bugs)
    - [Google Sheets Not Opening in a New Tab (Deployment Issue)](#google-sheets-not-opening-in-a-new-tab-deployment-issue)
-   - [GitHub Link Not Opening in a New Tab (Deployment Issue)](#github-link-not-opening-in-a-new-tab-deployment-issue)
+   - [GitHub Repository Link Not Opening in a New Tab (Deployment Issue)](#github-repository-link-not-opening-in-a-new-tab-deployment-issue)
    - [Fixed Bugs](#fixed-bugs)
+     - [Trail slash in the URL](#trail-slash-in-the-url)
+     - [Incorrect Identification of Internal Links](#incorrect-identification-of-internal-links)
+     - [Incorrect Base URL Extraction](#incorrect-base-url-extraction)
 9. [UI Improvements](#ui-improvements)
    - [Implementation of the colorama Library](#implementation-of-the-colorama-library)
    - [Removal of ASCII Art](#removal-of-ascii-art)
    - [Improved Main Menu](#improved-main-menu)
-10. [Future Improvements](#future-improvements)
+10. [Future Improvements](#futures-improvements)
 11. [Setup](#setup)
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
@@ -57,10 +62,9 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
 12. [Deployment](#deployment)
     - [Cloning & Forking](#cloning--forking)
     - [Local Deployment](#local-deployment)
-    - [Remote Deployment](#remote-deployment)
+    - [Remote Deployment (Heroku)](#remote-deployment-heroku)
 13. [Credits](#credits)
     - [Source Code](#source-code)
-    - [Icons](#icons)
     - [Images](#images)
     - [Useful links](#useful-links)
 14. [License](#license)
