@@ -442,11 +442,24 @@ class LinkValidator:
                     + "\nhttps://www.w3.org/WAI/demos/bad/before/home.html"
                     + self.RESET
                 )
+                print(self.CYAN + "\n" + "-" * 63 + self.RESET)
+                print(
+                    self.RED
+                    + "Note: Press 'm' to return to the main menu."
+                    + self.RESET
+                )
                 url = input(
                     self.CYAN
                     + "\nEnter the URL you want to scrape: \n"
                     + self.RESET
                 )
+                if url.lower() == "m":
+                    print(
+                        self.RED + "\nReturning to the main menu." + self.RESET
+                    )
+                    timer.sleep(1)
+                    self.main()
+                    return  # Return None when user goes back to the main menu
                 # Check if the URL starts with "http://" or "https://"
                 if not url.startswith(("http://", "https://")):
                     # If not, add "http://" to the beginning of the URL
