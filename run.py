@@ -655,11 +655,25 @@ class LinkValidator:
 
     def empty_links_google_sheet(self):
         """
-        Empty the links Google Sheet.
+        Empty the links Google Sheet after user confirmation.
         """
         try:
-            # Clear existing data (including header)
-            self.WORKSHEET.clear()
+            # Ask for confirmation
+            confirmation = input(
+                self.RED
+                + "Are you sure you want to empty the Google Sheet? (y/n): "
+                + self.RESET
+            ).lower()
+            if confirmation == "y" or confirmation == "yes":
+                # Clear existing data (including header)
+                self.WORKSHEET.clear()
+                print(
+                    self.GREEN
+                    + "\nGoogle Sheet has been emptied successfully."
+                    + self.RESET
+                )
+            else:
+                print(self.RED + "\nOperation canceled." + self.RESET)
         except Exception as e:
             print(
                 self.RED + "An unexpected error occurred:",
@@ -901,12 +915,6 @@ class LinkValidator:
                     self.display_summary_of_findings()
                 elif choice == 7:
                     self.empty_links_google_sheet()
-                    print(
-                        "\n"
-                        + self.GREEN
-                        + "The Google Sheet has been emptied."
-                        + self.RESET
-                    )
                 elif choice == 8:
                     self.open_google_sheet()
                 elif choice == 9:
