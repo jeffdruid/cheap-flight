@@ -2,6 +2,7 @@ import os
 import urllib.parse
 import webbrowser
 from urllib.parse import urljoin
+import time as timer
 
 import colorama
 import gspread
@@ -123,6 +124,9 @@ class LinkValidator:
         print("-" * 63)
         print(self.RED + "0. Exit Program" + self.RESET)
         print(self.CYAN + "-" * 63 + self.RESET)
+        print(
+            self.RED + "Note: Use Ctrl+C to exit at any time.\n" + self.RESET
+        )
 
     def get_user_input(self):
         """
@@ -833,6 +837,9 @@ class LinkValidator:
                 self.main()  # Continue with the main program loop
             elif choice.lower() in ["n", "no"]:
                 print(self.RED + "\nExiting the program..." + self.RESET)
+                timer.sleep(1)
+                self.clear_console()
+                print(self.RED + "Program terminated" + self.RESET)
                 exit()
             else:
                 print(
@@ -887,6 +894,9 @@ class LinkValidator:
                     self.open_github()
                 elif choice == 0:
                     print(self.RED + "\nExiting the program..." + self.RESET)
+                    timer.sleep(1)
+                    self.clear_console()
+                    print(self.RED + "Program terminated" + self.RESET)
                     exit()
                 self.ask_continue()
         # Handle keyboard interrupt
