@@ -860,6 +860,7 @@ class LinkValidator:
                 print(self.RED + "Program terminated" + self.RESET)
                 exit()
             else:
+                self.clear_console()
                 print(
                     self.RED
                     + "Invalid choice. Please enter 'y' or 'n'."
