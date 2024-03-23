@@ -166,10 +166,19 @@ class LinkValidator:
         if not parsed_url.path:
             base_url = f"{parsed_url.scheme}://{parsed_url.netloc}/"
         else:
-            base_url = (
-                f"{parsed_url.scheme}://{parsed_url.netloc}"
-                f"{parsed_url.path.rstrip('/')}/"
-            )
+            # Check if the path ends with ".html"
+            if parsed_url.path.endswith(".html"):
+                # If it does, remove the last component (the HTML file)
+                # from the path
+                base_url = (
+                    f"{parsed_url.scheme}://{parsed_url.netloc}"
+                    f"{'/'.join(parsed_url.path.split('/')[:-1])}/"
+                )
+            else:
+                base_url = (
+                    f"{parsed_url.scheme}://{parsed_url.netloc}"
+                    f"{parsed_url.path.rstrip('/')}/"
+                )
         return base_url
 
     def write_to_google_sheets(self, data):
@@ -293,9 +302,10 @@ class LinkValidator:
             # Check all links for aria labels
             for link in soup.find_all("a"):
                 href = link.get("href")
+                aria_label = link.get("aria-label")
                 # Join base URL with relative URL to get full URL
                 full_link = urljoin(base_url, href)
-                if link.get("aria-label"):
+                if aria_label:
                     links_with_aria.append(full_link)
                 else:
                     links_without_aria.append(full_link)
@@ -303,7 +313,7 @@ class LinkValidator:
             # Update data with missing aria labels for links with aria
             for link in links_with_aria:
                 # Determine missing aria
-                missing_aria = "yes" if link in links_without_aria else "no"
+                missing_aria = "no" if link in links_with_aria else "yes"
                 # Get status code and response from check_link_status function
                 status, response = self.check_link_status(link)
                 data[str(link)] = ("internal", status, response, missing_aria)
@@ -315,7 +325,6 @@ class LinkValidator:
                 # Get status code and response from check_link_status function
                 status, response = self.check_link_status(link)
                 data[str(link)] = ("internal", status, response, missing_aria)
-
             # Check external links
             external_links = self.check_external_links(soup, base_url)
 
