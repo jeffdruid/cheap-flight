@@ -264,8 +264,8 @@ class LinkValidator:
         url = self.get_url_input()
         print(self.CYAN + "You entered: " + url + self.RESET)
 
-        # Clear the Google Sheet first
-        self.empty_links_google_sheet()
+        # Clear existing data (including header)
+        self.WORKSHEET.clear()
 
         # Print the current page being scraped
         print(f"\nScraping {url}...")
@@ -351,7 +351,10 @@ class LinkValidator:
             print("Links with aria labels:", len(links_with_aria))
             print("Links without aria labels:", len(links_without_aria))
             print("External links found:", len(external_links))
-            print("Internal links found:", len(data) - len(external_links))
+            print(
+                "Internal links found:",
+                sum(1 for value in data.values() if value[0] == "internal"),
+            )
             print(
                 "Broken links found:",
                 sum(1 for value in data.values() if value[1] == "broken"),
