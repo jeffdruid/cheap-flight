@@ -459,7 +459,7 @@ class LinkValidator:
                     )
                     timer.sleep(1)
                     self.main()
-                    return  # Return None when user goes back to the main menu
+                    return
                 # Check if the URL starts with "http://" or "https://"
                 if not url.startswith(("http://", "https://")):
                     # If not, add "http://" to the beginning of the URL
@@ -469,7 +469,7 @@ class LinkValidator:
                 else:
                     print(
                         self.RED
-                        + "Invalid URL. Please try again."
+                        + "Invalid URL. Please try again.\n"
                         + self.RESET
                     )
             except KeyboardInterrupt:
@@ -493,11 +493,13 @@ class LinkValidator:
                 + self.RESET
             )
             return response.status_code == 200
-        except requests.exceptions.RequestException as e:
-            print(Back.RED + f"Error: {e}" + self.RESET)
+        except requests.exceptions.RequestException:
+            self.clear_console()
+            print(Back.RED + f"Error: {url}\n" + self.RESET)
             return False
         except ValueError as e:
-            print(f"Invalid URL: {e}")
+            self.clear_console()
+            print(Back.RED + f"Invalid URL: {e}\n" + self.RESET)
             return False
 
     def open_google_sheet(self):
