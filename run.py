@@ -106,7 +106,6 @@ class LinkValidator:
         """
 
         print(self.MAGENTA + "Menu options:" + self.RESET)
-        print(self.CYAN + "-" * 63)
         print("1. Scrape and Validate Links from a Webpage")
         print("-" * 63)
         print(self.YELLOW + "Display Options:" + self.RESET)
