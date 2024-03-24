@@ -36,6 +36,7 @@ class LinkValidator:
             + self.RESET
         )
         self.initialize_colorama()
+        self.print_welcome_message()
 
         self.SCOPE = [
             "https://www.googleapis.com/auth/spreadsheets",
@@ -92,13 +93,15 @@ class LinkValidator:
             Style.BRIGHT
             + Back.GREEN
             + Fore.WHITE
-            + "Welcome to the Link-Validator Tool!"
+            + "\nWelcome to the Link-Validator Tool!\n"
             + self.RESET
             + self.YELLOW
             + "\nThis tool allows you to scrape a webpage"
             + " and validate all the links."
             + self.RESET
         )
+        print(self.CYAN + "\nLoading..." + self.RESET)
+        timer.sleep(3)
 
     def print_instructions(self):
         """
@@ -915,7 +918,6 @@ class LinkValidator:
         The main function of the Link-Validator Tool.
         """
         self.clear_console()
-        self.print_welcome_message()
         try:
             while True:
                 self.print_instructions()
