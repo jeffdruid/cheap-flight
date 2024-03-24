@@ -95,7 +95,7 @@ class LinkValidator:
             + "Welcome to the Link-Validator Tool!"
             + self.RESET
             + self.YELLOW
-            + "This tool allows you to scrape a webpage"
+            + "\nThis tool allows you to scrape a webpage"
             + " and validate all the links."
             + self.RESET
         )
@@ -106,7 +106,7 @@ class LinkValidator:
         """
 
         print(self.MAGENTA + "Menu options:" + self.RESET)
-        print("1. Scrape and Validate Links from a Webpage")
+        print(self.CYAN + "1. Scrape and Validate Links from a Webpage")
         print("-" * 63)
         print(self.YELLOW + "Display Options:" + self.RESET)
         print(self.CYAN + "   2. Display All Links Scraped")
@@ -150,12 +150,16 @@ class LinkValidator:
                         + " Please enter 1, 2, 3, 4, 5, 6, 7, 8, 9 or 0.\n"
                         + self.RESET
                     )
+                    timer.sleep(2)
+                    self.main()
             except ValueError:
                 print(
                     self.RED
                     + "Invalid input. Please enter a number."
                     + self.RESET
                 )
+                timer.sleep(2)
+                self.main()
 
     def get_base_url(self, url):
         """
