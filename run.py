@@ -92,7 +92,7 @@ class LinkValidator:
             Style.BRIGHT
             + Back.GREEN
             + Fore.WHITE
-            + "Welcome to the Link-Validator Tool!\n"
+            + "Welcome to the Link-Validator Tool!"
             + self.RESET
             + self.YELLOW
             + "This tool allows you to scrape a webpage"
@@ -105,7 +105,7 @@ class LinkValidator:
         Display the instructions for using the Link-Validator Tool.
         """
 
-        print(self.MAGENTA + "\nMenu options:" + self.RESET)
+        print(self.MAGENTA + "Menu options:" + self.RESET)
         print(self.CYAN + "-" * 63)
         print("1. Scrape and Validate Links from a Webpage")
         print("-" * 63)
