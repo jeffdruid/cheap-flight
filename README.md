@@ -54,6 +54,7 @@ The Link-Validator Tool is a Python application that allows users to scrape a we
    - [Implementation of the colorama Library](#implementation-of-the-colorama-library)
    - [Removal of ASCII Art](#removal-of-ascii-art)
    - [Improved Main Menu](#improved-main-menu)
+   - [Adjusted display all links according to terminal size](#adjusted-display-all-links-according-to-terminal-size)
 10. [Future Improvements](#futures-improvements)
 11. [Setup](#setup)
     - [Prerequisites](#prerequisites)
@@ -615,6 +616,21 @@ Explanation:
 
 - The main menu of the tool was enhanced to improve navigation and user interaction. The menu options were organized in a clear and intuitive manner, making it easier for users to understand and access the various functionalities offered by the tool. Additionally, descriptive prompts and instructions were provided to guide users through the menu options and usage of the tool effectively.
   ![Main Menu](assets/media/feat-menu.png)
+
+### Adjusted display all links according to terminal size:
+
+- The display all links feature was adjusted to accommodate different terminal sizes. The output is now formatted to fit the user's terminal width, ensuring that all links are displayed clearly and legibly without wrapping or truncation. This improvement enhances the readability of the link list and provides a better user experience for users with varying terminal sizes.
+
+  ```python
+    # Get terminal width
+    terminal_width = shutil.get_terminal_size().columns
+
+    # Truncate columns if the DataFrame exceeds terminal width
+    pd.set_option("display.max_columns", None)
+    pd.set_option("display.width", terminal_width)
+  ```
+
+  - This code dynamically sets the maximum display width of the DataFrame based on the current terminal width. It ensures that the DataFrame is displayed within the available space in the terminal, preventing truncation of columns due to limited space.
 
 ## Futures Improvements
 
