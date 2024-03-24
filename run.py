@@ -108,7 +108,7 @@ class LinkValidator:
         Display the instructions for using the Link-Validator Tool.
         """
 
-        print(self.GREEN + "Menu options:\n")
+        print(self.GREEN + "Menu options:")
         print(self.CYAN + "1. Scrape and Validate Links from a Webpage")
         print("-" * 63)
         print(self.YELLOW + "Display Options:" + self.RESET)
