@@ -1,8 +1,9 @@
 import os
+import shutil
+import time as timer
 import urllib.parse
 import webbrowser
 from urllib.parse import urljoin
-import time as timer
 
 import colorama
 import gspread
@@ -91,7 +92,7 @@ class LinkValidator:
             Style.BRIGHT
             + Back.GREEN
             + Fore.WHITE
-            + "\nWelcome to the Link-Validator Tool!\n"
+            + "Welcome to the Link-Validator Tool!\n"
             + self.RESET
             + self.YELLOW
             + "This tool allows you to scrape a webpage"
@@ -425,6 +426,13 @@ class LinkValidator:
 
             # Convert data to DataFrame
             df = pd.DataFrame(data[1:], columns=data[0])
+
+            # Get terminal width
+            terminal_width = shutil.get_terminal_size().columns
+
+            # Truncate columns if the DataFrame exceeds terminal width
+            pd.set_option("display.max_columns", None)  # Show all columns
+            pd.set_option("display.width", terminal_width)  # Set display width
 
             # Display DataFrame
             print(df)
