@@ -533,7 +533,7 @@ class LinkValidator:
             sheet_url = self.SHEET.url
             os.system(f"start {sheet_url}")
             print(self.CYAN + "\nLink to Google Sheet: ")
-            print(sheet_url + self.RESET)
+            print("https://rb.gy/ie05bn" + self.RESET)
         except Exception as e:
             print(self.RED + "\nFailed to open Google Sheet:", e + self.RESET)
 
